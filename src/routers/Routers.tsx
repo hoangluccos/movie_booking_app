@@ -1,13 +1,14 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../screens/LoginScreen/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen/RegisterScreen';
-import ForgotPassScreen from '../screens/ForgotPassScreen/ForgotPassScreen';
-import HomeScreen from '../screens/MainScreen/MainScreen';
-import OnBoardSceeen from '../screens/OnBoardScreen/OnBoardScreen';
-import VerifyEmailScreen from '../screens/RegisterScreen/VerifyEmailScreen';
-import VerifyOtpScreen from '../screens/RegisterScreen/VerifyOtpScreen';
-import MainScreen from '../screens/MainScreen/MainScreen';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "../screens/LoginScreen/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen/RegisterScreen";
+import ForgotPassScreen from "../screens/ForgotPassScreen/ForgotPassScreen";
+import HomeScreen from "../screens/MainScreen/MainScreen";
+import OnBoardSceeen from "../screens/OnBoardScreen/OnBoardScreen";
+import VerifyEmailScreen from "../screens/RegisterScreen/VerifyEmailScreen";
+import VerifyOtpScreen from "../screens/RegisterScreen/VerifyOtpScreen";
+import MainScreen from "../screens/MainScreen/MainScreen";
+import MovieDetail from "../screens/MovieDetail/MovieDetail";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -34,9 +35,9 @@ const Routers = () => {
           component={RegisterScreen}
           options={{
             headerShown: true,
-            headerTitle: '',
-            headerStyle: {backgroundColor: '#000000'},
-            headerTintColor: '#FFFFFF',
+            headerTitle: "",
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
           }}
         />
         <Stack.Screen
@@ -44,9 +45,9 @@ const Routers = () => {
           component={ForgotPassScreen}
           options={{
             headerShown: true,
-            headerTitle: '',
-            headerStyle: {backgroundColor: '#000000'},
-            headerTintColor: '#FFFFFF',
+            headerTitle: "",
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
           }}
         />
         <Stack.Screen
@@ -61,9 +62,9 @@ const Routers = () => {
           component={VerifyEmailScreen}
           options={{
             headerShown: true,
-            headerTitle: '',
-            headerStyle: {backgroundColor: '#000000'},
-            headerTintColor: '#FFFFFF',
+            headerTitle: "",
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
           }}
         />
         <Stack.Screen
@@ -71,9 +72,9 @@ const Routers = () => {
           component={VerifyOtpScreen}
           options={{
             headerShown: true,
-            headerTitle: '',
-            headerStyle: {backgroundColor: '#000000'},
-            headerTintColor: '#FFFFFF',
+            headerTitle: "",
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
           }}
         />
         <Stack.Screen
@@ -81,8 +82,17 @@ const Routers = () => {
           component={MainScreen}
           options={{
             headerShown: false,
-            headerStyle: {backgroundColor: '#000000'},
-            headerTintColor: '#FFFFFF',
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="MovieDetail"
+          component={MovieDetail}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
           }}
         />
       </Stack.Navigator>

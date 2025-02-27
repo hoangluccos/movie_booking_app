@@ -4,105 +4,112 @@ import {
   Keyboard,
   ScrollView,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
-import InputSearchComponent from '../../../components/InputSearchComponent';
-import {useEffect, useState} from 'react';
-import {genreType, movieType} from '../../../data/Data';
-import {getApi} from '../../../api/Api';
-import {formatDuration} from '../../../utils/Utils';
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import InputSearchComponent from "../../../components/InputSearchComponent";
+import { useEffect, useState } from "react";
+import { genreType, movieType } from "../../../data/Data";
+import { getApi } from "../../../api/Api";
+import { formatDuration } from "../../../utils/Utils";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: any) => {
   const [activeSlide, setActiveSlide] = useState(0);
 
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [listMovie, setListMovie] = useState<movieType[]>([]);
 
-  const {width: screenWidth} = Dimensions.get('window');
+  const { width: screenWidth } = Dimensions.get("window");
   const sliderWidth = screenWidth;
-
   useEffect(() => {
-    getApi('/api/movies/', false, (error, response) => {
+    getApi("/api/movies/", false, (error, response) => {
       if (error) {
-        console.log('Error with get: ', error);
+        console.log("Error with get: ", error);
       } else {
-        console.log('Reponse: ', response.result);
+        console.log("Reponse: ", response.result);
         setListMovie(response.result);
       }
     });
   }, []);
-
-  const showMovieNowPlayingCus = ({item}: {item: movieType}) => {
+  const handleClickMovie = (id: string) => {
+    console.log("Click on movie", id);
+    navigation.navigate("MovieDetail", id);
+  };
+  const showMovieNowPlayingCus = ({ item }: { item: movieType }) => {
     return (
-      <View className="flex justify-center items-center w-[300px]">
-        <Image
-          className="w-[300px] h-[450px] rounded-lg"
-          source={{
-            uri: item.image,
-          }}
-        />
-        <Text className="text-white text-center mt-2 text-lg font-semibold">
-          {item.name}
-        </Text>
-        <View>
-          <Text className="text-gray-400">
-            {formatDuration(item.duration)} •{' '}
-            {item.genres
-              .slice(0, 2)
-              .map(genre => genre.name)
-              .join(', ')}
+      <TouchableOpacity onPress={() => handleClickMovie(item.id)}>
+        <View className="flex justify-center items-center w-[300px]">
+          <Image
+            className="w-[300px] h-[450px] rounded-lg"
+            source={{
+              uri: item.image,
+            }}
+          />
+          <Text className="text-white text-center mt-2 text-lg font-semibold">
+            {item.name}
           </Text>
+          <View>
+            <Text className="text-gray-400">
+              {formatDuration(item.duration)} •{" "}
+              {item.genres
+                .slice(0, 2)
+                .map((genre) => genre.name)
+                .join(", ")}
+            </Text>
+          </View>
+          <View className="flex-row justify-center items-center space-x-2">
+            <AntDesign name="star" size={20} color="#FCC434" />
+            <Text className="text-gray-400">{item.rate}</Text>
+          </View>
         </View>
-        <View className="flex-row justify-center items-center space-x-2">
-          <AntDesign name="star" size={20} color="#FCC434" />
-          <Text className="text-gray-400">{item.rate}</Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   const showMovieComingSoonCus = (item: movieType) => {
     return (
-      <View className="w-[170px]">
-        <View className="h-[300px]">
-          <Image
-            className="h-[240px] rounded-lg"
-            source={{
-              uri: item.image,
-            }}
-          />
-
-          <Text className="text-lg text-[#FCC434] numberOfLines={2}">
-            {item.name}
-          </Text>
-        </View>
-        <View>
-          <View className="flex-row items-center space-x-2">
+      <TouchableOpacity onPress={() => handleClickMovie(item.id)}>
+        <View className="w-[170px]">
+          <View className="h-[300px]">
             <Image
-              source={require('../../../../assets/images/video_icon.png')}
+              className="h-[240px] rounded-lg"
+              source={{
+                uri: item.image,
+              }}
             />
-            <Text className="text-gray-400">
-              {item.genres
-                .slice(0, 1)
-                .map(genre => genre.name)
-                .join(', ')}
+
+            <Text className="text-lg text-[#FCC434] numberOfLines={2}">
+              {item.name}
             </Text>
           </View>
-        </View>
-        <View>
-          <View className="flex-row items-center space-x-2">
-            <Image
-              source={require('../../../../assets/images/calendar_icon.png')}
-            />
-            <Text className="text-gray-400">{item.premiere}</Text>
+          <View>
+            <View className="flex-row items-center space-x-2">
+              <Image
+                source={require("../../../../assets/images/video_icon.png")}
+              />
+              <Text className="text-gray-400">
+                {item.genres
+                  .slice(0, 1)
+                  .map((genre) => genre.name)
+                  .join(", ")}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <View className="flex-row items-center space-x-2">
+              <Image
+                source={require("../../../../assets/images/calendar_icon.png")}
+              />
+              <Text className="text-gray-400">{item.premiere}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -110,8 +117,9 @@ const HomeScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView
         className="bg-black w-full h-full px-4"
-        contentContainerStyle={{flexGrow: 1}}
-        keyboardShouldPersistTaps="handled">
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View>
           <View className="py-4 flex-row justify-between">
             <View>
@@ -151,7 +159,7 @@ const HomeScreen = () => {
                 itemWidth={300}
                 inactiveSlideOpacity={0.5} //làm mờ ảnh
                 inactiveSlideScale={0.85} //làm nhỏ ảnh
-                onSnapToItem={index => setActiveSlide(index)}
+                onSnapToItem={(index) => setActiveSlide(index)}
                 loop
               />
               {/* <Pagination
@@ -187,7 +195,7 @@ const HomeScreen = () => {
 
             <View>
               <ScrollView className="space-x-4" horizontal>
-                {listMovie.map(item => (
+                {listMovie.map((item) => (
                   <View key={item.id}>{showMovieComingSoonCus(item)}</View>
                 ))}
               </ScrollView>
@@ -211,7 +219,7 @@ const HomeScreen = () => {
             <View className="items-center">
               <Image
                 className="w-[370px] h-[200px]"
-                source={require('../../../../assets/images/discount.png')}
+                source={require("../../../../assets/images/discount.png")}
               />
             </View>
           </View>
