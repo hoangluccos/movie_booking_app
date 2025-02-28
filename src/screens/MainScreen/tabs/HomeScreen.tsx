@@ -124,7 +124,7 @@ const HomeScreen = ({ navigation }: any) => {
           <View className="py-4 flex-row justify-between">
             <View>
               <Text className="text-lg text-white">Hi, Huy</Text>
-              <Text className="text-2xl text-white">Wellcome Back </Text>
+              <Text className="text-2xl text-white">Wellcome Back</Text>
             </View>
             <View className="justify-center">
               <Icon name="notifications" color="white" size={35} />
@@ -134,6 +134,7 @@ const HomeScreen = ({ navigation }: any) => {
             <InputSearchComponent
               value={searchValue}
               onChangeValue={setSearchValue}
+              listMovie={listMovie}
             />
           </View>
           <View>
