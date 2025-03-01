@@ -81,6 +81,7 @@ const MainScreen = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
+          headerShown: false,
           title: "Profile",
           tabBarIcon: ({ focused }) => (
             <Image
