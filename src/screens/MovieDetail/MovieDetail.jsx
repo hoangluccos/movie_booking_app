@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getApi } from "../../api/Api";
 import { FontAwesome } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 const MovieDetail = ({ route }) => {
+  const movies = useSelector((state) => state.movies);
   const navigation = useNavigation();
   const [movieDetail, setMovieDetail] = useState({});
+  console.log("redux movies:", movies);
   //   console.log(navigation);
   //   console.log(route.params);
   const handleBack = () => {

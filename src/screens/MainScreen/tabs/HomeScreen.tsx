@@ -17,8 +17,10 @@ import { useEffect, useState } from "react";
 import { genreType, movieType } from "../../../data/Data";
 import { getApi } from "../../../api/Api";
 import { formatDuration } from "../../../utils/Utils";
-
+import { useDispatch } from "react-redux";
+import { setMovies } from "../../../redux/slices/movieSlice.js";
 const HomeScreen = ({ navigation }: any) => {
+  const dispatch = useDispatch();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [searchValue, setSearchValue] = useState("");
@@ -32,6 +34,7 @@ const HomeScreen = ({ navigation }: any) => {
         console.log("Error with get: ", error);
       } else {
         console.log("Reponse: ", response.result);
+        dispatch(setMovies(response.result));
         setListMovie(response.result);
       }
     });
