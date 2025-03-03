@@ -1,24 +1,24 @@
-import {Image, Text, View} from 'react-native';
-import ButtonComponent from '../../components/ButtonComponent';
-import {useRecoilState, useSetRecoilState} from 'recoil';
-import {StateSendOtpAtom} from '../../Atom/StateSendOtpAtom';
-import {useState} from 'react';
+import { Image, Text, View } from "react-native";
+import ButtonComponent from "../../components/ButtonComponent";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
+import { useState } from "react";
 
-const OnBoardSceeen = ({navigation}: any) => {
+const OnBoardSceeen = ({ navigation }: any) => {
   const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
   const handleClickSignin = () => {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
 
   const handleClickSignUp = () => {
-    navigation.navigate('VerifyEmail');
-    setStateSendOtp('Register');
+    navigation.navigate("VerifyEmail");
+    setStateSendOtp("Register");
   };
 
   return (
-    <View className="w-full h-full justify-center items-center space-y-4 bg-black">
+    <View className="w-full h-full flex-col justify-center items-center gap-y-5 bg-black">
       <View>
-        <Image source={require('../../../assets/images/logo.png')} />
+        <Image source={require("../../../assets/images/logo.png")} />
       </View>
       <View className="justify-center items-center space-y-3">
         <Text className="text-white text-xl font-base">LHBoking Hello</Text>

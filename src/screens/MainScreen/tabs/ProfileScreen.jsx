@@ -33,7 +33,7 @@ const ProfileScreen = () => {
             {infoUser.user.username}
           </Text>
           <View>
-            <View className="flex-row gap-3 items-center">
+            <View className="flex-row gap-3 items-center mt-2">
               <AntDesign name="mail" size={18} color="gray" />
               <Text className="text-gray-100">{infoUser.user.email}</Text>
             </View>
@@ -46,10 +46,10 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </View>
       <View className="mt-[50] w-full gap-5">
-        <OptionProfile text={"Ticket"} />
-        <OptionProfile text={"Payment history"} />
-        <OptionProfile text={"Change language"} />
-        <OptionProfile text={"Change password"} />
+        <OptionProfile text={"Ticket"} nameIcon={"ticket-alt"} />
+        <OptionProfile text={"Payment history"} nameIcon={"shopping-cart"} />
+        <OptionProfile text={"Change language"} nameIcon={"language"} />
+        <OptionProfile text={"Change password"} nameIcon={"lock"} />
       </View>
     </View>
   );

@@ -47,6 +47,7 @@ const MainScreen = () => {
         name="Ticket"
         component={TicketScreen}
         options={{
+          headerShown: false,
           title: "Ticket",
           tabBarIcon: ({ focused }) => (
             <Image
@@ -64,6 +65,7 @@ const MainScreen = () => {
         name="Movie"
         component={MovieScreen}
         options={{
+          headerShown: false,
           title: "Movie",
           tabBarIcon: ({ focused }) => (
             <Image
