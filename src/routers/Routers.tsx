@@ -9,6 +9,7 @@ import VerifyEmailScreen from "../screens/RegisterScreen/VerifyEmailScreen";
 import VerifyOtpScreen from "../screens/RegisterScreen/VerifyOtpScreen";
 import MainScreen from "../screens/MainScreen/MainScreen";
 import MovieDetail from "../screens/MovieDetail/MovieDetail";
+import TicketScreen from "../screens/TicketScreen/TicketScreen";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -89,6 +90,15 @@ const Routers = () => {
         <Stack.Screen
           name="MovieDetail"
           component={MovieDetail}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="TicketScreen"
+          component={TicketScreen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: "#000000" },

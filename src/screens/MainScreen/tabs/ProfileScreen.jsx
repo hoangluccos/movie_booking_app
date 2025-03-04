@@ -18,7 +18,7 @@ const ProfileScreen = () => {
   }, []);
   console.log("user profile from redux: ", infoUser);
   return (
-    <View className="bg-black flex-1 px-3 py-10 mt-8">
+    <View className="bg-black flex-1 px-3 py-10 mt-7">
       <View className="flex-row gap-5">
         <Image
           source={

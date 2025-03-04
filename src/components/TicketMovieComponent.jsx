@@ -1,9 +1,15 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 const TicketMovieComponent = () => {
+  const navigation = useNavigation();
+  const handleClickTicket = () => {
+    console.log("Click ticket");
+    navigation.navigate("TicketScreen");
+  };
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={handleClickTicket}>
       <View
         className="flex-row w-full h-40 rounded-[20]"
         style={{ backgroundColor: "#1C1C1C" }}
