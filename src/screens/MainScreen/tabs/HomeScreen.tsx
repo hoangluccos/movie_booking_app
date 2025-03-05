@@ -77,7 +77,7 @@ const HomeScreen = ({ navigation }: any) => {
   const showMovieComingSoonCus = (item: movieType) => {
     return (
       <TouchableOpacity onPress={() => handleClickMovie(item.id)}>
-        <View className="w-[170px]">
+        <View className="w-[170px] mx-2">
           <View className="h-[300px]">
             <Image
               className="h-[240px] rounded-lg"
@@ -165,6 +165,7 @@ const HomeScreen = ({ navigation }: any) => {
                 inactiveSlideScale={0.85} //làm nhỏ ảnh
                 onSnapToItem={(index) => setActiveSlide(index)}
                 loop
+                containerCustomStyle={{}} // Thêm dòng này
               />
               {/* <Pagination
               dotsLength={listMovie.length}
@@ -198,7 +199,7 @@ const HomeScreen = ({ navigation }: any) => {
             </View>
 
             <View>
-              <ScrollView className="space-x-4" horizontal>
+              <ScrollView horizontal>
                 {listMovie.map((item) => (
                   <View key={item.id}>{showMovieComingSoonCus(item)}</View>
                 ))}

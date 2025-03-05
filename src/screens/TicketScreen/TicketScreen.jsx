@@ -100,8 +100,15 @@ const TicketScreen = () => {
             </Text>
           </View>
         </View>
-        <View className="">
-          <View className="border-b border-black border-dashed mt-5 mx-4" />
+        <View className="my-5 h-auto">
+          {/* circle-half */}
+          <MaterialCommunityIcons
+            name="circle-half"
+            size={60}
+            color="black"
+            className="rotate-180 absolute top-0 left-[-50]"
+          />
+          {/* <View className="border-b border-black border-dashed mt-5 mx-4" /> */}
           {/* circle-half */}
           <MaterialCommunityIcons
             name="circle-half"
