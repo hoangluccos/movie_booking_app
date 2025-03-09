@@ -2,23 +2,37 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   ScrollView,
   ImageBackground,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { getApi } from "../../api/Api";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import ActorComponent from "../../components/ActorComponent";
 import CinemaComponent from "../../components/CinemaComponent";
+import { movieType } from "../../data/Data";
 
-const MovieDetail = ({ route }) => {
-  const stars = 5;
-  const movies = useSelector((state) => state.movies);
+type RootStackParamList = {
+  Home: undefined;
+  MovieDetail: { id: string };
+};
+type MovieDetailNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "MovieDetail"
+>;
+type MovieDetailRouteProp = RouteProp<RootStackParamList, "MovieDetail">;
+
+interface MovieDetailProp {
+  route: MovieDetailRouteProp;
+}
+
+const MovieDetail = ({ route }: MovieDetailProp) => {
+  const movies = useSelector((state: any) => state.movies);
   const navigation = useNavigation();
-  const [movieDetail, setMovieDetail] = useState({});
+  const [movieDetail, setMovieDetail] = useState<movieType | null>(null);
   console.log("redux movies:", movies);
   //   console.log(navigation);
   //   console.log(route.params);
@@ -36,7 +50,13 @@ const MovieDetail = ({ route }) => {
       }
     });
   }, []);
-  console.log(movieDetail.image);
+  if (!movieDetail) {
+    return (
+      <View className="flex-1 bg-black justify-center items-center">
+        <Text className="text-white">Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -89,7 +109,9 @@ const MovieDetail = ({ route }) => {
         <View className="flex flex-col justify-center my-10 gap-2">
           <View className="flex flex-row gap-5">
             <Text className="text-white">Movie genre</Text>
-            <Text className="font-bold text-white">Action,Action,Action</Text>
+            <Text className="font-bold text-white">
+              {movieDetail.genres.map((genre) => genre.name + ` `)}
+            </Text>
           </View>
           <View className="flex flex-row gap-5">
             <Text className="text-white">Censorship</Text>
@@ -97,7 +119,7 @@ const MovieDetail = ({ route }) => {
           </View>
           <View className="flex flex-row gap-5">
             <Text className="text-white">Language</Text>
-            <Text className="font-bold text-white">English</Text>
+            <Text className="font-bold text-white">{movieDetail.language}</Text>
           </View>
         </View>
         <View className="flex flex-col w-full mb-10 gap-2">

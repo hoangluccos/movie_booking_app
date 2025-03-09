@@ -3,7 +3,7 @@ import React from "react";
 
 const ActorComponent = () => {
   return (
-    <View className="bg-gray-700 w-[110] h-[50] rounded-[10] flex flex-row items-center gap-2">
+    <View className="bg-gray-700 w-[130] h-[50] rounded-[10] flex flex-row items-center gap-2">
       <View className="flex flex-row items-center justify-center gap-1 mx-2">
         <Image
           source={require("../../assets/images/movie_sample.jpg")}
