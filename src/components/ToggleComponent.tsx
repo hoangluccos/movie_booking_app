@@ -1,12 +1,15 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-
-const ToggleComponent = ({ isSelectFirst, setIsSelectFirst }) => {
+interface ToggleProps {
+  isSelectFirst: boolean;
+  setIsSelectFirst: (value: boolean) => void;
+}
+const ToggleComponent = ({ isSelectFirst, setIsSelectFirst }: ToggleProps) => {
   return (
     <View className="flex flex-row w-full h-[50] bg-gray-400 rounded-[10] my-5">
       <TouchableOpacity
         className="flex-1"
-        onPress={() => setIsSelectFirst(!isSelectFirst)}
+        onPress={() => setIsSelectFirst(true)}
       >
         <View
           className="flex-1  rounded-l-[10] items-center justify-center"
@@ -19,7 +22,7 @@ const ToggleComponent = ({ isSelectFirst, setIsSelectFirst }) => {
       </TouchableOpacity>
       <TouchableOpacity
         className="flex-1"
-        onPress={() => setIsSelectFirst(!isSelectFirst)}
+        onPress={() => setIsSelectFirst(false)}
       >
         <View
           className="flex-1 rounded-r-[10] items-center justify-center"

@@ -8,23 +8,21 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import AntDesign from "react-native-vector-icons/AntDesign";
+import { FontAwesome } from "@expo/vector-icons";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import InputSearchComponent from "../../../components/InputSearchComponent";
 import { useEffect, useState } from "react";
-import { genreType, movieType } from "../../../data/Data";
+import { GenreType, MovieType } from "../../../data/Data";
 import { getApi } from "../../../api/Api";
 import { formatDuration } from "../../../utils/Utils";
 import { useDispatch } from "react-redux";
-import { setMovies } from "../../../redux/slices/movieSlice.js";
+import { setMovies } from "../../../redux/slices/movieSlice";
 const HomeScreen = ({ navigation }: any) => {
   const dispatch = useDispatch();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [searchValue, setSearchValue] = useState("");
-  const [listMovie, setListMovie] = useState<movieType[]>([]);
+  const [listMovie, setListMovie] = useState<MovieType[]>([]);
 
   const { width: screenWidth } = Dimensions.get("window");
   const sliderWidth = screenWidth;
@@ -43,7 +41,7 @@ const HomeScreen = ({ navigation }: any) => {
     console.log("Click on movie", id);
     navigation.navigate("MovieDetail", id);
   };
-  const showMovieNowPlayingCus = ({ item }: { item: movieType }) => {
+  const showMovieNowPlayingCus = ({ item }: { item: MovieType }) => {
     return (
       <TouchableOpacity onPress={() => handleClickMovie(item.id)}>
         <View className="flex justify-center items-center w-[300px]">
@@ -65,8 +63,8 @@ const HomeScreen = ({ navigation }: any) => {
                 .join(", ")}
             </Text>
           </View>
-          <View className="flex-row justify-center items-center space-x-2">
-            <AntDesign name="star" size={20} color="#FCC434" />
+          <View className="flex-row justify-center items-center gap-x-2">
+            <FontAwesome name="star" size={20} color="#FCC434" />
             <Text className="text-gray-400">{item.rate}</Text>
           </View>
         </View>
@@ -74,7 +72,7 @@ const HomeScreen = ({ navigation }: any) => {
     );
   };
 
-  const showMovieComingSoonCus = (item: movieType) => {
+  const showMovieComingSoonCus = (item: MovieType) => {
     return (
       <TouchableOpacity onPress={() => handleClickMovie(item.id)}>
         <View className="w-[170px] mx-2">
@@ -91,7 +89,7 @@ const HomeScreen = ({ navigation }: any) => {
             </Text>
           </View>
           <View>
-            <View className="flex-row items-center space-x-2">
+            <View className="flex-row items-center gap-x-2">
               <Image
                 source={require("../../../../assets/images/video_icon.png")}
               />
@@ -104,7 +102,7 @@ const HomeScreen = ({ navigation }: any) => {
             </View>
           </View>
           <View>
-            <View className="flex-row items-center space-x-2">
+            <View className="flex-row items-center gap-x-2">
               <Image
                 source={require("../../../../assets/images/calendar_icon.png")}
               />
@@ -130,7 +128,7 @@ const HomeScreen = ({ navigation }: any) => {
               <Text className="text-2xl text-white">Wellcome Back</Text>
             </View>
             <View className="justify-center">
-              <Icon name="notifications" color="white" size={35} />
+              <FontAwesome name="bell-o" color="white" size={35} />
             </View>
           </View>
           <View>
@@ -143,13 +141,9 @@ const HomeScreen = ({ navigation }: any) => {
           <View>
             <View className="flex-row justify-between items-center py-4">
               <Text className="text-white text-xl">Now Playing</Text>
-              <View className="flex-row items-center">
+              <View className="flex-row items-center gap-1">
                 <Text className="text-[#FCC434] text-sm">See all</Text>
-                <MaterialIcons
-                  name="arrow-forward-ios"
-                  color="#FCC434"
-                  size={15}
-                />
+                <FontAwesome name="caret-right" color="#FCC434" size={15} />
               </View>
             </View>
 
@@ -188,13 +182,9 @@ const HomeScreen = ({ navigation }: any) => {
           <View className="pb-4">
             <View className="flex-row justify-between items-center py-4">
               <Text className="text-white text-xl">Coming Soon</Text>
-              <View className="flex-row items-center">
+              <View className="flex-row items-center gap-x-1">
                 <Text className="text-[#FCC434] text-sm">See all</Text>
-                <MaterialIcons
-                  name="arrow-forward-ios"
-                  color="#FCC434"
-                  size={15}
-                />
+                <FontAwesome name="caret-right" color="#FCC434" size={15} />
               </View>
             </View>
 
@@ -211,13 +201,9 @@ const HomeScreen = ({ navigation }: any) => {
           <View className="pb-4">
             <View className="flex-row justify-between items-center py-4">
               <Text className="text-white text-xl">Promo & Discount</Text>
-              <View className="flex-row items-center">
+              <View className="flex-row items-center gap-x-1">
                 <Text className="text-[#FCC434] text-sm">See all</Text>
-                <MaterialIcons
-                  name="arrow-forward-ios"
-                  color="#FCC434"
-                  size={15}
-                />
+                <FontAwesome name="caret-right" color="#FCC434" size={15} />
               </View>
             </View>
 

@@ -1,4 +1,4 @@
-export type movieType = {
+export interface MovieType {
   id: string;
   name: string;
   premiere: string;
@@ -7,10 +7,21 @@ export type movieType = {
   duration: number;
   rate: number;
   image: string;
-  genres: genreType[];
-};
+  genres: GenreType[];
+  actors: {
+    name: string;
+    image: string;
+    gender: true | false;
+  }[];
+}
 
-export type genreType = {
+export interface GenreType {
   id: string;
   name: string;
-};
+}
+
+export interface User {
+  username: string;
+  email: string;
+  avatar?: string;
+}

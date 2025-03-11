@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import { RootStackParamList } from "../navigation/type";
 
 interface InputSearchComponentProps {
   value: string;
@@ -19,9 +20,7 @@ type Movie = {
   image: string;
   name: string;
 };
-type RootStackParamList = {
-  MovieDetail: { id: string }; // Nếu MovieDetail có params, thay undefined bằng { id: string } chẳng hạn
-};
+
 const InputSearchComponent = (props: InputSearchComponentProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { onChangeValue, value, listMovie } = props;

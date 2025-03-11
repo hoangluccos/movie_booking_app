@@ -2,8 +2,14 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../navigation/type";
+
+// Định nghĩa kiểu cho navigation
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const TicketMovieComponent = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   const handleClickTicket = () => {
     console.log("Click ticket");
     navigation.navigate("TicketScreen");

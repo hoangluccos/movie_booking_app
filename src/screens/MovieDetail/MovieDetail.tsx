@@ -13,12 +13,8 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import ActorComponent from "../../components/ActorComponent";
 import CinemaComponent from "../../components/CinemaComponent";
-import { movieType } from "../../data/Data";
-
-type RootStackParamList = {
-  Home: undefined;
-  MovieDetail: { id: string };
-};
+import { MovieType } from "../../data/Data";
+import { RootStackParamList } from "../../navigation/type";
 type MovieDetailNavigationProp = StackNavigationProp<
   RootStackParamList,
   "MovieDetail"
@@ -32,7 +28,7 @@ interface MovieDetailProp {
 const MovieDetail = ({ route }: MovieDetailProp) => {
   const movies = useSelector((state: any) => state.movies);
   const navigation = useNavigation();
-  const [movieDetail, setMovieDetail] = useState<movieType | null>(null);
+  const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
   console.log("redux movies:", movies);
   //   console.log(navigation);
   //   console.log(route.params);
@@ -125,19 +121,21 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
         <View className="flex flex-col w-full mb-10 gap-2">
           <Text className="text-2xl font-bold text-white">Storyline</Text>
           <Text className="font-bold text-white" numberOfLines={3}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
-            praesentium blanditiis, excepturi provident molestias itaque
-            doloribus reprehenderit nobis enim, eos quae id? Cumque quis ea,
-            atque voluptatem soluta voluptatum debitis!
+            {movieDetail.content}
           </Text>
         </View>
         <View className="flex flex-col w-full mb-10 gap-2">
           <Text className="text-2xl font-bold text-white">Actors</Text>
           {/* Actors, Directors Component */}
           <View className="flex flex-row gap-2">
-            <ActorComponent />
-            <ActorComponent />
-            <ActorComponent />
+            {movieDetail.actors.map((actor, index) => (
+              <ActorComponent
+                key={index}
+                nameActor={actor.name}
+                gender={actor.gender}
+                image={actor.image}
+              />
+            ))}
           </View>
           {/* Cinema Component*/}
           <View className="flex flex-col mt-3">

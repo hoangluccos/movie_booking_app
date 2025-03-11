@@ -2,7 +2,11 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const OptionProfile = ({ text, nameIcon }) => {
+interface OptionProfileProps {
+  text: string;
+  nameIcon: string;
+}
+const OptionProfile = ({ text, nameIcon }: OptionProfileProps) => {
   return (
     <TouchableOpacity>
       <View className="w-full h-20 bg-yellow-600 flex flex-row items-center justify-between px-3 rounded-md">

@@ -4,18 +4,36 @@ import OptionProfile from "../../../components/OptionProfile";
 import { useEffect } from "react";
 import { getApi } from "../../../api/Api";
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
 import { setUser } from "../../../redux/slices/userSlice";
+import { User } from "../../../data/Data";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../../navigation/type";
+
+interface UserState {
+  user: User | null;
+}
+interface ApiResponse {
+  result: User;
+}
+
 const ProfileScreen = () => {
-  const dispatch = useDispatch();
-  const infoUser = useSelector((state) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
+  const infoUser = useSelector<RootState, UserState>((state) => state.user);
   useEffect(() => {
-    getApi("/api/users/bio", true, (error, res) => {
+    getApi("/api/users/bio", true, (error: any, res: ApiResponse) => {
       if (!error) {
         console.log("user profile: ", res.result);
         dispatch(setUser(res.result));
       }
     });
   }, []);
+  type ProfileScreenNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    "ProfileScreen"
+  >;
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
   console.log("user profile from redux: ", infoUser);
   return (
     <View className="bg-black flex-1 px-3 py-10 mt-7">
@@ -30,16 +48,23 @@ const ProfileScreen = () => {
         />
         <View>
           <Text className="text-white font-bold text-3xl">
-            {infoUser.user.username}
+            {infoUser?.user?.username || "Not find user"}
           </Text>
           <View>
             <View className="flex-row gap-3 items-center mt-2">
               <AntDesign name="mail" size={18} color="gray" />
-              <Text className="text-gray-100">{infoUser.user.email}</Text>
+              <Text className="text-gray-100">
+                {infoUser?.user?.email || "Not find email"}
+              </Text>
             </View>
           </View>
         </View>
-        <TouchableOpacity className="absolute top-1 right-2">
+        <TouchableOpacity
+          className="absolute top-1 right-2"
+          onPress={() => {
+            navigation.navigate("ProfileInfoScreen");
+          }}
+        >
           <View>
             <AntDesign name="edit" size={23} color="white" />
           </View>

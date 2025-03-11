@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const CinemaComponent = () => {
   return (
