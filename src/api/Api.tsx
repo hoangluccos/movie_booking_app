@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://172.16.5.35:8080";
+export const API_URL = "http://192.168.1.2:8080";
 // export const API_URL = 'http://localhost:8080';
 
 export const getToken = async (): Promise<string | null> => {
@@ -65,7 +65,7 @@ export const postApi = async (
 
 export const putApi = async (
   url: string,
-  params: any,
+  request: any,
   useToken: boolean,
   callback: (error: any, response: any) => void
 ) => {
@@ -74,7 +74,7 @@ export const putApi = async (
     const token = useToken ? await AsyncStorage.getItem("token") : null;
     const response: AxiosResponse = await axios.put(
       `${API_URL}${url}`,
-      params,
+      request,
       {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),

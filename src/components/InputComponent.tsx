@@ -1,13 +1,13 @@
-import {TextInput, View} from 'react-native';
+import { TextInput, View } from "react-native";
 
 interface InputComponentProps {
   placeholder: string;
-  value: string;
+  value?: string;
   onChangeValue: (value: string) => void;
 }
 
 const InputComponent = (props: InputComponentProps) => {
-  const {onChangeValue, placeholder, value} = props;
+  const { onChangeValue, placeholder, value } = props;
 
   return (
     <TextInput
