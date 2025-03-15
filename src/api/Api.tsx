@@ -72,14 +72,19 @@ export const putApi = async (
   try {
     // Lấy token nếu có auth
     const token = useToken ? await AsyncStorage.getItem("token") : null;
+    const headers: any = {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+    if (request instanceof FormData) {
+      headers["Content-type"] = "multipart/form-data";
+    } else {
+      headers["Content-type"] = "application/json";
+    }
     const response: AxiosResponse = await axios.put(
       `${API_URL}${url}`,
       request,
       {
-        headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     callback(null, response.data);

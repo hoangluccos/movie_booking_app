@@ -5,7 +5,9 @@ import { RootState } from "../../redux/store";
 import { User } from "../../data/Data";
 import InputInfoComponent from "../../components/InputInfoComponent";
 import { putApi } from "../../api/Api";
-import { setUser, changeImage } from "../../redux/slices/userSlice";
+import { setUser } from "../../redux/slices/userSlice";
+import * as ImagePicker from "expo-image-picker";
+
 interface UserState {
   user: User | null;
 }
@@ -21,17 +23,6 @@ const ProfileInfoScreen = () => {
 
   const userInfo = useSelector<RootState, UserState>((state) => state.user);
   const dispatch = useDispatch();
-
-  // Hàm chuyển chuỗi "dd-mm-yyyy" thành Date
-  const parseDateFromString = (dateString: string): Date => {
-    const [day, month, year] = dateString.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  };
-  const transStringToDate = (stringDate: string) => {
-    const parts = stringDate.split("/");
-    const dateObject = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    return dateObject;
-  };
 
   const [userData, setUserData] = useState<User>({
     username: userInfo?.user?.username || "", // Bắt buộc
@@ -49,6 +40,16 @@ const ProfileInfoScreen = () => {
       ? { uri: userInfo.user.avatar }
       : require("../../../assets/images/user.png")
   );
+  // Hàm chuyển chuỗi "dd-mm-yyyy" thành Date
+  const parseDateFromString = (dateString: string): Date => {
+    const [day, month, year] = dateString.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  };
+  const transStringToDate = (stringDate: string) => {
+    const parts = stringDate.split("/");
+    const dateObject = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    return dateObject;
+  };
   const handleErrorAvatar = () => {
     console.log("Fail to load image");
     setAvatar(require("../../../assets/images/user.png"));
@@ -99,18 +100,55 @@ const ProfileInfoScreen = () => {
           }
         );
   };
+  const handlePick = async () => {
+    // No permissions request is necessary for launching the image library
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry we need your grant to access the library");
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    console.log(result);
+    if (!result.canceled && result?.assets.length > 0) {
+      const selectedImg = result.assets[0].uri;
+      setAvatar({ uri: selectedImg });
+
+      const formDataImg = new FormData();
+      formDataImg.append("file", {
+        uri: selectedImg,
+        name: "avatar.jpg",
+        type: "image/jpeg",
+      } as any);
+      putApi("/api/users/avatar", formDataImg, true, (error, response) => {
+        if (error) console.log(error);
+        else {
+          console.log("Put api upload image successfully");
+          console.log(response.result);
+        }
+      });
+    }
+  };
   return (
     <View className="bg-gray-600 flex flex-1">
       <View className="bg-yellow-400 h-[150] w-full"></View>
       <View className="flex justify-center items-center">
         <View className="  flex h-auto" style={{ width: widthDevice * 0.9 }}>
           <View className="relative flex justify-center items-center">
-            <Image
-              source={avatar}
-              className="w-[120] h-[120] bg-yellow-50 absolute top-[-50] rounded-[50]"
-              onError={handleErrorAvatar}
-              resizeMode="cover"
-            />
+            <TouchableOpacity
+              onPress={() => handlePick()}
+              className="flex justify-center items-center"
+            >
+              <Image
+                source={avatar}
+                className="w-[120] h-[120] bg-yellow-50 absolute top-[-50] rounded-[50]"
+                onError={handleErrorAvatar}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
             <Text className="text-xl mt-[80] mb-[10] font-bold">
               {userInfo?.user?.username}
             </Text>
