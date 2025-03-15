@@ -26,12 +26,24 @@ interface MovieDetailProp {
 }
 
 const MovieDetail = ({ route }: MovieDetailProp) => {
+  const listMovie = [1, 2];
+
   const movies = useSelector((state: any) => state.movies);
   const navigation = useNavigation();
   const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
   console.log("redux movies:", movies);
-  //   console.log(navigation);
-  //   console.log(route.params);
+  const [listSelected, setListSelected] = useState<number[]>([]);
+  const handleSelectMovie = (value: any) => {
+    //logic: arr only store 1 element to select the movie that had been select to choose
+    setListSelected((prevSelected) => {
+      const isExist = prevSelected.includes(value);
+      if (isExist) {
+        return [];
+      } else {
+        return [value];
+      }
+    });
+  };
   const handleBack = () => {
     console.log("go back");
     navigation.goBack();
@@ -140,8 +152,22 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
           {/* Cinema Component*/}
           <View className="flex flex-col mt-3">
             <Text className="text-white text-2xl font-bold mb-3">Cinema</Text>
-            <CinemaComponent />
-            <CinemaComponent />
+            {/* arr sample to store list cinema */}
+            {listMovie.map((value, index) => (
+              <CinemaComponent
+                key={index}
+                isSelected={listSelected.includes(value)}
+                setSelected={() => handleSelectMovie(value)}
+              />
+            ))}
+            {/* <CinemaComponent
+              isSelected={isSelectMovie}
+              setSelected={handleSelectMovie}
+            />
+            <CinemaComponent
+              isSelected={isSelectMovie}
+              setSelected={handleSelectMovie}
+            /> */}
           </View>
         </View>
       </View>
