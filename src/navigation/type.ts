@@ -5,4 +5,5 @@ export type RootStackParamList = {
   Home: undefined;
   ProfileScreen: undefined;
   ProfileInfoScreen: undefined;
+  SeatScreen: undefined;
 };

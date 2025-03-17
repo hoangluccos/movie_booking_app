@@ -15,10 +15,9 @@ import ActorComponent from "../../components/ActorComponent";
 import CinemaComponent from "../../components/CinemaComponent";
 import { MovieType } from "../../data/Data";
 import { RootStackParamList } from "../../navigation/type";
-type MovieDetailNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "MovieDetail"
->;
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type MovieDetailRouteProp = RouteProp<RootStackParamList, "MovieDetail">;
 
 interface MovieDetailProp {
@@ -26,10 +25,10 @@ interface MovieDetailProp {
 }
 
 const MovieDetail = ({ route }: MovieDetailProp) => {
-  const listMovie = [1, 2];
+  const listCinema = [1, 2];
 
   const movies = useSelector((state: any) => state.movies);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
   console.log("redux movies:", movies);
   const [listSelected, setListSelected] = useState<number[]>([]);
@@ -65,102 +64,110 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
       </View>
     );
   }
-
+  const handleSelectCinema = () => {
+    navigation.navigate("SeatScreen");
+  };
   return (
-    <ScrollView
-      className="flex flex-1 bg-black w-full"
-      contentContainerStyle={{ paddingBottom: 20 }}
-    >
-      <TouchableOpacity onPress={handleBack}>
-        <View className="p-2 bg-slate-600 rounded-md absolute top-2 left-2">
-          <Text className="color-white">Back</Text>
-        </View>
-      </TouchableOpacity>
-      <ImageBackground
-        source={{ uri: movieDetail.image }}
-        className="w-full h-[300]"
-      />
-      <TouchableOpacity onPress={handleBack} className="absolute top-5 left-5">
-        <FontAwesome name="arrow-left" size={30} color="white" />
-      </TouchableOpacity>
-      <View className=" relative top-[-100] mx-4 rounded-md">
-        <View className="flex flex-col p-5 bg-gray-800 h-[200]">
-          <Text className="text-2xl font-bold text-white">
-            {movieDetail.name}
-          </Text>
-          <Text className="text-xl text-white">{movieDetail.premiere}</Text>
-          <View className="h-10 " />
-          <Text className="text-xl text-white">Review 4.8</Text>
-          <View className="flex flex-row items-center justify-between">
-            <View className="flex flex-row">
-              {Array(5)
-                .fill(null)
-                .map((_, index) => (
-                  <FontAwesome
-                    key={index}
-                    name="star-o"
-                    size={25}
-                    color="white"
-                    className="mx-1"
-                  />
-                ))}
-            </View>
-            <TouchableOpacity>
-              <View className="flex flex-row gap-2 items-center border border-white p-2 rounded-sm">
-                <FontAwesome name="play" size={20} color="white" />
-                <Text className="text-white">Watch trailer</Text>
-              </View>
-            </TouchableOpacity>
+    <View className="flex-1 bg-black">
+      <ScrollView
+        className="flex flex-1 bg-black w-full"
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
+        <TouchableOpacity onPress={handleBack}>
+          <View className="p-2 bg-slate-600 rounded-md absolute top-2 left-2">
+            <Text className="color-white">Back</Text>
           </View>
-        </View>
+        </TouchableOpacity>
+        <ImageBackground
+          source={{ uri: movieDetail.image }}
+          className="w-full h-[300]"
+        />
+        <TouchableOpacity
+          onPress={handleBack}
+          className="absolute top-5 left-5"
+        >
+          <FontAwesome name="arrow-left" size={30} color="white" />
+        </TouchableOpacity>
+        <View className=" relative top-[-100] mx-4 rounded-md">
+          <View className="flex flex-col p-5 bg-gray-800 h-[200]">
+            <Text className="text-2xl font-bold text-white">
+              {movieDetail.name}
+            </Text>
+            <Text className="text-xl text-white">{movieDetail.premiere}</Text>
+            <View className="h-10 " />
+            <Text className="text-xl text-white">Review 4.8</Text>
+            <View className="flex flex-row items-center justify-between">
+              <View className="flex flex-row">
+                {Array(5)
+                  .fill(null)
+                  .map((_, index) => (
+                    <FontAwesome
+                      key={index}
+                      name="star-o"
+                      size={25}
+                      color="white"
+                      className="mx-1"
+                    />
+                  ))}
+              </View>
+              <TouchableOpacity>
+                <View className="flex flex-row gap-2 items-center border border-white p-2 rounded-sm">
+                  <FontAwesome name="play" size={20} color="white" />
+                  <Text className="text-white">Watch trailer</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-        <View className="flex flex-col justify-center my-10 gap-2">
-          <View className="flex flex-row gap-5">
-            <Text className="text-white">Movie genre</Text>
-            <Text className="font-bold text-white">
-              {movieDetail.genres.map((genre) => genre.name + ` `)}
+          <View className="flex flex-col justify-center my-10 gap-2">
+            <View className="flex flex-row gap-5">
+              <Text className="text-white">Movie genre</Text>
+              <Text className="font-bold text-white">
+                {movieDetail.genres.map((genre) => genre.name + ` `)}
+              </Text>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Text className="text-white">Censorship</Text>
+              <Text className="font-bold text-white">13+</Text>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Text className="text-white">Language</Text>
+              <Text className="font-bold text-white">
+                {movieDetail.language}
+              </Text>
+            </View>
+          </View>
+          <View className="flex flex-col w-full mb-10 gap-2">
+            <Text className="text-2xl font-bold text-white">Storyline</Text>
+            <Text className="font-bold text-white" numberOfLines={3}>
+              {movieDetail.content}
             </Text>
           </View>
-          <View className="flex flex-row gap-5">
-            <Text className="text-white">Censorship</Text>
-            <Text className="font-bold text-white">13+</Text>
-          </View>
-          <View className="flex flex-row gap-5">
-            <Text className="text-white">Language</Text>
-            <Text className="font-bold text-white">{movieDetail.language}</Text>
-          </View>
-        </View>
-        <View className="flex flex-col w-full mb-10 gap-2">
-          <Text className="text-2xl font-bold text-white">Storyline</Text>
-          <Text className="font-bold text-white" numberOfLines={3}>
-            {movieDetail.content}
-          </Text>
-        </View>
-        <View className="flex flex-col w-full mb-10 gap-2">
-          <Text className="text-2xl font-bold text-white">Actors</Text>
-          {/* Actors, Directors Component */}
-          <View className="flex flex-row gap-2">
-            {movieDetail.actors.map((actor, index) => (
-              <ActorComponent
-                key={index}
-                nameActor={actor.name}
-                gender={actor.gender}
-                image={actor.image}
-              />
-            ))}
-          </View>
-          {/* Cinema Component*/}
-          <View className="flex flex-col mt-3">
-            <Text className="text-white text-2xl font-bold mb-3">Cinema</Text>
-            {/* arr sample to store list cinema */}
-            {listMovie.map((value, index) => (
-              <CinemaComponent
-                key={index}
-                isSelected={listSelected.includes(value)}
-                setSelected={() => handleSelectMovie(value)}
-              />
-            ))}
-            {/* <CinemaComponent
+          <View className="flex flex-col w-full mb-10 gap-2">
+            <Text className="text-2xl font-bold text-white">Actors</Text>
+            {/* Actors, Directors Component */}
+            <View className="flex flex-row gap-2">
+              {movieDetail.actors.map((actor, index) => (
+                <ActorComponent
+                  key={index}
+                  nameActor={actor.name}
+                  gender={actor.gender}
+                  image={actor.image}
+                />
+              ))}
+            </View>
+            {/* Cinema Component*/}
+            <View className="flex flex-col mt-3">
+              <Text className="text-white text-2xl font-bold mb-3">Cinema</Text>
+              {/* arr sample to store list cinema */}
+              {listCinema.map((value, index) => (
+                <CinemaComponent
+                  key={index}
+                  isSelected={listSelected.includes(value)}
+                  setSelected={() => handleSelectMovie(value)}
+                />
+              ))}
+              {/* <CinemaComponent
               isSelected={isSelectMovie}
               setSelected={handleSelectMovie}
             />
@@ -168,10 +175,26 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
               isSelected={isSelectMovie}
               setSelected={handleSelectMovie}
             /> */}
+            </View>
           </View>
         </View>
+      </ScrollView>
+      <View
+        className={
+          listSelected.length > 0
+            ? "bg-yellow-400 fixed bottom-0 py-5 flex items-center rounded-[50]"
+            : "bg-yellow-200 fixed bottom-0 py-5 flex items-center rounded-[50]"
+        }
+      >
+        {listSelected.length > 0 ? (
+          <TouchableOpacity onPress={() => handleSelectCinema()}>
+            <Text className="text-black font-bold">Booking Ticket</Text>
+          </TouchableOpacity>
+        ) : (
+          <Text className="text-black font-bold">Booking Ticket</Text>
+        )}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

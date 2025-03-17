@@ -12,7 +12,7 @@ const CinemaComponent = ({ isSelected, setSelected }: props) => {
       <View
         className={
           !isSelected
-            ? "border border-yellow-400 p-3 rounded-md my-2"
+            ? "border border-yellow-100 p-3 rounded-md my-2"
             : "border bg-[#261D08] border-yellow-400 p-3 rounded-md my-2"
         }
       >
