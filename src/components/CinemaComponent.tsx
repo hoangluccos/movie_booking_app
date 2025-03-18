@@ -5,8 +5,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 interface props {
   isSelected: boolean;
   setSelected: (value: any) => void;
+  theater: { name: string; location: string };
 }
-const CinemaComponent = ({ isSelected, setSelected }: props) => {
+const CinemaComponent = ({ isSelected, setSelected, theater }: props) => {
   return (
     <TouchableOpacity onPress={setSelected}>
       <View
@@ -16,10 +17,8 @@ const CinemaComponent = ({ isSelected, setSelected }: props) => {
             : "border bg-[#261D08] border-yellow-400 p-3 rounded-md my-2"
         }
       >
-        <Text className="text-white text-xl font-bold">
-          Vincom Ocean Park CGV
-        </Text>
-        <Text className="text-white">Quan 2, TPHCM</Text>
+        <Text className="text-white text-xl font-bold">{theater.name}</Text>
+        <Text className="text-white">{theater.location}</Text>
         <View className="absolute top-6 right-3">
           <FontAwesome5 name="film" size={20} color="white" />
         </View>

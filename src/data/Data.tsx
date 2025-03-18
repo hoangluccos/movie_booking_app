@@ -28,3 +28,15 @@ export interface User {
   firstName?: string;
   lastName?: string;
 }
+
+export interface ShowtimeType {
+  id: string;
+  status: string;
+  theater: {
+    id: string;
+    location: string;
+    name: string;
+  };
+  totalSeat: number;
+  emptySeat: number;
+}
