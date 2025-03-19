@@ -12,6 +12,7 @@ import MovieDetail from "../screens/MovieDetail/MovieDetail";
 import TicketScreen from "../screens/TicketScreen/TicketScreen";
 import ProfileInfoScreen from "../screens/ProfileInfoScreen/ProfileInfoScreen";
 import SeatScreen from "../screens/SeatScreen/SeatScreen";
+import PaymentScreen from "../screens/PaymentScreen/PaymentScreen";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -119,6 +120,15 @@ const Routers = () => {
         <Stack.Screen
           name="SeatScreen"
           component={SeatScreen}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="PaymentScreen"
+          component={PaymentScreen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: "#000000" },

@@ -36,13 +36,14 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
   const movies = useSelector((state: any) => state.movies);
   console.log("redux movies:", movies);
+
   //modal
   const [isShowModal, setIsShowModal] = useState(false);
-  const [listSelected, setListSelected] = useState<string[]>([]);
+  const [listCinemaSelected, setListCinemaSelected] = useState<string[]>([]);
   const [listCinema, setListCinema] = useState<Array<ShowtimeType> | []>([]);
   const handleSelectMovie = (value: any) => {
     //logic: arr only store 1 element to select the movie that had been select to choose
-    setListSelected((prevSelected) => {
+    setListCinemaSelected((prevSelected) => {
       const isExist = prevSelected.includes(value);
       if (isExist) {
         return [];
@@ -51,6 +52,8 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
       }
     });
   };
+  console.log("selected cinema:", listCinemaSelected[0]);
+
   const getNextFiveDays = () => {
     const today = new Date();
     const dates = [];
@@ -62,7 +65,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   };
   const next5Days = getNextFiveDays(); //array
 
-  const handleSelectCinema = () => {
+  const handleClickBooking = () => {
     //show the modal select date and theater
     setIsShowModal(!isShowModal);
   };
@@ -76,9 +79,19 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   const convertDateApi = (date: string) => {
     const currentY = new Date().getFullYear();
     const formattedDate = parse(date, "dd/MM", new Date(currentY, 0, 1));
-    return formattedDate;
+    // return formattedDate;
+    return format(formattedDate, "yyyy-MM-dd");
   };
-  // const [listCinema, setListCinema] = useState<Array<number>>([]);
+
+  const handleSelectSeat = (id: string) => {
+    console.log("Showtime have clicked: ", id);
+    setIsShowModal(false);
+    navigation.navigate("SeatScreen", {
+      showtimeId: id,
+      theaterId: listCinema[0].theater.id,
+    });
+  };
+
   //uef
   //fetch api for movieDetail
   useEffect(() => {
@@ -96,7 +109,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   useEffect(() => {
     if (isSelectedDate.length > 0) {
       const formattedDate = convertDateApi(isSelectedDate[0]);
-      console.log("Formatted date:", formattedDate.toDateString());
+      console.log("Formatted date:", formattedDate);
       const request = {
         movieId: movieDetail?.id,
         date: formattedDate,
@@ -111,9 +124,10 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
             console.log("Error when fetching api", error);
           } else {
             console.log("Fetch api successfully");
-            console.log("showtimes", response.result);
+            console.log("showtimes: ", response.result);
             //update list Cinema
             setListCinema(response.result);
+            setListCinemaSelected([]);
           }
         }
       );
@@ -218,23 +232,8 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
           </View>
         </View>
       </ScrollView>
-      {/* <View
-        className={
-          listSelected.length > 0
-            ? "bg-yellow-400 fixed bottom-0 py-5 flex items-center rounded-[50]"
-            : "bg-yellow-200 fixed bottom-0 py-5 flex items-center rounded-[50]"
-        }
-      >
-        {listSelected.length > 0 ? (
-          <TouchableOpacity onPress={() => handleSelectCinema()}>
-            <Text className="text-black font-bold">Booking Ticket</Text>
-          </TouchableOpacity>
-        ) : (
-          <Text className="text-black font-bold">Booking Ticket</Text>
-        )}
-      </View> */}
       <View className="bg-yellow-400 fixed bottom-0 py-5 flex items-center rounded-[50]">
-        <TouchableOpacity onPress={() => handleSelectCinema()}>
+        <TouchableOpacity onPress={() => handleClickBooking()}>
           <Text className="text-black font-bold">Booking Ticket</Text>
         </TouchableOpacity>
       </View>
@@ -285,20 +284,23 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
               {listCinema.map((value, index) => (
                 <CinemaComponent
                   key={index}
+                  date={value.date}
                   theater={value.theater}
-                  isSelected={listSelected.includes(value?.id)}
+                  isSelected={listCinemaSelected.includes(value?.id)}
                   setSelected={() => handleSelectMovie(value?.id)}
                 />
               ))}
             </View>
             <View className="flex flex-row justify-center bg-white bottom-0 mt-5 py-4 rounded-[50]">
-              {listSelected.length > 0 ? (
-                <TouchableOpacity>
+              {listCinemaSelected.length > 0 ? (
+                <TouchableOpacity
+                  onPress={() => handleSelectSeat(listCinemaSelected[0])}
+                >
                   <Text className="font-bold">Select Seats</Text>
                 </TouchableOpacity>
               ) : (
                 <View>
-                  <Text className="">Choose Theater</Text>
+                  <Text className="">Choose Date</Text>
                 </View>
               )}
             </View>

@@ -31,6 +31,7 @@ export interface User {
 
 export interface ShowtimeType {
   id: string;
+  date: string;
   status: string;
   theater: {
     id: string;
@@ -39,4 +40,13 @@ export interface ShowtimeType {
   };
   totalSeat: number;
   emptySeat: number;
+}
+
+export interface SeatType {
+  id: string;
+  locateRow: string;
+  locateColumn: number;
+  price: number;
+  status: boolean;
+  showtimeId: string;
 }

@@ -6,8 +6,9 @@ interface props {
   isSelected: boolean;
   setSelected: (value: any) => void;
   theater: { name: string; location: string };
+  date: string;
 }
-const CinemaComponent = ({ isSelected, setSelected, theater }: props) => {
+const CinemaComponent = ({ isSelected, setSelected, theater, date }: props) => {
   return (
     <TouchableOpacity onPress={setSelected}>
       <View
@@ -18,7 +19,10 @@ const CinemaComponent = ({ isSelected, setSelected, theater }: props) => {
         }
       >
         <Text className="text-white text-xl font-bold">{theater.name}</Text>
-        <Text className="text-white">{theater.location}</Text>
+        <View className="flex flex-row">
+          <Text className="text-white">{theater.location}</Text>
+          <Text className="text-white">- {date}</Text>
+        </View>
         <View className="absolute top-6 right-3">
           <FontAwesome5 name="film" size={20} color="white" />
         </View>
