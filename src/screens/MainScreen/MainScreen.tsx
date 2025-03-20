@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./tabs/HomeScreen";
 import ProfileScreen from "./tabs/ProfileScreen";
-import TicketScreen from "./tabs/TicketScreen";
 import MovieScreen from "./tabs/MovieScreen";
 import { Image, Text } from "react-native";
+import MyTicketScreen from "./tabs/MyTicketScreen";
 
 const MainScreen = () => {
   const Tab = createBottomTabNavigator();
@@ -44,11 +44,11 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name="Ticket"
-        component={TicketScreen}
+        name="My ticket"
+        component={MyTicketScreen}
         options={{
           headerShown: false,
-          title: "Ticket",
+          title: "My ticket",
           tabBarIcon: ({ focused }) => (
             <Image
               source={require("../../../assets/images/ticket_icon.png")}

@@ -7,11 +7,11 @@ export type RootStackParamList = {
   Home: undefined;
   ProfileScreen: undefined;
   ProfileInfoScreen: undefined;
-  SeatScreen: { showtimeId: string; theaterId: string };
-  // SeatScreen: { Showtime: ShowtimeType; Movie: MovieType };
+  // SeatScreen: { showtimeId: string; theaterId: string };
+  SeatScreen: { showtimeId: string; Movie: MovieType; showTime: ShowtimeType };
   PaymentScreen: {
     seats: Array<string>;
-    showtimeID: string;
-    theaterId: string;
+    showTime: ShowtimeType;
+    Movie: MovieType;
   };
 };

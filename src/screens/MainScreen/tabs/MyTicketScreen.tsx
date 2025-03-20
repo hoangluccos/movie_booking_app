@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import TicketMovieComponent from "../../../components/TicketMovieComponent";
 
-const TicketScreen = () => {
+const MyTicketScreen = () => {
   return (
     <View className="flex-1 bg-black mt-7 px-5 gap-4">
       <View className="flex items-center my-3">
@@ -14,4 +14,4 @@ const TicketScreen = () => {
   );
 };
 
-export default TicketScreen;
+export default MyTicketScreen;

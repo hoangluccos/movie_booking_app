@@ -17,7 +17,7 @@ const SeatScreen = () => {
   console.log("route", route);
 
   const showtimeId = route.params.showtimeId;
-  const theaterId = route.params.theaterId;
+  // const theaterId = route.params.theaterId;
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   console.log("seat selected: ", selectedSeats);
   const handleClickSeat = (seatID: string) => {
@@ -60,8 +60,8 @@ const SeatScreen = () => {
   const handleBuyTicket = () => {
     navigation.navigate("PaymentScreen", {
       seats: selectedSeats,
-      showtimeID: showtimeId,
-      theaterId: theaterId,
+      showTime: route.params.showTime,
+      Movie: route.params.Movie,
     });
   };
   return (

@@ -39,9 +39,17 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
 
   //modal
   const [isShowModal, setIsShowModal] = useState(false);
-  const [listCinemaSelected, setListCinemaSelected] = useState<string[]>([]);
-  const [listCinema, setListCinema] = useState<Array<ShowtimeType> | []>([]);
-  const handleSelectMovie = (value: any) => {
+  const [listCinemaSelected, setListCinemaSelected] = useState<ShowtimeType[]>(
+    []
+  );
+  const [listCinema, setListCinema] = useState<ShowtimeType[] | []>([]);
+
+  const handleClickBooking = () => {
+    //show the modal select date and theater
+    setIsShowModal(!isShowModal);
+  };
+
+  const handleSelectCinema = (value: any) => {
     //logic: arr only store 1 element to select the movie that had been select to choose
     setListCinemaSelected((prevSelected) => {
       const isExist = prevSelected.includes(value);
@@ -65,31 +73,19 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   };
   const next5Days = getNextFiveDays(); //array
 
-  const handleClickBooking = () => {
-    //show the modal select date and theater
-    setIsShowModal(!isShowModal);
-  };
-
   const [isSelectedDate, setIsSelectedDate] = useState<Array<string>>([]);
+
   const handleSelectDate = (value: any) => {
     const isExist = isSelectedDate.includes(value);
     isExist ? setIsSelectedDate([]) : setIsSelectedDate([value]);
   };
+
   //convert date from DD/MM -> yyyy/mm/dd localDate
   const convertDateApi = (date: string) => {
     const currentY = new Date().getFullYear();
     const formattedDate = parse(date, "dd/MM", new Date(currentY, 0, 1));
     // return formattedDate;
     return format(formattedDate, "yyyy-MM-dd");
-  };
-
-  const handleSelectSeat = (id: string) => {
-    console.log("Showtime have clicked: ", id);
-    setIsShowModal(false);
-    navigation.navigate("SeatScreen", {
-      showtimeId: id,
-      theaterId: listCinema[0].theater.id,
-    });
   };
 
   //uef
@@ -140,6 +136,18 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
       </View>
     );
   }
+
+  //handle navigate to SeatScreen
+  const handleSelectSeat = (showTime: ShowtimeType) => {
+    console.log("ShowtimeId have clicked: ", showTime.id);
+    setIsShowModal(false);
+    navigation.navigate("SeatScreen", {
+      showtimeId: showTime.id,
+      Movie: movieDetail,
+      showTime: showTime,
+    });
+  };
+
   return (
     <View className="flex-1 bg-black">
       <ScrollView
@@ -286,8 +294,8 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
                   key={index}
                   date={value.date}
                   theater={value.theater}
-                  isSelected={listCinemaSelected.includes(value?.id)}
-                  setSelected={() => handleSelectMovie(value?.id)}
+                  isSelected={listCinemaSelected.includes(value)}
+                  setSelected={() => handleSelectCinema(value)}
                 />
               ))}
             </View>
