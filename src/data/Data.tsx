@@ -33,6 +33,7 @@ export interface ShowtimeType {
   id: string;
   date: string;
   status: string;
+  startTime: string;
   theater: {
     id: string;
     location: string;

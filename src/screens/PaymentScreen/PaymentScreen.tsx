@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import React from "react";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -6,6 +6,7 @@ import { RootStackParamList } from "../../navigation/type";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import MyTicketComponent from "../../components/MyTicketComponent";
 import DetailBetween from "../../components/DetailBetweenComponent";
+import PaymentComponent from "../../components/PaymentComponent";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -15,7 +16,7 @@ const PaymentScreen = () => {
   const route = useRoute<PaymentScreenRouteProp>();
   console.log("route params", route.params);
   return (
-    <View className="flex flex-1 bg-black px-5 mt-7">
+    <View className="flex flex-1 flex-col bg-black px-5 mt-7">
       <View className="flex flex-row justify-center py-4 my-2">
         <TouchableOpacity
           className="absolute top-3 left-2"
@@ -33,9 +34,39 @@ const PaymentScreen = () => {
         Date={route.params.showTime.date}
       />
       {/* Seat an coupons */}
-      <View className="flex gap-y-2 my-5">
+      <View className="flex gap-y-2 my-10">
         <DetailBetween />
         <DetailBetween />
+        <View className="flex flex-row bg-gray-600 h-auto rounded-md mt-3 items-center">
+          <View className="flex flex-1 flex-row px-5 items-center gap-x-3">
+            <FontAwesome name="flickr" size={20} color={"white"} />
+            <TextInput
+              placeholderTextColor={"white"}
+              className="text-white"
+              placeholder="discount code"
+            />
+          </View>
+          <TouchableOpacity className="bg-yellow-500 w-[130] h-full flex flex-row justify-center items-center rounded-lg">
+            <Text className="font-bold">Apply</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {/* Total cost */}
+      <View className="flex flex-row justify-between mb-5">
+        <Text className="text-white text-xl">Total</Text>
+        <Text className="text-white text-xl font-bold">100000VND</Text>
+      </View>
+      {/* Payment method */}
+      <View>
+        <Text className="text-white font-bold text-xl">Payment Method</Text>
+        <PaymentComponent nameMethod="Zalo Pay" image="nothing" />
+        <PaymentComponent nameMethod="Momo" image="nothing" />
+        <PaymentComponent nameMethod="Credit Card" image="nothing" />
+      </View>
+      <View className="bg-yellow-400 absolute w-full bottom-0 left-5 justify-items-center py-5 flex items-center rounded-[50]">
+        <TouchableOpacity onPress={() => console.log("Click payment")}>
+          <Text className="text-black font-bold">Booking Ticket</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
