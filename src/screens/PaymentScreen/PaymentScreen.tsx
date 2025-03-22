@@ -7,6 +7,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import MyTicketComponent from "../../components/MyTicketComponent";
 import DetailBetween from "../../components/DetailBetweenComponent";
 import PaymentComponent from "../../components/PaymentComponent";
+import { postApi } from "../../api/Api";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -15,6 +16,21 @@ const PaymentScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<PaymentScreenRouteProp>();
   console.log("route params", route.params);
+  const handleClickPayment = () => {
+    const requestBook = {
+      showtimeId: route.params.showTime.id,
+      seatId: route.params.seats,
+      couponId: "",
+    };
+    postApi("/api/book/", requestBook, true, (error: any, response: any) => {
+      if (error) {
+        console.log("Error when post api Booking ticket");
+      } else {
+        console.log("Have booking ticket successfully");
+        console.log(response.result);
+      }
+    });
+  };
   return (
     <View className="flex flex-1 flex-col bg-black px-5 mt-7">
       <View className="flex flex-row justify-center py-4 my-2">
@@ -63,11 +79,12 @@ const PaymentScreen = () => {
         <PaymentComponent nameMethod="Momo" image="nothing" />
         <PaymentComponent nameMethod="Credit Card" image="nothing" />
       </View>
-      <View className="bg-yellow-400 absolute w-full bottom-0 left-5 justify-items-center py-5 flex items-center rounded-[50]">
-        <TouchableOpacity onPress={() => console.log("Click payment")}>
-          <Text className="text-black font-bold">Booking Ticket</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => handleClickPayment()}
+        className="bg-yellow-400 absolute w-full bottom-0 left-5 justify-items-center py-5 flex items-center rounded-[50]"
+      >
+        <Text className="text-black font-bold">Booking Ticket</Text>
+      </TouchableOpacity>
     </View>
   );
 };

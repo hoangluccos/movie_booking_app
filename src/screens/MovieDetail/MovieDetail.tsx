@@ -240,11 +240,12 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
           </View>
         </View>
       </ScrollView>
-      <View className="bg-yellow-400 fixed bottom-0 py-5 flex items-center rounded-[50]">
-        <TouchableOpacity onPress={() => handleClickBooking()}>
-          <Text className="text-black font-bold">Booking Ticket</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => handleClickBooking()}
+        className="bg-yellow-400 fixed bottom-0 py-5 flex items-center rounded-[50]"
+      >
+        <Text className="text-black font-bold">Booking Ticket</Text>
+      </TouchableOpacity>
       <Modal animationType="fade" transparent={true} visible={isShowModal}>
         <View
           style={{
