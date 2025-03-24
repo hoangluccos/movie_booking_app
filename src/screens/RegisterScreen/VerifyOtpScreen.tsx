@@ -4,46 +4,55 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import InputOtpComponent from '../../components/InputOtpComponent';
-import {useEffect, useState} from 'react';
-import ButtonComponent from '../../components/ButtonComponent';
-import {postApi} from '../../api/Api';
-import {StateSendOtpAtom} from '../../Atom/StateSendOtpAtom';
-import {useRecoilState} from 'recoil';
+} from "react-native";
+import InputOtpComponent from "../../components/InputOtpComponent";
+import { useEffect, useState } from "react";
+import ButtonComponent from "../../components/ButtonComponent";
+import { postApi } from "../../api/Api";
+import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
+import { useRecoilState } from "recoil";
 
-const VerifyOtpScreen = ({route, navigation}: any) => {
-  const email = route.params?.email || 'No value';
-  const [otpValue, setOtpValue] = useState('');
+const VerifyOtpScreen = ({ route, navigation }: any) => {
+  const email = route.params?.email || "No value";
+  const [otpValue, setOtpValue] = useState("");
   const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
 
   const handleClickContinue = () => {
-    console.log('Otp: ', otpValue);
+    console.log("Otp: ", otpValue);
     if (otpValue.length === 6) {
       const params = {
         email: email,
         otp: otpValue,
       };
-      postApi('/api/verify/verifyOtp', params, false, (error, response) => {
-        if (error) {
-          console.log('Error with post: ', error);
-        } else {
-          console.log('Reponse: ', response.result);
-          if (response.result === true) {
-            if (stateSendOtp === 'Register') {
-              navigation.navigate('Register', {otp: otpValue, email: email});
-            } else if (stateSendOtp === 'ForgotPassword') {
-              navigation.navigate('ForgotPassword', {
-                otp: otpValue,
-                email: email,
-              });
+      postApi(
+        "/api/verify/verifyOtp",
+        null,
+        params,
+        false,
+        (error, response) => {
+          if (error) {
+            console.log("Error with post: ", error);
+          } else {
+            console.log("Reponse: ", response.result);
+            if (response.result === true) {
+              if (stateSendOtp === "Register") {
+                navigation.navigate("Register", {
+                  otp: otpValue,
+                  email: email,
+                });
+              } else if (stateSendOtp === "ForgotPassword") {
+                navigation.navigate("ForgotPassword", {
+                  otp: otpValue,
+                  email: email,
+                });
+              }
+              setStateSendOtp("");
             }
-            setStateSendOtp('');
           }
         }
-      });
+      );
     } else {
-      console.log('Chưa nhập đủ giá trị otp');
+      console.log("Chưa nhập đủ giá trị otp");
     }
   };
 

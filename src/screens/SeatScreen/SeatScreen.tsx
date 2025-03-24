@@ -87,11 +87,24 @@ const SeatScreen = () => {
         {formattedSeat(seatInfo).map((seat, index) => (
           <SeatComponent
             key={index}
+            isSample={{ id: false, textSample: "", colorSample: "" }}
+            status={seat.status}
             isSelected={selectedSeats.includes(seat.id)}
             setIsSelected={() => handleClickSeat(seat.id)}
             positionSeat={`${seat.locateRow}${seat.locateColumn} `}
           />
         ))}
+      </View>
+      <View className="flex flex-row justify-center items-center mt-5 gap-3">
+        <SeatComponent
+          isSample={{ id: true, textSample: "Can not", colorSample: "red" }}
+        />
+        <SeatComponent
+          isSample={{ id: true, textSample: "Can", colorSample: "gray" }}
+        />
+        <SeatComponent
+          isSample={{ id: true, textSample: "Picking", colorSample: "yellow" }}
+        />
       </View>
       <View className="flex flex-row justify-between items-center border-gray-300  absolute bottom-0 left-0 right-0">
         {/* total fee */}

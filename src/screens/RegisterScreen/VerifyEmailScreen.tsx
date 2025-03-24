@@ -6,54 +6,54 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import InputComponent from '../../components/InputComponent';
-import {useEffect, useState} from 'react';
-import ButtonComponent from '../../components/ButtonComponent';
-import Icon from 'react-native-vector-icons/Entypo';
-import {postApi} from '../../api/Api';
-import {useRecoilState} from 'recoil';
-import {StateSendOtpAtom} from '../../Atom/StateSendOtpAtom';
+} from "react-native";
+import InputComponent from "../../components/InputComponent";
+import { useEffect, useState } from "react";
+import ButtonComponent from "../../components/ButtonComponent";
+import Icon from "react-native-vector-icons/Entypo";
+import { postApi } from "../../api/Api";
+import { useRecoilState } from "recoil";
+import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
 
-const VerifyEmailScreen = ({navigation}: any) => {
-  const [emailValue, setEmailValue] = useState('');
+const VerifyEmailScreen = ({ navigation }: any) => {
+  const [emailValue, setEmailValue] = useState("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
 
   useEffect(() => {
-    console.log('State Send: ', stateSendOtp);
+    console.log("State Send: ", stateSendOtp);
   });
 
   const handleClickContinue = () => {
     Keyboard.dismiss();
-    if (emailValue.trim() !== '') {
+    if (emailValue.trim() !== "") {
       if (emailRegex.test(emailValue)) {
         const params = {
           email: emailValue,
         };
 
         const url =
-          stateSendOtp === 'Register'
-            ? '/api/verify/registration'
-            : stateSendOtp === 'ForgotPassword'
-            ? '/api/verify/forgotPassword'
-            : '';
+          stateSendOtp === "Register"
+            ? "/api/verify/registration"
+            : stateSendOtp === "ForgotPassword"
+            ? "/api/verify/forgotPassword"
+            : "";
 
-        console.log('Url: ', url);
+        console.log("Url: ", url);
 
-        postApi(url, params, false, (error, response) => {
+        postApi(url, null, params, false, (error, response) => {
           if (error) {
-            console.log('Error with post: ', error);
+            console.log("Error with post: ", error);
           } else {
-            console.log('Reponse: ', response.result);
-            navigation.navigate('VerifyOtp', {email: emailValue});
+            console.log("Reponse: ", response.result);
+            navigation.navigate("VerifyOtp", { email: emailValue });
           }
         });
       } else {
-        console.log('Email không hợp lệ');
+        console.log("Email không hợp lệ");
       }
     } else {
-      console.log('Email không được để trống');
+      console.log("Email không được để trống");
     }
   };
   return (
@@ -77,7 +77,7 @@ const VerifyEmailScreen = ({navigation}: any) => {
             title="Continue"
           />
         </View>
-        {stateSendOtp === 'Register' ? (
+        {stateSendOtp === "Register" ? (
           <View className="space-y-4">
             <View className="flex-row justify-center items-center">
               <View className="bg-white flex-1 h-[1px]" />
@@ -89,7 +89,7 @@ const VerifyEmailScreen = ({navigation}: any) => {
             <View className="h-[50px] w-full bg-[#1A1A1A] justify-center items-center rounded-full flex-row space-x-2">
               <View>
                 <Image
-                  source={require('../../../assets/images/facebook_icon.png')}
+                  source={require("../../../assets/images/facebook_icon.png")}
                 />
               </View>
               <Text className="text-white font-base">Facebook</Text>
@@ -97,7 +97,7 @@ const VerifyEmailScreen = ({navigation}: any) => {
             <View className="h-[50px] w-full bg-[#1A1A1A] justify-center items-center rounded-full flex-row space-x-2">
               <View>
                 <Image
-                  source={require('../../../assets/images/google_icon.png')}
+                  source={require("../../../assets/images/google_icon.png")}
                 />
               </View>
               <Text className="text-white font-base">Google</Text>

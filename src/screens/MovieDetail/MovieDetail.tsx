@@ -113,6 +113,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
       };
       postApi(
         "/api/showtimes/all",
+        null,
         request,
         true,
         (error: any, response: any) => {

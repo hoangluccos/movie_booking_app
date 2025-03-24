@@ -7,35 +7,35 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import ButtonComponent from '../../components/ButtonComponent';
-import {useState} from 'react';
-import InputInfoComponent from '../../components/InputInfoComponent';
-import Icon from 'react-native-vector-icons/Entypo';
-import DatePickerModal from './Modal/DatePickerModal';
-import {RadioButtonProps, RadioGroup} from 'react-native-radio-buttons-group';
-import {postApi} from '../../api/Api';
+} from "react-native";
+import ButtonComponent from "../../components/ButtonComponent";
+import { useState } from "react";
+import InputInfoComponent from "../../components/InputInfoComponent";
+import Icon from "react-native-vector-icons/Entypo";
+import DatePickerModal from "./Modal/DatePickerModal";
+import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group";
+import { postApi } from "../../api/Api";
 
-const RegisterScreen = ({route, navigation}: any) => {
-  const email = route.params?.email || 'No value';
-  const otp = route.params?.otp || 'No value';
+const RegisterScreen = ({ route, navigation }: any) => {
+  const email = route.params?.email || "No value";
+  const otp = route.params?.otp || "No value";
   const genderData: RadioButtonProps[] = [
     {
-      id: '1',
-      label: 'Nam',
-      value: '1',
+      id: "1",
+      label: "Nam",
+      value: "1",
     },
     {
-      id: '2',
-      label: 'Nữ',
-      value: '2',
+      id: "2",
+      label: "Nữ",
+      value: "2",
     },
   ];
 
-  const [usernameValue, setUsernameValue] = useState('');
-  const [passwordValue, setPasswordValue] = useState('');
-  const [firstnameValue, setFirstnameValue] = useState('');
-  const [lastnameValue, setLastnameValue] = useState('');
+  const [usernameValue, setUsernameValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [firstnameValue, setFirstnameValue] = useState("");
+  const [lastnameValue, setLastnameValue] = useState("");
   const [dateOfBirthValue, setDateOfBirthValue] = useState(new Date());
   const [genderValue, setGenderValue] = useState(genderData[0].id);
 
@@ -43,12 +43,12 @@ const RegisterScreen = ({route, navigation}: any) => {
   const [openDatePickerModal, setOpenDatePickerModal] = useState(false);
 
   const handleClickDone = () => {
-    console.log('Date: ', dateOfBirthValue);
+    console.log("Date: ", dateOfBirthValue);
     if (
-      usernameValue.trim() !== '' &&
-      passwordValue.trim() !== '' &&
-      firstnameValue.trim() !== '' &&
-      lastnameValue.trim() !== ''
+      usernameValue.trim() !== "" &&
+      passwordValue.trim() !== "" &&
+      firstnameValue.trim() !== "" &&
+      lastnameValue.trim() !== ""
     ) {
       const params = {
         username: usernameValue,
@@ -58,21 +58,21 @@ const RegisterScreen = ({route, navigation}: any) => {
         dateOfBirth: dateOfBirthValue,
         gender: Number(genderValue),
         email: email,
-        avatar: '',
+        avatar: "",
         otp: otp,
       };
 
       // console.log('Params: ', params);
-      postApi('/api/users/', params, false, (error, response) => {
+      postApi("/api/users/", null, params, false, (error, response) => {
         if (error) {
-          console.log('Error with post: ', error);
+          console.log("Error with post: ", error);
         } else {
-          console.log('Reponse: ', response.result);
-          navigation.navigate('Login');
+          console.log("Reponse: ", response.result);
+          navigation.navigate("Login");
         }
       });
     } else {
-      console.log('Vui lòng nhập đầy đủ thông tin');
+      console.log("Vui lòng nhập đầy đủ thông tin");
     }
   };
   const handleClickShowPassword = () => {
@@ -91,8 +91,9 @@ const RegisterScreen = ({route, navigation}: any) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
           className="bg-black w-full h-full px-4"
-          contentContainerStyle={{flexGrow: 1}}
-          keyboardShouldPersistTaps="handled">
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
           <View className="space-y-28">
             <View className="space-y-4">
               <View className="space-y-2">
@@ -116,7 +117,8 @@ const RegisterScreen = ({route, navigation}: any) => {
                   />
                   <TouchableOpacity
                     onPress={() => handleClickShowPassword()}
-                    className="absolute right-4 top-10">
+                    className="absolute right-4 top-10"
+                  >
                     {isShowPass ? (
                       <Icon name="eye" size={24} color="white" />
                     ) : (
@@ -145,11 +147,12 @@ const RegisterScreen = ({route, navigation}: any) => {
                 </Text>
                 <Pressable
                   className="border border-gray-500 rounded-md px-4 py-2"
-                  onPress={() => handleClickDateOfBirth()}>
+                  onPress={() => handleClickDateOfBirth()}
+                >
                   <Text className="text-lg font-base text-white">
                     {dateOfBirthValue
-                      ? new Date(dateOfBirthValue).toLocaleDateString('vi-VN')
-                      : 'Select Date'}
+                      ? new Date(dateOfBirthValue).toLocaleDateString("vi-VN")
+                      : "Select Date"}
                   </Text>
                 </Pressable>
               </View>
@@ -161,19 +164,19 @@ const RegisterScreen = ({route, navigation}: any) => {
                 </Text>
                 <View className="justify-between">
                   <RadioGroup
-                    radioButtons={genderData.map(item => ({
+                    radioButtons={genderData.map((item) => ({
                       ...item,
-                      color: '#FCC434',
+                      color: "#FCC434",
                       labelStyle: {
-                        color: '#FFFFFF',
+                        color: "#FFFFFF",
                         fontSize: 16,
-                        fontWeight: 'bold',
+                        fontWeight: "bold",
                       },
                     }))}
                     onPress={setGenderValue}
                     selectedId={genderValue}
                     layout="row"
-                    containerStyle={{justifyContent: 'space-around'}}
+                    containerStyle={{ justifyContent: "space-around" }}
                   />
                 </View>
               </View>

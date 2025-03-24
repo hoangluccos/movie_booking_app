@@ -38,7 +38,8 @@ export const getApi = async (
 
 export const postApi = async (
   url: string,
-  params: any,
+  params: any, // Đây là query params
+  bodyRequest: any, // Thêm body nếu cần
   useToken: boolean,
   callback: (error: any, response: any) => void
 ) => {
@@ -47,8 +48,9 @@ export const postApi = async (
     const token = useToken ? await AsyncStorage.getItem("token") : null;
     const response: AxiosResponse = await axios.post(
       `${API_URL}${url}`,
-      params,
+      bodyRequest,
       {
+        params: params,
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
           "Content-Type": "application/json",

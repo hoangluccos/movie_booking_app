@@ -13,6 +13,8 @@ import TicketScreen from "../screens/TicketScreen/TicketScreen";
 import ProfileInfoScreen from "../screens/ProfileInfoScreen/ProfileInfoScreen";
 import SeatScreen from "../screens/SeatScreen/SeatScreen";
 import PaymentScreen from "../screens/PaymentScreen/PaymentScreen";
+import SuccessScreen from "../screens/PayFlow/SuccessScreen";
+import ErrorScreen from "../screens/PayFlow/ErrorScreen";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -129,6 +131,24 @@ const Routers = () => {
         <Stack.Screen
           name="PaymentScreen"
           component={PaymentScreen}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="SuccessScreen"
+          component={SuccessScreen}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="ErrorScreen"
+          component={ErrorScreen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: "#000000" },

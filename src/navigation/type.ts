@@ -1,3 +1,4 @@
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
 import { MovieType, ShowtimeType } from "../data/Data";
 
 // Định nghĩa các màn hình trong stack navigator
@@ -14,4 +15,6 @@ export type RootStackParamList = {
     showTime: ShowtimeType;
     Movie: MovieType;
   };
+  SuccessScreen: { amount: number; orderInfo: string; transactionNo: string };
+  ErrorScreen: undefined;
 };
