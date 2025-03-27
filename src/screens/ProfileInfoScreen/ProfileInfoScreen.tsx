@@ -1,12 +1,13 @@
 import { View, Text, Image, Dimensions, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import { User } from "../../data/Data";
 import InputInfoComponent from "../../components/InputInfoComponent";
 import { putApi } from "../../api/Api";
-import { setUser } from "../../redux/slices/userSlice";
+import { changeImage, updateUser } from "../../redux/slices/userSlice";
 import * as ImagePicker from "expo-image-picker";
+import { transStringToDate } from "../../utils/Utils";
 
 interface UserState {
   user: User | null;
@@ -19,10 +20,9 @@ type ImageSource =
 const ProfileInfoScreen = () => {
   //Dimensions
   const widthDevice = Dimensions.get("window").width;
-  const heightDevice = Dimensions.get("window").height;
 
   const userInfo = useSelector<RootState, UserState>((state) => state.user);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [userData, setUserData] = useState<User>({
     username: userInfo?.user?.username || "", // Bắt buộc
@@ -40,66 +40,39 @@ const ProfileInfoScreen = () => {
       ? { uri: userInfo.user.avatar }
       : require("../../../assets/images/user.png")
   );
-  // Hàm chuyển chuỗi "dd-mm-yyyy" thành Date
-  const parseDateFromString = (dateString: string): Date => {
-    const [day, month, year] = dateString.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  };
-  const transStringToDate = (stringDate: string) => {
-    const parts = stringDate.split("/");
-    const dateObject = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    return dateObject;
-  };
   const handleErrorAvatar = () => {
     console.log("Fail to load image");
     setAvatar(require("../../../assets/images/user.png"));
   };
+
   //SAVE update
-  const handleSaveUserInfo = (data: User) => {
+  const handleSaveUserInfo = async (data: User) => {
     const { username, dateOfBirth, ...dataWithOutUsername_Date } = data; //destructuring - nice way
-    // if (typeof dateOfBirth === "string") {
-    // console.log("string roi!!!!");
-    // transStringToDate(dateOfBirth);
-    // setUserData({ ...userData, dateOfBirth: transStringToDate(dateOfBirth) });
-    // }
+
     console.log("dateOfBirth ", dateOfBirth);
     console.log("dataWithOutUsername_Date", dataWithOutUsername_Date);
 
-    typeof dateOfBirth !== "string"
-      ? putApi(
-          "/api/users/bio",
-          { dateOfBirth, ...dataWithOutUsername_Date },
-          true,
-          (error, response) => {
-            if (error) {
-              console.log("error", error);
-            } else {
-              console.log("Chinh sua Date");
-              console.log("put user data API successful");
-              console.log("response update user:", response.result);
-              dispatch(setUser(response.result));
-            }
-          }
-        )
-      : putApi(
-          "/api/users/bio",
-          {
-            dateOfBirth: transStringToDate(dateOfBirth),
-            ...dataWithOutUsername_Date,
-          },
-          true,
-          (error, response) => {
-            if (error) {
-              console.log("error", error);
-            } else {
-              console.log("Khong chinh sua Date");
-              console.log("put user data API successful");
-              console.log("response update user:", response.result);
-              dispatch(setUser(response.result));
-            }
-          }
-        );
+    const formattedData = {
+      ...dataWithOutUsername_Date,
+      dateOfBirth:
+        typeof dateOfBirth === "string"
+          ? transStringToDate(dateOfBirth)
+          : dateOfBirth,
+    };
+
+    try {
+      const resultAction = await dispatch(updateUser(formattedData));
+      if (updateUser.fulfilled.match(resultAction)) {
+        console.log("Update successfully", resultAction.payload);
+        setUserData(resultAction.payload);
+      } else {
+        console.log("update failed", resultAction.payload);
+      }
+    } catch (error) {
+      console.log("Error dispatching updateUser", error);
+    }
   };
+
   const handlePick = async () => {
     // No permissions request is necessary for launching the image library
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -115,7 +88,6 @@ const ProfileInfoScreen = () => {
     console.log(result);
     if (!result.canceled && result?.assets.length > 0) {
       const selectedImg = result.assets[0].uri;
-      setAvatar({ uri: selectedImg });
 
       const formDataImg = new FormData();
       formDataImg.append("file", {
@@ -123,15 +95,21 @@ const ProfileInfoScreen = () => {
         name: "avatar.jpg",
         type: "image/jpeg",
       } as any);
-      putApi("/api/users/avatar", formDataImg, true, (error, response) => {
-        if (error) console.log(error);
-        else {
-          console.log("Put api upload image successfully");
-          console.log(response.result);
+
+      try {
+        const resultAction = await dispatch(changeImage(formDataImg));
+        if (changeImage.fulfilled.match(resultAction)) {
+          console.log("Update Image successfully", resultAction.payload);
+          setAvatar({ uri: selectedImg });
+        } else {
+          console.log("update failed", resultAction.payload);
         }
-      });
+      } catch (error) {
+        console.log("Fail to updateImage", error);
+      }
     }
   };
+
   return (
     <View className="bg-gray-600 flex flex-1">
       <View className="bg-yellow-400 h-[150] w-full"></View>

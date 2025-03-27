@@ -15,32 +15,46 @@ import { useEffect, useState } from "react";
 import { GenreType, MovieType } from "../../../data/Data";
 import { getApi } from "../../../api/Api";
 import { formatDuration } from "../../../utils/Utils";
-import { useDispatch } from "react-redux";
-import { setMovies } from "../../../redux/slices/movieSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllMovies, setMovies } from "../../../redux/slices/movieSlice";
+import { AppDispatch, RootState } from "../../../redux/store";
+
 const HomeScreen = ({ navigation }: any) => {
-  const dispatch = useDispatch();
+  const { width: screenWidth } = Dimensions.get("window");
+  const sliderWidth = screenWidth;
+
+  const dispatch = useDispatch<AppDispatch>();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const [searchValue, setSearchValue] = useState("");
-  const [listMovie, setListMovie] = useState<MovieType[]>([]);
 
-  const { width: screenWidth } = Dimensions.get("window");
-  const sliderWidth = screenWidth;
+  const { movies, loading, error } = useSelector(
+    (state: RootState) => state.movies
+  );
+  const listMovie = movies || [];
+  // const [listMovie, setListMovie] = useState<MovieType[]>([]);
+
+  // useEffect(() => {
+  //   getApi("/api/movies/", false, (error, response) => {
+  //     if (error) {
+  //       console.log("Error with get: ", error);
+  //     } else {
+  //       console.log("Response: ", response.result);
+  //       dispatch(setMovies(response.result));
+  //       setListMovie(response.result);
+  //     }
+  //   });
+  // }, []);
+
   useEffect(() => {
-    getApi("/api/movies/", false, (error, response) => {
-      if (error) {
-        console.log("Error with get: ", error);
-      } else {
-        console.log("Reponse: ", response.result);
-        dispatch(setMovies(response.result));
-        setListMovie(response.result);
-      }
-    });
-  }, []);
+    dispatch(fetchAllMovies());
+  }, [dispatch]);
+
   const handleClickMovie = (id: string) => {
     console.log("Click on movie", id);
     navigation.navigate("MovieDetail", id);
   };
+
   const showMovieNowPlayingCus = ({ item }: { item: MovieType }) => {
     return (
       <TouchableOpacity onPress={() => handleClickMovie(item.id)}>
@@ -113,6 +127,9 @@ const HomeScreen = ({ navigation }: any) => {
       </TouchableOpacity>
     );
   };
+
+  if (loading) return <Text>Loading movies...</Text>;
+  if (error) return <Text>Error: {error}</Text>;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

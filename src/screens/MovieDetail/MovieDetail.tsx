@@ -27,6 +27,7 @@ interface MovieDetailProp {
 
 const MovieDetail = ({ route }: MovieDetailProp) => {
   const navigation = useNavigation<NavigationProp>();
+
   const handleBack = () => {
     console.log("go back");
     navigation.goBack();
@@ -34,8 +35,9 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
 
   //redux
   const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
-  const movies = useSelector((state: any) => state.movies);
-  console.log("redux movies:", movies);
+
+  // const movies = useSelector((state: any) => state.movies);
+  // console.log("redux movies:", movies);
 
   //modal
   const [isShowModal, setIsShowModal] = useState(false);

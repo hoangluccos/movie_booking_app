@@ -1,11 +1,16 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import OptionProfile from "../../../components/OptionProfile";
 import { useEffect } from "react";
-import { getApi } from "../../../api/Api";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { setUser } from "../../../redux/slices/userSlice";
+import { fetchUser, setUser } from "../../../redux/slices/userSlice";
 import { User } from "../../../data/Data";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,27 +19,49 @@ import { RootStackParamList } from "../../../navigation/type";
 interface UserState {
   user: User | null;
 }
-interface ApiResponse {
-  result: User;
-}
-
+type ProfileScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "ProfileScreen"
+>;
 const ProfileScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const infoUser = useSelector<RootState, UserState>((state) => state.user);
-  useEffect(() => {
-    getApi("/api/users/bio", true, (error: any, res: ApiResponse) => {
-      if (!error) {
-        console.log("user profile: ", res.result);
-        dispatch(setUser(res.result));
-      }
-    });
-  }, []);
-  type ProfileScreenNavigationProp = StackNavigationProp<
-    RootStackParamList,
-    "ProfileScreen"
-  >;
+  const { loading, error } = useSelector((state: RootState) => state.user);
+
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
   console.log("user profile from redux: ", infoUser);
+
+  const handleClickImage = () => {
+    navigation.navigate("ProfileInfoScreen");
+  };
+
+  if (loading) {
+    return (
+      <View className="bg-black flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#ffffff" />
+        <Text className="text-white mt-2">Loading...</Text>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View className="bg-black flex-1 justify-center items-center">
+        <Text className="text-red-500 text-lg">Error: {error}</Text>
+        <TouchableOpacity
+          onPress={() => dispatch(fetchUser())}
+          className="mt-4 bg-gray-700 p-2 rounded"
+        >
+          <Text className="text-white">Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View className="bg-black flex-1 px-3 py-10 mt-7">
       <View className="flex-row gap-5">
@@ -61,9 +88,7 @@ const ProfileScreen = () => {
         </View>
         <TouchableOpacity
           className="absolute top-1 right-2"
-          onPress={() => {
-            navigation.navigate("ProfileInfoScreen");
-          }}
+          onPress={() => handleClickImage()}
         >
           <View>
             <AntDesign name="edit" size={23} color="white" />
