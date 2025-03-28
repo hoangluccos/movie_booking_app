@@ -118,21 +118,19 @@ const SeatScreen = () => {
             <Text className="text-white font-bold text-xl">0 VND</Text>
           )}
         </View>
-        <View
-          className={
-            selectedSeats.length > 0
-              ? "flex-1 bg-yellow-500 rounded-[30] flex justify-center items-center h-20"
-              : "flex-1 bg-gray-200 rounded-[30] flex justify-center items-center h-20"
-          }
-        >
-          {selectedSeats.length > 0 ? (
-            <TouchableOpacity onPress={() => handleBuyTicket()}>
-              <Text className="p-2 font-bold text-xl">Buy ticket</Text>
-            </TouchableOpacity>
-          ) : (
+
+        {selectedSeats.length > 0 ? (
+          <TouchableOpacity
+            className="flex-1 bg-yellow-500 rounded-[30] flex justify-center items-center h-20"
+            onPress={() => handleBuyTicket()}
+          >
             <Text className="p-2 font-bold text-xl">Buy ticket</Text>
-          )}
-        </View>
+          </TouchableOpacity>
+        ) : (
+          <View className="flex-1 bg-gray-200 rounded-[30] flex justify-center items-center h-20">
+            <Text className="p-2 font-bold text-xl">Buy ticket</Text>
+          </View>
+        )}
       </View>
     </View>
   );

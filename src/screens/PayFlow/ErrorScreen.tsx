@@ -19,10 +19,10 @@ const ErrorScreen = () => {
         Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.
       </Text>
       <TouchableOpacity
-        onPress={() => console.log("close")} // Quay lại màn hình thanh toán
+        onPress={() => navigation.navigate("Home")}
         className="bg-yellow-400 py-3 px-6 rounded-full"
       >
-        <Text className="text-black font-bold text-lg">Thử lại</Text>
+        <Text>Go to Home</Text>
       </TouchableOpacity>
     </View>
   );

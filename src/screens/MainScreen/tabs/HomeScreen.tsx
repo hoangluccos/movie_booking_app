@@ -32,19 +32,6 @@ const HomeScreen = ({ navigation }: any) => {
     (state: RootState) => state.movies
   );
   const listMovie = movies || [];
-  // const [listMovie, setListMovie] = useState<MovieType[]>([]);
-
-  // useEffect(() => {
-  //   getApi("/api/movies/", false, (error, response) => {
-  //     if (error) {
-  //       console.log("Error with get: ", error);
-  //     } else {
-  //       console.log("Response: ", response.result);
-  //       dispatch(setMovies(response.result));
-  //       setListMovie(response.result);
-  //     }
-  //   });
-  // }, []);
 
   useEffect(() => {
     dispatch(fetchAllMovies());
@@ -128,8 +115,18 @@ const HomeScreen = ({ navigation }: any) => {
     );
   };
 
-  if (loading) return <Text>Loading movies...</Text>;
-  if (error) return <Text>Error: {error}</Text>;
+  if (loading)
+    return (
+      <View className="bg-black flex flex-1 items-center justify-center">
+        <Text className="text-white font-bold text-2xl">Loading movies...</Text>
+      </View>
+    );
+  if (error)
+    return (
+      <View className="bg-black flex flex-1 items-center justify-center">
+        <Text className="text-red text-2xl">Error: {error}</Text>
+      </View>
+    );
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -141,7 +138,7 @@ const HomeScreen = ({ navigation }: any) => {
         <View>
           <View className="py-4 flex-row justify-between">
             <View>
-              <Text className="text-lg text-white">Hi, Huy</Text>
+              <Text className="text-lg text-white">Hi, Friends</Text>
               <Text className="text-2xl text-white">Wellcome Back</Text>
             </View>
             <View className="justify-center">

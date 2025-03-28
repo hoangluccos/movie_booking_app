@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigation, RouteProp } from "@react-navigation/native";
 import { getApi, postApi } from "../../api/Api";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
 import ActorComponent from "../../components/ActorComponent";
 import CinemaComponent from "../../components/CinemaComponent";
 import { MovieType, ShowtimeType } from "../../data/Data";
@@ -303,19 +302,18 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
                 />
               ))}
             </View>
-            <View className="flex flex-row justify-center bg-white bottom-0 mt-5 py-4 rounded-[50]">
-              {listCinemaSelected.length > 0 ? (
-                <TouchableOpacity
-                  onPress={() => handleSelectSeat(listCinemaSelected[0])}
-                >
-                  <Text className="font-bold">Select Seats</Text>
-                </TouchableOpacity>
-              ) : (
-                <View>
-                  <Text className="">Choose Date</Text>
-                </View>
-              )}
-            </View>
+            {listCinemaSelected.length > 0 ? (
+              <TouchableOpacity
+                className="flex flex-row justify-center bg-white bottom-0 mt-5 py-4 rounded-[50]"
+                onPress={() => handleSelectSeat(listCinemaSelected[0])}
+              >
+                <Text className="font-bold">Select Seats</Text>
+              </TouchableOpacity>
+            ) : (
+              <View className="flex flex-row justify-center bg-white bottom-0 mt-5 py-4 rounded-[50]">
+                <Text className="">Choose Date</Text>
+              </View>
+            )}
           </View>
         </View>
       </Modal>

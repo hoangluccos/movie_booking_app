@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://172.16.15.29:8080";
+export const API_URL = "http://192.168.1.4:8080";
 // export const API_URL = 'http://localhost:8080';
 
 export const getToken = async (): Promise<string | null> => {
@@ -34,6 +34,29 @@ export const getApi = async (
       error.response?.data?.message || "Something went wrong";
     callback(errorMessage, null);
   }
+};
+
+// Tạo hàm getApi (nếu chưa có)
+const getPaymentApi = (
+  url: string,
+  params: Record<string, string> | null,
+  callback: (error: any, response: any) => void
+) => {
+  const baseUrl = "http://192.168.1.4:8080";
+  let queryString = "";
+  if (params) {
+    queryString = "?" + new URLSearchParams(params).toString();
+  }
+  fetch(`${baseUrl}${url}${queryString}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      // Thêm headers nếu cần (ví dụ: Authorization)
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => callback(null, data))
+    .catch((error) => callback(error, null));
 };
 
 export const postApi = async (
