@@ -28,7 +28,7 @@ export const getPaymentApi = (
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://172.16.23.140:8080";
+  const baseUrl = "http://192.168.1.4:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();
@@ -92,14 +92,23 @@ const PaymentScreen = () => {
     // console.log("Total food cost:", totalFoodCost);
   };
 
+  const handleEntries = (obj: object) => {
+    const entries = Object.entries(obj).map(([key, value], index) => {
+      return { foodId: key, quantity: value };
+    });
+    return entries;
+  };
+
   const handleClickPayment = () => {
     const requestBook = {
       showtimeId: route.params.showTime.id,
       seatId: route.params.seats,
       couponId: null,
-      orderRequests: [],
+      orderRequests: handleEntries(foodQuantities),
+      // orderRequests: [],
     };
-    console.log("requestBook: ", requestBook);
+    console.log("foodQuantities", foodQuantities);
+    console.log("requestBook orderRequests nha: ", requestBook);
     postApi(
       "/api/book/",
       null,
