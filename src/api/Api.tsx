@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://192.168.1.4:8080";
+export const API_URL = "http://172.16.23.140:8080";
 // export const API_URL = 'http://localhost:8080';
 
 export const getToken = async (): Promise<string | null> => {
@@ -32,6 +32,7 @@ export const getApi = async (
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.message || "Something went wrong";
+
     callback(errorMessage, null);
   }
 };

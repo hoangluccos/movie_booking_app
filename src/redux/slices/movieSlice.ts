@@ -47,14 +47,6 @@ const movieSlice = createSlice({
     setMovies: (state, action: PayloadAction<MovieType[]>) => {
       state.movies = action.payload;
     },
-    //Don't need to getMovie cause bc useSelector
-    addMovie: (state, action: PayloadAction<MovieType>) => {
-      if (state.movies) {
-        state.movies = [...state.movies, action.payload];
-      } else {
-        state.movies = [action.payload];
-      }
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,5 +68,5 @@ const movieSlice = createSlice({
   },
 });
 
-export const { setMovies, addMovie } = movieSlice.actions;
+export const { setMovies } = movieSlice.actions;
 export default movieSlice.reducer;

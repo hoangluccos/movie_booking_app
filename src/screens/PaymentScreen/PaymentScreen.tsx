@@ -1,13 +1,6 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Modal,
-} from "react-native";
-import React, { useState } from "react";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, Modal } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/type";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -20,6 +13,11 @@ import { WebView } from "react-native-webview";
 import { ScrollView } from "react-native-gesture-handler";
 import FoodComponent from "../../components/FoodComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import SetCoupon from "../../components/SetCoupon";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchAllFoods } from "../../redux/slices/foodSlice";
+import { FoodType } from "../../data/Data";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -30,7 +28,7 @@ export const getPaymentApi = (
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://192.168.1.4:8080";
+  const baseUrl = "http://172.16.23.140:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();
@@ -39,7 +37,6 @@ export const getPaymentApi = (
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      // Thêm headers nếu cần (ví dụ: Authorization)
     },
   })
     .then((response) => response.json())
@@ -53,20 +50,29 @@ const PaymentScreen = () => {
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [ticketId, setTicketId] = useState<string | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(true);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const foodListRedux = useSelector<RootState, FoodType[]>(
+    (state) => state.foods.foods
+  );
   const [foodQuantities, setFoodQuantities] = useState<{
     [key: string]: number;
-  }>({ food1: 0, food2: 0, food3: 0 });
+  }>({});
 
-  const foodList = [
-    { id: "food1", name: "Popcorn", price: 50000 },
-    { id: "food2", name: "Coca", price: 30000 },
-    { id: "food3", name: "Combo Popcorn + Coca", price: 70000 },
-    { id: "food3", name: "Combo Popcorn + Coca", price: 70000 },
-    { id: "food3", name: "Combo Popcorn + Coca", price: 70000 },
-    { id: "food3", name: "Combo Popcorn + Coca", price: 70000 },
-    { id: "food3", name: "Combo Popcorn + Coca", price: 70000 },
-  ];
+  useEffect(() => {
+    dispatch(fetchAllFoods());
+    if (foodListRedux.length > 0) {
+      const initialFoodQuantities = foodListRedux.reduce(
+        (accumulator, currentValue) => {
+          accumulator[currentValue.id] = 0;
+          return accumulator;
+        },
+        {} as { [key: string]: number }
+      );
+      setFoodQuantities(initialFoodQuantities);
+    }
+  }, [dispatch]);
+
+  console.log("ListFood From reduxt call API: ", foodListRedux);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     setFoodQuantities((prev) => ({
@@ -75,7 +81,7 @@ const PaymentScreen = () => {
     }));
   };
 
-  const totalFoodCost = foodList.reduce(
+  const totalFoodCost = foodListRedux.reduce(
     (sum, food) => sum + food.price * foodQuantities[food.id],
     0
   );
@@ -83,7 +89,7 @@ const PaymentScreen = () => {
   const handleConfirmFood = () => {
     setIsOpenModal(false);
     console.log("Selected food quantities:", foodQuantities);
-    console.log("Total food cost:", totalFoodCost);
+    // console.log("Total food cost:", totalFoodCost);
   };
 
   const handleClickPayment = () => {
@@ -183,9 +189,9 @@ const PaymentScreen = () => {
 
   return (
     <GestureHandlerRootView className="flex-1">
-      <View className="flex-1 bg-black p-5">
+      <View className="flex-1 bg-black px-3">
         {/* Modal chọn combo đồ ăn */}
-        <Modal visible={isOpenModal} transparent={true} animationType="slide">
+        <Modal visible={isOpenModal} transparent={true} animationType="fade">
           <View className="flex-1 bg-black/70 justify-center items-center">
             <View className="bg-white w-11/12 max-h-[80%] rounded-lg p-5">
               <Text className="text-xl font-bold text-center mb-5">
@@ -194,16 +200,21 @@ const PaymentScreen = () => {
               <ScrollView className="max-h-full">
                 {/* Giới hạn chiều cao của ScrollView */}
                 {/* Dùng ScrollView để cuộn nội dung */}
-                {foodList.map((food) => (
-                  <FoodComponent
-                    key={food.id}
-                    id={food.id}
-                    name={food.name}
-                    price={food.price}
-                    quantity={foodQuantities[food.id]}
-                    onQuantityChange={handleQuantityChange}
-                  />
-                ))}
+                {foodListRedux ? (
+                  foodListRedux.map((food) => (
+                    <FoodComponent
+                      key={food.id}
+                      id={food.id}
+                      name={food.name}
+                      image={food.image}
+                      price={food.price}
+                      quantity={foodQuantities[food.id]}
+                      onQuantityChange={handleQuantityChange}
+                    />
+                  ))
+                ) : (
+                  <Text>No foods available</Text> // Hoặc loading indicator
+                )}
               </ScrollView>
               <View className="mt-5 items-center">
                 <Text className="text-lg font-bold mb-2">
@@ -223,6 +234,10 @@ const PaymentScreen = () => {
         </Modal>
         {!isOpenModal && (
           <View className="flex flex-1 flex-col bg-black px-5 mt-7">
+            {/* <ScrollView
+              className="flex-1"
+              contentContainerStyle={{ paddingBottom: 80 }} // Thêm padding để tránh nội dung bị che bởi nút
+            > */}
             {paymentUrl ? (
               <WebView
                 source={{ uri: paymentUrl }}
@@ -252,47 +267,60 @@ const PaymentScreen = () => {
                   </TouchableOpacity>
                   <Text className="text-2xl text-white font-bold">Payment</Text>
                 </View>
-                <MyTicketComponent
-                  nameMovie={route.params.Movie.name}
-                  image={route.params.Movie.image}
-                  duration={route.params.Movie.duration}
-                  timeStart={route.params.showTime.startTime}
-                  Date={route.params.showTime.date}
-                />
-                {/* Seat an coupons */}
-                <View className="flex gap-y-2 my-10">
-                  <DetailBetween />
-                  <DetailBetween />
-                  <View className="flex flex-row bg-gray-600 h-auto rounded-md mt-3 items-center">
-                    <View className="flex flex-1 flex-row px-5 items-center gap-x-3">
-                      <FontAwesome name="flickr" size={20} color={"white"} />
-                      <TextInput
-                        placeholderTextColor={"white"}
-                        className="text-white"
-                        placeholder="discount code"
-                      />
-                    </View>
-                    <TouchableOpacity className="bg-yellow-500 w-[130] h-full flex flex-row justify-center items-center rounded-lg">
-                      <Text className="font-bold">Apply</Text>
+                <ScrollView
+                  className="flex-1"
+                  contentContainerStyle={{ paddingBottom: 80 }} // Thêm padding để tránh nội dung bị che bởi nút
+                >
+                  <MyTicketComponent
+                    nameMovie={route.params.Movie.name}
+                    image={route.params.Movie.image}
+                    duration={route.params.Movie.duration}
+                    timeStart={route.params.showTime.startTime}
+                    Date={route.params.showTime.date}
+                  />
+                  {/* Seat and coupons */}
+                  <View className="flex gap-y-2 my-10">
+                    <DetailBetween />
+                    <DetailBetween />
+                    <SetCoupon />
+                    {/* Food order  */}
+                    <TouchableOpacity
+                      className="flex flex-row justify-center mt-3 items-center p-2 bg-yellow-500 rounded-md"
+                      onPress={() => setIsOpenModal(true)}
+                    >
+                      <View className="flex flex-row gap-2 items-center">
+                        <MaterialCommunityIcons
+                          name="popcorn"
+                          size={28}
+                          color={"white"}
+                        />
+                        <Text className="text-white font-bold">Food - </Text>
+                      </View>
+                      <Text className="text-white font-bold">
+                        {totalFoodCost}
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                </View>
-                {/* Total cost */}
-                <View className="flex flex-row justify-between mb-5">
-                  <Text className="text-white text-xl">Total</Text>
-                  <Text className="text-white text-xl font-bold">
-                    100000VND
-                  </Text>
-                </View>
-                {/* Payment method */}
-                <View>
-                  <Text className="text-white font-bold text-xl">
-                    Payment Method
-                  </Text>
-                  <PaymentComponent nameMethod="Zalo Pay" image="nothing" />
-                  <PaymentComponent nameMethod="Momo" image="nothing" />
-                  <PaymentComponent nameMethod="Credit Card" image="nothing" />
-                </View>
+                  {/* Total cost */}
+                  <View className="flex flex-row justify-between mb-5">
+                    <Text className="text-white text-xl">Total</Text>
+                    <Text className="text-white text-xl font-bold">
+                      100000VND
+                    </Text>
+                  </View>
+                  {/* Payment method */}
+                  <View>
+                    <Text className="text-white font-bold text-xl">
+                      Payment Method
+                    </Text>
+                    <PaymentComponent nameMethod="Zalo Pay" image="nothing" />
+                    <PaymentComponent nameMethod="Momo" image="nothing" />
+                    <PaymentComponent
+                      nameMethod="Credit Card"
+                      image="nothing"
+                    />
+                  </View>
+                </ScrollView>
                 <TouchableOpacity
                   onPress={() => handleClickPayment()}
                   className="bg-yellow-400 absolute w-full bottom-0 left-5 justify-items-center py-5 flex items-center rounded-[50]"
@@ -301,6 +329,7 @@ const PaymentScreen = () => {
                 </TouchableOpacity>
               </>
             )}
+            {/* </ScrollView> */}
           </View>
         )}
       </View>

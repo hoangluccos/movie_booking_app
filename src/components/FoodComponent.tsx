@@ -5,6 +5,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 interface Props {
   id: string;
   name: string;
+  image: string;
   price: number;
   quantity: number;
   onQuantityChange: (id: string, newQuantity: number) => void;
@@ -13,6 +14,7 @@ interface Props {
 const FoodComponent = ({
   id,
   name,
+  image,
   price,
   quantity,
   onQuantityChange,
@@ -32,12 +34,17 @@ const FoodComponent = ({
       >
         <View className="h-full w-1/3 rounded-l-[20]">
           <Image
-            source={require("../../assets/images/movie_sample.jpg")}
+            source={
+              image
+                ? { uri: image }
+                : require("../../assets/images/movie_sample.jpg")
+            }
             className="w-full h-full rounded-l-[20]"
+            resizeMode="cover"
           />
         </View>
         <View className="flex-1 rounded-r-[20] p-3">
-          <Text className="text-2xl my-2 font-bold text-white">{name}</Text>{" "}
+          <Text className="text-2xl my-2 font-bold text-white">{name}</Text>
           {/* Dùng name từ props */}
           <View className="flex flex-row items-center gap-2">
             <FontAwesome6
@@ -48,7 +55,7 @@ const FoodComponent = ({
             />
             <Text className="text-xl mb-1 text-white">
               {price.toLocaleString()} VND
-            </Text>{" "}
+            </Text>
             {/* Dùng price từ props */}
           </View>
           <View className="flex-row items-center">

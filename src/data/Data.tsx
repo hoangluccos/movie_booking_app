@@ -51,3 +51,11 @@ export interface SeatType {
   status: boolean;
   showtimeId: string;
 }
+
+export interface FoodType {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  publicId: string;
+}
