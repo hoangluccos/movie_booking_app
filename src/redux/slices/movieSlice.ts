@@ -3,12 +3,12 @@ import { MovieType } from "../../data/Data";
 import { getApi } from "../../api/Api";
 
 interface MoviesState {
-  movies: MovieType[] | null;
+  movies: MovieType[];
   loading: boolean;
   error: string | null;
 }
 const initialState: MoviesState = {
-  movies: null,
+  movies: [],
   loading: false,
   error: null,
 };

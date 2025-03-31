@@ -7,8 +7,13 @@ import { RootStackParamList } from "../navigation/type";
 
 // Định nghĩa kiểu cho navigation
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-const TicketMovieComponent = () => {
+interface Props {
+  nameMovie: string;
+  time: string;
+  place: string;
+  image: string;
+}
+const TicketMovieComponent = ({ nameMovie, time, place, image }: Props) => {
   const navigation = useNavigation<NavigationProp>();
   const handleClickTicket = () => {
     console.log("Click ticket");
@@ -17,18 +22,19 @@ const TicketMovieComponent = () => {
   return (
     <TouchableOpacity onPress={handleClickTicket}>
       <View
-        className="flex-row w-full h-40 rounded-[20]"
+        className="flex-row w-full h-40 rounded-[20] mt-4"
         style={{ backgroundColor: "#1C1C1C" }}
       >
         <View className="h-full w-1/3 rounded-l-[20]">
           <Image
-            source={require("../../assets/images/movie_sample.jpg")}
+            // source={require("../../assets/images/movie_sample.jpg")}
+            source={{ uri: image }}
             className="w-full h-full rounded-l-[20]"
           />
         </View>
         <View className="flex-1 rounded-r-[20] p-3 ">
           <Text className="text-2xl my-2 font-bold text-white">
-            Avengers:Infinity War
+            {nameMovie}
           </Text>
           <View className="flex flex-row items-center gap-2">
             <FontAwesome5
@@ -37,7 +43,7 @@ const TicketMovieComponent = () => {
               color="white"
               className="rounded-lg"
             />
-            <Text className="text-xl mb-1 text-white">16.12.2025</Text>
+            <Text className="text-xl mb-1 text-white">{time}</Text>
           </View>
           <View className="flex flex-row items-center gap-2">
             <FontAwesome5
@@ -46,7 +52,7 @@ const TicketMovieComponent = () => {
               color="white"
               className="rounded-lg"
             />
-            <Text className="text-xl mb-1 text-white">Vincom Ocean Park</Text>
+            <Text className="text-xl mb-1 text-white">{place}</Text>
           </View>
         </View>
       </View>

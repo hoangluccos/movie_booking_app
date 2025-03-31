@@ -1,3 +1,5 @@
+import { Double } from "react-native/Libraries/Types/CodegenTypes";
+
 export interface MovieType {
   id: string;
   name: string;
@@ -58,4 +60,23 @@ export interface FoodType {
   price: number;
   image: string;
   publicId: string;
+}
+export interface TicketType {
+  id: string;
+  date: string;
+  time: string;
+  startTime: string;
+  endTime: string;
+  movieName: string;
+  movieId: string;
+  theaterName: string;
+  roomName: string;
+  canComment: boolean;
+  seats: {
+    id: string;
+    locateRow: string;
+    locateColumn: number;
+    price: Double;
+  };
+  totalPrice: Double;
 }
