@@ -1,15 +1,49 @@
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/type";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { findMovieById } from "../../redux/slices/movieSlice";
+import { MovieType } from "../../data/Data";
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+type TicketScreenRouteProp = RouteProp<RootStackParamList, "TicketScreen">;
+
 const TicketScreen = () => {
-  const nav = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
+  const route = useRoute<TicketScreenRouteProp>();
+  const { ticket } = route.params;
+  const dispatch = useDispatch<AppDispatch>();
+  const movieDetail = useSelector<RootState, MovieType | null>(
+    (state) => state.movies.movieDetail
+  );
+  // const {loading, error} = useSelector<RootState>(
+  //   (state) => state.movies.movieDetail
+  // );
+
+  useEffect(() => {
+    dispatch(findMovieById(ticket.movieId));
+  }, [ticket.movieId]);
+  console.log("ticket", ticket);
+  console.log("movieDetail-From-Redux", movieDetail);
+
+  if (!movieDetail) {
+    return (
+      <View className="flex flex-1 bg-black">
+        <Text className="text-red-500">Loi He Thong</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="bg-black flex flex-1 mt-7">
       <View className="p-5 flex flex-row justify-center items-center">
         <TouchableOpacity
           className="absolute top-5 left-5"
-          onPress={() => nav.goBack()}
+          onPress={() => navigation.goBack()}
         >
           <FontAwesome5 name="arrow-left" size={28} color="white" />
         </TouchableOpacity>
@@ -19,7 +53,7 @@ const TicketScreen = () => {
       <View className="flex bg-white h-auto mx-3 p-4 rounded-2xl">
         <View className="h-auto flex-row gap-4">
           <Image
-            source={require("../../../assets/images/movie_sample.jpg")}
+            source={{ uri: movieDetail.image }}
             className="w-[100] rounded-2xl"
             style={{ aspectRatio: 2 / 3 }}
             resizeMode="cover"
@@ -27,7 +61,7 @@ const TicketScreen = () => {
           <View className="bg-gray-600 flex-1 rounded-r-2xl">
             <View className="flex-1 rounded-r-[20] p-3 ">
               <Text className="text-2xl my-2 font-bold text-white">
-                Avengers:Infinity War
+                {ticket.movieName}
               </Text>
               <View className="flex flex-row items-center gap-2">
                 <FontAwesome5
@@ -37,7 +71,7 @@ const TicketScreen = () => {
                   className="rounded-lg"
                 />
                 <Text className="text-xl mb-1 text-white">
-                  2 hours 29 minutes
+                  {movieDetail.duration} minutes
                 </Text>
               </View>
               <View className="flex flex-row items-center gap-2">
@@ -48,7 +82,10 @@ const TicketScreen = () => {
                   className="rounded-lg"
                 />
                 <Text className="text-xl mb-1 text-white">
-                  Action, adventure
+                  {movieDetail.genres.reduce((accumulator, current) => {
+                    accumulator += current.name + " ";
+                    return accumulator;
+                  }, "")}
                 </Text>
               </View>
             </View>
@@ -64,9 +101,10 @@ const TicketScreen = () => {
               color="black"
               className="rounded-lg"
             />
+            {/* Time date */}
             <View>
-              <Text className="font-bold text-2xl">14h15'</Text>
-              <Text className="font-bold text-2xl">10.12.2025</Text>
+              <Text className="font-bold text-2xl">{ticket.startTime}</Text>
+              <Text className="font-bold text-2xl">{ticket.date}</Text>
             </View>
           </View>
           <View className="flex-1 h-[100] flex-row gap-2 justify-center items-center">
@@ -76,9 +114,16 @@ const TicketScreen = () => {
               color="black"
               className="rounded-lg"
             />
+            {/* Seat location */}
             <View>
-              <Text className="font-bold text-2xl">14h15'</Text>
-              <Text className="font-bold text-2xl">10.12.2025</Text>
+              {ticket.seats.map((seat, index) => {
+                return (
+                  <Text key={index} className="font-bold text-2xl">
+                    {seat.locateRow}
+                    {seat.locateColumn}
+                  </Text>
+                );
+              })}
             </View>
           </View>
         </View>
@@ -87,11 +132,11 @@ const TicketScreen = () => {
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center gap-2">
             <FontAwesome5 name="money-bill-alt" size={18} color="black" />
-            <Text className="text-xl">210.000 VND</Text>
+            <Text className="text-xl">{ticket.totalPrice}-VND</Text>
           </View>
           <View className="flex flex-row items-center gap-2">
             <FontAwesome5 name="paper-plane" size={18} color="black" />
-            <Text className="text-xl">Vincom Ocean Park</Text>
+            <Text className="text-xl">{ticket.theaterName}</Text>
           </View>
           <View className="flex flex-row items-baseline gap-2">
             <FontAwesome5 name="sticky-note" size={18} color="black" />

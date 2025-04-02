@@ -39,6 +39,7 @@ const MyTicketScreen = () => {
           return (
             <TicketMovieComponent
               key={i}
+              ticket={ticket}
               nameMovie={ticket.movieName}
               time={`${ticket.time} - ${ticket.date}`}
               place={ticket.theaterName}

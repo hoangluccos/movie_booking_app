@@ -4,6 +4,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/type";
+import { TicketType } from "../data/Data";
 
 // Định nghĩa kiểu cho navigation
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -12,12 +13,22 @@ interface Props {
   time: string;
   place: string;
   image: string;
+  ticket: TicketType;
 }
-const TicketMovieComponent = ({ nameMovie, time, place, image }: Props) => {
+const TicketMovieComponent = ({
+  nameMovie,
+  time,
+  place,
+  image,
+  ticket,
+}: Props) => {
   const navigation = useNavigation<NavigationProp>();
+
   const handleClickTicket = () => {
     console.log("Click ticket");
-    navigation.navigate("TicketScreen");
+    navigation.navigate("TicketScreen", {
+      ticket: ticket,
+    });
   };
   return (
     <TouchableOpacity onPress={handleClickTicket}>

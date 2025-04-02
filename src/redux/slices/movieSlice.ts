@@ -4,11 +4,13 @@ import { getApi } from "../../api/Api";
 
 interface MoviesState {
   movies: MovieType[];
+  movieDetail: MovieType | null;
   loading: boolean;
   error: string | null;
 }
 const initialState: MoviesState = {
   movies: [],
+  movieDetail: null,
   loading: false,
   error: null,
 };
@@ -47,6 +49,11 @@ const movieSlice = createSlice({
     setMovies: (state, action: PayloadAction<MovieType[]>) => {
       state.movies = action.payload;
     },
+    findMovieById: (state, action: PayloadAction<string>) => {
+      state.movieDetail = state.movies.filter(
+        (movie) => movie.id === action.payload
+      )[0];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,5 +75,5 @@ const movieSlice = createSlice({
   },
 });
 
-export const { setMovies } = movieSlice.actions;
+export const { setMovies, findMovieById } = movieSlice.actions;
 export default movieSlice.reducer;

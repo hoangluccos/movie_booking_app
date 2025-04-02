@@ -1,9 +1,8 @@
-import { Float } from "react-native/Libraries/Types/CodegenTypes";
-import { MovieType, ShowtimeType } from "../data/Data";
+import { MovieType, ShowtimeType, TicketType } from "../data/Data";
 
 // Định nghĩa các màn hình trong stack navigator
 export type RootStackParamList = {
-  TicketScreen: undefined;
+  TicketScreen: { ticket: TicketType };
   MovieDetail: { id: string };
   Home: undefined;
   ProfileScreen: undefined;

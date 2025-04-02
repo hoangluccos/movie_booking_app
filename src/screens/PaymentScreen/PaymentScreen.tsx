@@ -28,7 +28,7 @@ export const getPaymentApi = (
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://172.172.7.98:8080";
+  const baseUrl = "http://192.168.1.4:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();

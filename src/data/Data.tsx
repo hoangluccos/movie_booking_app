@@ -72,11 +72,11 @@ export interface TicketType {
   theaterName: string;
   roomName: string;
   canComment: boolean;
-  seats: {
+  seats: Array<{
     id: string;
     locateRow: string;
     locateColumn: number;
     price: Double;
-  };
+  }>;
   totalPrice: Double;
 }
