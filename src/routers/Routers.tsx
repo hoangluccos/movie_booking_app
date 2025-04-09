@@ -155,6 +155,15 @@ const Routers = () => {
             headerTintColor: "#FFFFFF",
           }}
         />
+        <Stack.Screen
+          name="LogInScreen"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

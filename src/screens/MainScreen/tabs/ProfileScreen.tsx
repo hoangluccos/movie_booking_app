@@ -5,16 +5,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import OptionProfile from "../../../components/OptionProfile";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { fetchUser, setUser } from "../../../redux/slices/userSlice";
+import { fetchUser, logOut } from "../../../redux/slices/userSlice";
 import { User } from "../../../data/Data";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../../navigation/type";
+import { deleteToken } from "../../../api/Api";
 
 interface UserState {
   user: User | null;
@@ -27,7 +28,7 @@ const ProfileScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const infoUser = useSelector<RootState, UserState>((state) => state.user);
   const { loading, error } = useSelector((state: RootState) => state.user);
-
+  const isLoggedOut = useSelector((state: RootState) => state.user.isLogOut);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
 
   useEffect(() => {
@@ -39,6 +40,23 @@ const ProfileScreen = () => {
   const handleClickImage = () => {
     navigation.navigate("ProfileInfoScreen");
   };
+
+  const handleLogOut = () => {
+    deleteToken();
+    dispatch(logOut());
+    console.log("user profile from redux: ", infoUser);
+    //handle of click back in android
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "LogInScreen" }],
+    });
+  };
+
+  useEffect(() => {
+    if (isLoggedOut && infoUser.user === null) {
+      navigation.navigate("LogInScreen");
+    }
+  }, [navigation, isLoggedOut]);
 
   if (loading) {
     return (
@@ -100,6 +118,15 @@ const ProfileScreen = () => {
         <OptionProfile text={"Payment history"} nameIcon={"shopping-cart"} />
         <OptionProfile text={"Change language"} nameIcon={"language"} />
         <OptionProfile text={"Change password"} nameIcon={"lock"} />
+      </View>
+      <View>
+        <TouchableOpacity
+          onPress={() => handleLogOut()}
+          className="w-[200] px-3 py-3 mx-auto bg-red-500 mt-8 rounded-md justify-center flex flex-row gap-2 items-center "
+        >
+          <Ionicons name="log-out" size={24} color="black" />
+          <Text className="text-white font-bold">Log out</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

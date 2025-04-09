@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://192.168.1.4:8080";
+export const API_URL = "http://172.28.31.167:8080";
 // export const API_URL = 'http://localhost:8080';
 
 export const getToken = async (): Promise<string | null> => {
@@ -11,6 +11,15 @@ export const getToken = async (): Promise<string | null> => {
   } catch (error) {
     console.error("Error getting token:", error);
     return null;
+  }
+};
+
+export const deleteToken = async () => {
+  try {
+    await AsyncStorage.removeItem("token");
+    console.log("deleteToken in AsyncStorage successfully");
+  } catch (error) {
+    console.log("Error deleteToken: ", error);
   }
 };
 

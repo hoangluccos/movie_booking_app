@@ -18,6 +18,7 @@ import { formatDuration } from "../../../utils/Utils";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMovies, setMovies } from "../../../redux/slices/movieSlice";
 import { AppDispatch, RootState } from "../../../redux/store";
+import { setIsLogOut } from "../../../redux/slices/userSlice";
 
 const HomeScreen = ({ navigation }: any) => {
   const { width: screenWidth } = Dimensions.get("window");
@@ -35,6 +36,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     dispatch(fetchAllMovies());
+    dispatch(setIsLogOut(false));
   }, [dispatch]);
 
   const handleClickMovie = (id: string) => {
