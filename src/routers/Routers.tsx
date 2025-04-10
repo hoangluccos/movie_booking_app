@@ -15,6 +15,7 @@ import SeatScreen from "../screens/SeatScreen/SeatScreen";
 import PaymentScreen from "../screens/PaymentScreen/PaymentScreen";
 import SuccessScreen from "../screens/PayFlow/SuccessScreen";
 import ErrorScreen from "../screens/PayFlow/ErrorScreen";
+import ChangePasswordScreen from "../screens/ChangePasswordScreen/ChangePasswordScreen";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -158,6 +159,15 @@ const Routers = () => {
         <Stack.Screen
           name="LogInScreen"
           component={LoginScreen}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="ChangePasswordScreen"
+          component={ChangePasswordScreen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: "#000000" },

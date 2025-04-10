@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import OTPTextView from 'react-native-otp-textinput';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import OTPTextView from "react-native-otp-textinput";
 
 interface InputOtpComponentProps {
   value: string;
@@ -9,14 +9,14 @@ interface InputOtpComponentProps {
 }
 
 const InputOtpComponent = (props: InputOtpComponentProps) => {
-  const {onChangeValue, value, clickResentOtp} = props;
+  const { onChangeValue, value, clickResentOtp } = props;
   const [timeLeft, setTimeLeft] = useState(5 * 60);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
 
     const timer = setInterval(() => {
-      setTimeLeft(prevTime => prevTime - 1);
+      setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
 
     return () => clearInterval(timer);
@@ -25,9 +25,9 @@ const InputOtpComponent = (props: InputOtpComponentProps) => {
   const formatTime = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds
+    return `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
-      .padStart(2, '0')}`;
+      .padStart(2, "0")}`;
   };
 
   return (
@@ -38,8 +38,8 @@ const InputOtpComponent = (props: InputOtpComponentProps) => {
         defaultValue={value}
         handleTextChange={onChangeValue}
         textInputStyle={styles.otpInput}
-        tintColor={'#FCC434'}
-        offTintColor={'#FCC434'}
+        tintColor={"#FCC434"}
+        offTintColor={"#FCC434"}
       />
       <View className="items-end mt-2">
         {timeLeft > 0 ? (
@@ -60,13 +60,13 @@ const styles = StyleSheet.create({
   otpInput: {
     width: 50,
     height: 60,
-    textAlign: 'center',
-    color: 'white',
-    fontFamily: 'base-Bold',
+    textAlign: "center",
+    color: "white",
+    fontFamily: "base-Bold",
     borderWidth: 1,
     borderBottomWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#261D08',
+    backgroundColor: "#261D08",
   },
 });
 

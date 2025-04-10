@@ -114,10 +114,17 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </View>
       <View className="mt-[50] w-full gap-5">
-        <OptionProfile text={"Ticket"} nameIcon={"ticket-alt"} />
+        {/* <OptionProfile text={"Ticket"} nameIcon={"ticket-alt"} />
         <OptionProfile text={"Payment history"} nameIcon={"shopping-cart"} />
-        <OptionProfile text={"Change language"} nameIcon={"language"} />
-        <OptionProfile text={"Change password"} nameIcon={"lock"} />
+        <OptionProfile text={"Change language"} nameIcon={"language"} /> */}
+        <OptionProfile
+          text={"Change password"}
+          nameIcon={"lock"}
+          navigateTo={{
+            screen: "ChangePasswordScreen",
+            params: { email: infoUser.user?.email },
+          }}
+        />
       </View>
       <View>
         <TouchableOpacity
