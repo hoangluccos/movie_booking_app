@@ -17,5 +17,5 @@ export type RootStackParamList = {
   SuccessScreen: { amount: number; orderInfo: string; transactionNo: string };
   ErrorScreen: undefined;
   LogInScreen: undefined;
-  ChangePasswordScreen: { email: string | undefined };
+  ChangePasswordScreen: { email: string };
 };

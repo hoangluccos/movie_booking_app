@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://192.168.1.4:8080";
+export const API_URL = "http://192.168.88.83:8080";
 // export const API_URL = 'http://localhost:8080';
 
 export const getToken = async (): Promise<string | null> => {
@@ -52,7 +52,7 @@ const getPaymentApi = (
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://192.168.1.4:8080";
+  const baseUrl = "http://192.168.88.83:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();

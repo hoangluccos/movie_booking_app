@@ -80,3 +80,10 @@ export interface TicketType {
   }>;
   totalPrice: Double;
 }
+
+export interface ChangePasswordType {
+  otp: string;
+  password: string;
+  passwordConfirm: string;
+  email: string;
+}

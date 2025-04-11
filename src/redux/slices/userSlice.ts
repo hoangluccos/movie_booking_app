@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../data/Data";
+import { ChangePasswordType, User } from "../../data/Data";
 import { getApi, postApi, putApi } from "../../api/Api";
 import { ResponseApiType } from "../../data/Response";
 import { act } from "react";
@@ -9,6 +9,7 @@ interface UserState {
   loading: boolean;
   error: string | null;
   isLogOut: boolean;
+  changePasswordSuccess: boolean;
 }
 
 const initialState: UserState = {
@@ -16,6 +17,7 @@ const initialState: UserState = {
   loading: false,
   error: null,
   isLogOut: false,
+  changePasswordSuccess: false,
 };
 interface ApiResponse {
   result: User;
@@ -106,6 +108,59 @@ export const logOut = createAsyncThunk(
   }
 );
 
+//Action sendOTP
+export const sendOTP = createAsyncThunk(
+  "user/sendOTP",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      await new Promise<ApiResponse>((resolve, reject) => {
+        console.log("Thuc hien gui mail den: ", email);
+        postApi(
+          "/api/verify/forgotPassword",
+          null,
+          { email: email },
+          true,
+          (error, res) => {
+            if (error) {
+              console.log("Lỗi từ postApi:", error);
+              reject(error); // Promise sẽ bị reject với lỗi từ API
+            } else {
+              console.log("Send OTP successfully");
+              resolve(res as ApiResponse); // Promise resolve khi thành công
+            }
+          }
+        );
+      });
+      // Không cần return response.result ở đây vì promise đã resolve
+    } catch (error) {
+      // Lỗi ở đây thường là lỗi xảy ra trong quá trình tạo Promise
+      return rejectWithValue(error as string);
+    }
+  }
+);
+//Action changePassword
+export const changePassword = createAsyncThunk(
+  "user/changePassword",
+  async (obj: ChangePasswordType, { rejectWithValue }) => {
+    try {
+      await new Promise<ApiResponse>((resolve, reject) => {
+        console.log("Thuc hien viec doi Password", obj);
+        putApi("/api/users/changePassword", obj, true, (error, res) => {
+          if (error) {
+            console.log("Loi tu post Api", error);
+            reject(error);
+          } else {
+            console.log("ChangePassword successfully");
+            resolve(res as ApiResponse);
+          }
+        });
+      });
+    } catch (error) {
+      return rejectWithValue((error as string) || "Đổi mật khẩu thất bại.");
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -115,6 +170,9 @@ const userSlice = createSlice({
     },
     setIsLogOut: (state, action: PayloadAction<boolean>) => {
       state.isLogOut = action.payload;
+    },
+    updateVariablePw: (state, action: PayloadAction<boolean>) => {
+      state.changePasswordSuccess = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -170,8 +228,29 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.isLogOut = true;
+      })
+      //sendOTP
+      .addCase(sendOTP.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        // state.user = null;
+      })
+      .addCase(sendOTP.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //changePassword
+      .addCase(
+        changePassword.fulfilled,
+        (state, action: PayloadAction<undefined>) => {
+          state.loading = false;
+          state.changePasswordSuccess = true;
+        }
+      )
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
-export const { setUser, setIsLogOut } = userSlice.actions;
+export const { setUser, setIsLogOut, updateVariablePw } = userSlice.actions;
 export default userSlice.reducer;
