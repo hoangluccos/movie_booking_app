@@ -9,8 +9,8 @@ const SetCoupon = () => {
       <View className="flex flex-1 flex-row px-5 items-center gap-x-3">
         <FontAwesome name="flickr" size={20} color={"white"} />
         <TextInput
-          placeholderTextColor={"white"}
-          className="text-white"
+          placeholderTextColor={"gray"}
+          className="text-white font-bold"
           placeholder="discount code"
         />
       </View>

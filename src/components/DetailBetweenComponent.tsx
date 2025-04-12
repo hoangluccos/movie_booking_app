@@ -1,11 +1,15 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const DetailBetweenComponent = () => {
+interface Props {
+  title: string;
+  value: string;
+}
+const DetailBetweenComponent = ({ title, value }: Props) => {
   return (
     <View className="flex flex-row justify-between">
-      <Text className="text-white text-xl">ShowtimeID</Text>
-      <Text className="text-white text-xl font-bold">xxxx000xxx</Text>
+      <Text className="text-white text-xl">{title}</Text>
+      <Text className="text-white text-xl font-bold">{value}</Text>
     </View>
   );
 };

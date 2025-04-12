@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/type";
 import { getApi } from "../../api/Api";
 import { SeatType } from "../../data/Data";
-import { formattedSeat } from "../../utils/Utils";
+import { formattedSeat, formatVND, totalPrice } from "../../utils/Utils";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type SeatScreenRouteProp = RouteProp<RootStackParamList, "SeatScreen">;
@@ -115,7 +115,7 @@ const SeatScreen = () => {
           <Text className="text-xl text-white">Total</Text>
           {selectedSeats.length > 0 ? (
             <Text className="text-white font-bold text-xl">
-              {100000 * selectedSeats.length} VND
+              {formatVND(totalPrice(selectedSeats.length))}
             </Text>
           ) : (
             <Text className="text-white font-bold text-xl">0 VND</Text>

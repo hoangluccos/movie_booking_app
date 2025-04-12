@@ -16,6 +16,9 @@ import { MovieType, ShowtimeType } from "../../data/Data";
 import { RootStackParamList } from "../../navigation/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { addDays, format, parse } from "date-fns";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { fetchAllCoupons } from "../../redux/slices/couponSlice";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type MovieDetailRouteProp = RouteProp<RootStackParamList, "MovieDetail">;
@@ -26,24 +29,23 @@ interface MovieDetailProp {
 
 const MovieDetail = ({ route }: MovieDetailProp) => {
   const navigation = useNavigation<NavigationProp>();
+  const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
+  //modal
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [listCinemaSelected, setListCinemaSelected] = useState<ShowtimeType[]>(
+    []
+  );
+  const [isSelectedDate, setIsSelectedDate] = useState<Array<string>>([]);
+  const [listCinema, setListCinema] = useState<ShowtimeType[] | []>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleBack = () => {
     console.log("go back");
     navigation.goBack();
   };
 
-  //redux
-  const [movieDetail, setMovieDetail] = useState<MovieType | null>(null);
-
   // const movies = useSelector((state: any) => state.movies);
   // console.log("redux movies:", movies);
-
-  //modal
-  const [isShowModal, setIsShowModal] = useState(false);
-  const [listCinemaSelected, setListCinemaSelected] = useState<ShowtimeType[]>(
-    []
-  );
-  const [listCinema, setListCinema] = useState<ShowtimeType[] | []>([]);
 
   const handleClickBooking = () => {
     //show the modal select date and theater
@@ -74,8 +76,6 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   };
   const next5Days = getNextFiveDays(); //array
 
-  const [isSelectedDate, setIsSelectedDate] = useState<Array<string>>([]);
-
   const handleSelectDate = (value: any) => {
     const isExist = isSelectedDate.includes(value);
     isExist ? setIsSelectedDate([]) : setIsSelectedDate([value]);
@@ -100,6 +100,8 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
         setMovieDetail(response.result);
       }
     });
+    console.log("Bat dau fetch API coupon");
+    dispatch(fetchAllCoupons());
   }, []);
 
   //fetch api showtime- finding showtime of this movieID, date
@@ -131,6 +133,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
       );
     }
   }, [isSelectedDate]);
+
   if (!movieDetail) {
     return (
       <View className="flex-1 bg-black justify-center items-center">

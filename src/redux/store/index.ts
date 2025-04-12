@@ -3,6 +3,7 @@ import movieReducer from "../slices/movieSlice";
 import userReducer from "../slices/userSlice";
 import foodReducer from "../slices/foodSlice";
 import ticketReducer from "../slices/ticketSlice";
+import couponReducer from "../slices/couponSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     user: userReducer,
     foods: foodReducer,
     tickets: ticketReducer,
+    coupons: couponReducer,
   },
 });
 

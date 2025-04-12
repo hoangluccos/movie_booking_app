@@ -1,6 +1,18 @@
-import { View, Text, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Image,
+  AppState,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/type";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -13,11 +25,12 @@ import { WebView } from "react-native-webview";
 import { ScrollView } from "react-native-gesture-handler";
 import FoodComponent from "../../components/FoodComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import SetCoupon from "../../components/SetCoupon";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllFoods } from "../../redux/slices/foodSlice";
-import { FoodType } from "../../data/Data";
+import { CouponType, FoodType } from "../../data/Data";
+import { formatVND, getTypeOfCoupon, totalPrice } from "../../utils/Utils";
+import CouponComponent from "../../components/CouponComponent";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -28,7 +41,7 @@ export const getPaymentApi = (
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://192.168.1.4:8080";
+  const baseUrl = "http://172.16.0.225:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();
@@ -53,37 +66,31 @@ const PaymentScreen = () => {
   const [ticketId, setTicketId] = useState<string | null>(null);
 
   const [isOpenModal, setIsOpenModal] = useState(true);
-
+  const [isOpenModalDiscount, setIsOpenModalDiscount] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const foodListRedux = useSelector<RootState, FoodType[]>(
     (state) => state.foods.foods
   );
-  const { loading, error } = useSelector((state: RootState) => state.foods);
+  //   const { loading, error } = useSelector((state: RootState) => state.foods);
   const [foodQuantities, setFoodQuantities] = useState<{
     [key: string]: number;
   }>({});
   console.log("FoodQuantities after function: ", foodQuantities);
-  const [coupon, setCoupon] = useState("62aaa308-16c9-4a87-9a56-8b1fbeb4b461");
   console.log("Route PaymentScreen", route.params);
+  const listCoupons = useSelector((state: RootState) => state.coupons.coupons);
+  console.log("Coupons ", listCoupons);
+  const [selectCoupon, setSelectCoupon] = useState<CouponType>(listCoupons[0]);
+
+  const handleSelectCoupon = (objCoupon: CouponType) => {
+    console.log("selectCoupon: ", objCoupon.id);
+    setSelectCoupon(objCoupon);
+  };
 
   useEffect(() => {
     dispatch(fetchAllFoods());
-    // if (foodListRedux.length > 0) {
-    //   console.log("Food da duoc function");
-    //   //create initial value FoodQuantities and display them
-    //   const initialFoodQuantities = foodListRedux.reduce(
-    //     (accumulator, currentValue) => {
-    //       accumulator[currentValue.id] = 0;
-    //       return accumulator;
-    //     },
-    //     {} as { [key: string]: number }
-    //   );
-    //   setFoodQuantities(initialFoodQuantities);
-    // }
   }, [dispatch]);
   useEffect(() => {
     if (foodListRedux.length > 0) {
-      console.log("Food da duoc function");
       //create initial value FoodQuantities and display them
       const initialFoodQuantities = foodListRedux.reduce(
         (accumulator, currentValue) => {
@@ -114,7 +121,11 @@ const PaymentScreen = () => {
     console.log("Selected food quantities:", foodQuantities);
     // console.log("Total food cost:", totalFoodCost);
   };
-
+  const handleConfirmCoupon = () => {
+    setIsOpenModalDiscount(false);
+    // console.log("Selected food quantities:", foodQuantities);
+    // console.log("Total food cost:", totalFoodCost);
+  };
   const handleEntries = (obj: object) => {
     const entries = Object.entries(obj).map(([key, value], index) => {
       return { foodId: key, quantity: value };
@@ -126,7 +137,7 @@ const PaymentScreen = () => {
     const requestBook = {
       showtimeId: route.params.showTime.id,
       seatId: route.params.seats,
-      couponId: coupon,
+      couponId: selectCoupon.id,
       orderRequests: handleEntries(foodQuantities),
       // orderRequests: [],
     };
@@ -245,12 +256,12 @@ const PaymentScreen = () => {
                     />
                   ))
                 ) : (
-                  <Text>No foods available</Text> // Hoặc loading indicator
+                  <Text>No foods available</Text>
                 )}
               </ScrollView>
               <View className="mt-5 items-center">
                 <Text className="text-lg font-bold mb-2">
-                  Tổng: {totalFoodCost.toLocaleString()} VND
+                  Tổng: {formatVND(totalFoodCost)}
                 </Text>
                 <TouchableOpacity
                   className="bg-green-600 py-2 px-5 rounded-md"
@@ -264,12 +275,72 @@ const PaymentScreen = () => {
             </View>
           </View>
         </Modal>
+        {/* Modal chọn coupon discount */}
+        <Modal
+          visible={isOpenModalDiscount}
+          transparent={true}
+          animationType="fade"
+        >
+          <View className="flex-1 bg-black/70 justify-center items-center">
+            <View className="bg-white w-11/12 max-h-[80%] rounded-lg p-5">
+              <Text className="text-xl font-bold text-center mb-5">
+                Chọn Voucher Discount
+              </Text>
+              <ScrollView className="max-h-full">
+                {/* Giới hạn chiều cao của ScrollView */}
+                {/* Dùng ScrollView để cuộn nội dung */}
+
+                {/* Thanh tìm kiếm */}
+                <View className="mb-3">
+                  <TextInput
+                    className="border border-gray-300 rounded-md p-2 w-full"
+                    placeholder="Nhập mã voucher"
+                    // xử lý sự kiện onChangeText ở đây
+                  />
+
+                  <ScrollView className="max-h-[calc(80%-150px)]">
+                    {listCoupons.map((coupon, i) => (
+                      <CouponComponent
+                        key={coupon.id}
+                        id={coupon.id}
+                        image={coupon.image}
+                        title={coupon.code}
+                        discount={coupon.discountValue}
+                        expireTime={coupon.endDate}
+                        minValue={coupon.minValue}
+                        handleSelect={() => handleSelectCoupon(coupon)}
+                        isSelected={
+                          selectCoupon.id === coupon.id ? true : false
+                        }
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              </ScrollView>
+              <View className="mt-5 items-center">
+                <Text className="text-lg font-bold mb-2">
+                  Giảm giá:{" "}
+                  {formatVND(
+                    getTypeOfCoupon(
+                      selectCoupon,
+                      totalPrice(route.params.seats.length) + totalFoodCost
+                    )
+                  )}
+                </Text>
+                <TouchableOpacity
+                  className="bg-green-600 py-2 px-5 rounded-md"
+                  onPress={handleConfirmCoupon}
+                >
+                  <Text className="text-white text-base font-bold">
+                    Xác nhận
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         {!isOpenModal && (
           <View className="flex flex-1 flex-col bg-black px-5 mt-7">
-            {/* <ScrollView
-              className="flex-1"
-              contentContainerStyle={{ paddingBottom: 80 }} // Thêm padding để tránh nội dung bị che bởi nút
-            > */}
             {paymentUrl ? (
               <WebView
                 source={{ uri: paymentUrl }}
@@ -312,12 +383,18 @@ const PaymentScreen = () => {
                   />
                   {/* Seat and coupons */}
                   <View className="flex gap-y-2 my-10">
-                    <DetailBetween />
-                    <DetailBetween />
-                    <SetCoupon />
-                    {/* Food order  */}
+                    <DetailBetween
+                      title="Time Schedule"
+                      value={
+                        route.params.showTime.date +
+                        "-" +
+                        route.params.showTime.startTime
+                      }
+                    />
+                    <DetailBetween title="Seats" value="Seat???" />
+
                     <TouchableOpacity
-                      className="flex flex-row justify-center mt-3 items-center p-2 bg-yellow-500 rounded-md"
+                      className="flex flex-row justify-between mt-3 items-center p-2 bg-yellow-500 rounded-md"
                       onPress={() => setIsOpenModal(true)}
                     >
                       <View className="flex flex-row gap-2 items-center">
@@ -326,24 +403,58 @@ const PaymentScreen = () => {
                           size={28}
                           color={"white"}
                         />
-                        <Text className="text-white font-bold">Food - </Text>
+                        <Text className="text-white font-bold">Food </Text>
                       </View>
                       {totalFoodCost === 0 ? (
                         <Text className="text-white font-bold">
-                          {totalFoodCost}VND
+                          + {formatVND(totalFoodCost)}
                         </Text>
                       ) : (
                         <Text className="text-red-700 font-bold text-xl">
-                          {totalFoodCost}VND
+                          + {formatVND(totalFoodCost)}
                         </Text>
                       )}
                     </TouchableOpacity>
+                    {/* <SetCoupon /> Set coupon Modal*/}
+                    <TouchableOpacity
+                      className="flex flex-row justify-between mt-3 items-center p-2 bg-yellow-500 rounded-md"
+                      onPress={() => setIsOpenModalDiscount(true)}
+                    >
+                      <View className="flex flex-row gap-2 items-center">
+                        <FontAwesome5
+                          name="money-check"
+                          size={25}
+                          color={"white"}
+                        />
+                        <Text className="text-white font-bold">Discount</Text>
+                      </View>
+
+                      <Text className="text-red-700 font-bold text-xl">
+                        -{" "}
+                        {formatVND(
+                          getTypeOfCoupon(
+                            selectCoupon,
+                            totalPrice(route.params.seats.length) +
+                              totalFoodCost
+                          )
+                        )}
+                      </Text>
+                    </TouchableOpacity>
+                    {/* Food order  */}
                   </View>
                   {/* Total cost */}
                   <View className="flex flex-row justify-between mb-5">
                     <Text className="text-white text-xl">Total</Text>
                     <Text className="text-white text-xl font-bold">
-                      100000VND
+                      {formatVND(
+                        totalPrice(route.params.seats.length) +
+                          totalFoodCost -
+                          getTypeOfCoupon(
+                            selectCoupon,
+                            totalPrice(route.params.seats.length) +
+                              totalFoodCost
+                          )
+                      )}
                     </Text>
                   </View>
                   {/* Payment method */}
@@ -367,7 +478,6 @@ const PaymentScreen = () => {
                 </TouchableOpacity>
               </>
             )}
-            {/* </ScrollView> */}
           </View>
         )}
       </View>

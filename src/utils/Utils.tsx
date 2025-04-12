@@ -1,4 +1,4 @@
-import { MovieType, SeatType } from "../data/Data";
+import { CouponType, MovieType, SeatType } from "../data/Data";
 
 export const formatDuration = (duration: number) => {
   const hours = Math.floor(duration / 60);
@@ -32,4 +32,20 @@ export const formattedSeat = (seat: SeatType[]) => {
     return a.locateColumn - b.locateColumn;
   });
   return result;
+};
+
+export const totalPrice = (value: number) => value * 100000;
+
+export const formatVND = (amount: number): string => {
+  return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+};
+
+export const getTypeOfCoupon = (coupon: CouponType, price: number) => {
+  if (coupon.discountType === "Percentage") {
+    return (price * coupon.discountValue) / 100;
+  }
+  //just think it == fix type
+  else {
+    return coupon.discountValue;
+  }
 };

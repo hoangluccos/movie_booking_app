@@ -87,3 +87,16 @@ export interface ChangePasswordType {
   passwordConfirm: string;
   email: string;
 }
+
+export interface CouponType {
+  id: string;
+  code: string;
+  discountType: string;
+  discountValue: number;
+  startDate: string;
+  endDate: string;
+  minValue: number;
+  image: string;
+  publicId: string;
+  status: boolean;
+}
