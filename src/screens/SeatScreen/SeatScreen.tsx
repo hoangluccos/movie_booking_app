@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/type";
 import { getApi } from "../../api/Api";
 import { SeatType } from "../../data/Data";
+import { formattedSeat } from "../../utils/Utils";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type SeatScreenRouteProp = RouteProp<RootStackParamList, "SeatScreen">;
@@ -33,15 +34,16 @@ const SeatScreen = () => {
 
   const [seatInfo, setSeatInfo] = useState<SeatType[]>([]);
 
-  const formattedSeat = (seat: SeatType[]) => {
-    const result = seat.sort((a: SeatType, b: SeatType) => {
-      if (a.locateRow < b.locateRow) return -1;
-      if (a.locateRow > b.locateRow) return 1;
-      //if equal locateRow
-      return a.locateColumn - b.locateColumn;
-    });
-    return result;
-  };
+  // const formattedSeat = (seat: SeatType[]) => {
+  //   const result = seat.sort((a: SeatType, b: SeatType) => {
+  //     if (a.locateRow < b.locateRow) return -1;
+  //     if (a.locateRow > b.locateRow) return 1;
+  //     //if equal locateRow
+  //     return a.locateColumn - b.locateColumn;
+  //   });
+  //   return result;
+  // };
+
   useEffect(() => {
     getApi(
       `/api/showtimes/${showtimeId}`,
@@ -57,6 +59,7 @@ const SeatScreen = () => {
     );
   }, []);
 
+  //navigate
   const handleBuyTicket = () => {
     navigation.navigate("PaymentScreen", {
       seats: selectedSeats,

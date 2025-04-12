@@ -33,6 +33,7 @@ export const getPaymentApi = (
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();
   }
+
   fetch(`${baseUrl}${url}${queryString}`, {
     method: "GET",
     headers: {
@@ -47,20 +48,43 @@ export const getPaymentApi = (
 const PaymentScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<PaymentScreenRouteProp>();
+
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [ticketId, setTicketId] = useState<string | null>(null);
+
   const [isOpenModal, setIsOpenModal] = useState(true);
+
   const dispatch = useDispatch<AppDispatch>();
   const foodListRedux = useSelector<RootState, FoodType[]>(
     (state) => state.foods.foods
   );
+  const { loading, error } = useSelector((state: RootState) => state.foods);
   const [foodQuantities, setFoodQuantities] = useState<{
     [key: string]: number;
   }>({});
+  console.log("FoodQuantities after function: ", foodQuantities);
+  const [coupon, setCoupon] = useState("62aaa308-16c9-4a87-9a56-8b1fbeb4b461");
+  console.log("Route PaymentScreen", route.params);
 
   useEffect(() => {
     dispatch(fetchAllFoods());
+    // if (foodListRedux.length > 0) {
+    //   console.log("Food da duoc function");
+    //   //create initial value FoodQuantities and display them
+    //   const initialFoodQuantities = foodListRedux.reduce(
+    //     (accumulator, currentValue) => {
+    //       accumulator[currentValue.id] = 0;
+    //       return accumulator;
+    //     },
+    //     {} as { [key: string]: number }
+    //   );
+    //   setFoodQuantities(initialFoodQuantities);
+    // }
+  }, [dispatch]);
+  useEffect(() => {
     if (foodListRedux.length > 0) {
+      console.log("Food da duoc function");
+      //create initial value FoodQuantities and display them
       const initialFoodQuantities = foodListRedux.reduce(
         (accumulator, currentValue) => {
           accumulator[currentValue.id] = 0;
@@ -70,8 +94,7 @@ const PaymentScreen = () => {
       );
       setFoodQuantities(initialFoodQuantities);
     }
-  }, [dispatch]);
-
+  }, [foodListRedux]);
   console.log("ListFood From reduxt call API: ", foodListRedux);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
@@ -103,7 +126,7 @@ const PaymentScreen = () => {
     const requestBook = {
       showtimeId: route.params.showTime.id,
       seatId: route.params.seats,
-      couponId: null,
+      couponId: coupon,
       orderRequests: handleEntries(foodQuantities),
       // orderRequests: [],
     };
@@ -305,9 +328,15 @@ const PaymentScreen = () => {
                         />
                         <Text className="text-white font-bold">Food - </Text>
                       </View>
-                      <Text className="text-white font-bold">
-                        {totalFoodCost}
-                      </Text>
+                      {totalFoodCost === 0 ? (
+                        <Text className="text-white font-bold">
+                          {totalFoodCost}VND
+                        </Text>
+                      ) : (
+                        <Text className="text-red-700 font-bold text-xl">
+                          {totalFoodCost}VND
+                        </Text>
+                      )}
                     </TouchableOpacity>
                   </View>
                   {/* Total cost */}
