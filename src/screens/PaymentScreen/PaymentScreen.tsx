@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Image,
-  AppState,
-} from "react-native";
+import { View, Text, TouchableOpacity, Modal, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   FontAwesome,
@@ -41,7 +33,7 @@ export const getPaymentApi = (
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://172.16.0.225:8080";
+  const baseUrl = "http://192.168.1.4:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();

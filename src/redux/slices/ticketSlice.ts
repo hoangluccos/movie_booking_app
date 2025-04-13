@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TicketType } from "../../data/Data";
 import { ResponseApiType } from "../../data/Response";
 import { getApi } from "../../api/Api";
+import { compareDates } from "../../utils/Utils";
 
 interface TicketState {
   tickets: TicketType[];
@@ -38,7 +39,14 @@ export const fetchAllTickets = createAsyncThunk(
 const ticketSlice = createSlice({
   name: "ticket",
   initialState,
-  reducers: {},
+  reducers: {
+    sortByNearestDate: (state) => {
+      state.tickets.sort((a, b) => compareDates(a.date, b.date));
+    },
+    sortByFarthestDate: (state) => {
+      state.tickets.sort((a, b) => compareDates(b.date, a.date));
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllTickets.pending, (state) => {
@@ -58,5 +66,5 @@ const ticketSlice = createSlice({
       });
   },
 });
-
+export const { sortByNearestDate, sortByFarthestDate } = ticketSlice.actions;
 export default ticketSlice.reducer;

@@ -49,3 +49,12 @@ export const getTypeOfCoupon = (coupon: CouponType, price: number) => {
     return coupon.discountValue;
   }
 };
+export const compareDates = (a: string, b: string) => {
+  const [dayA, monthA, yearA] = a.split("-").map(Number);
+  const [dayB, monthB, yearB] = b.split("-").map(Number);
+
+  const dateA = new Date(yearA, monthA - 1, dayA);
+  const dateB = new Date(yearB, monthB - 1, dayB);
+  console.log("dang compareDates");
+  return dateA.getTime() - dateB.getTime();
+};
