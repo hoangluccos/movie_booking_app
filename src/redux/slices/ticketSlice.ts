@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TicketType } from "../../data/Data";
+import { FeedbackType, TicketType } from "../../data/Data";
 import { ResponseApiType } from "../../data/Response";
-import { getApi } from "../../api/Api";
+import { getApi, postApi } from "../../api/Api";
 import { compareDates } from "../../utils/Utils";
 
 interface TicketState {
@@ -36,6 +36,27 @@ export const fetchAllTickets = createAsyncThunk(
     }
   }
 );
+export const postFeedback = createAsyncThunk(
+  "tickets/postFeedback",
+  async (obj: FeedbackType, { rejectWithValue }) => {
+    try {
+      const response = await new Promise<ResponseApiType>((resolve, reject) => {
+        postApi("/api/feedbacks/", null, obj, true, (error, res) => {
+          if (error) {
+            console.log("Error when post feedback", error);
+            reject(res);
+          } else {
+            console.log("Post feedback successfully", res);
+            resolve(res);
+          }
+        });
+      });
+      return response.result;
+    } catch (error) {
+      return rejectWithValue(error as string);
+    }
+  }
+);
 const ticketSlice = createSlice({
   name: "ticket",
   initialState,
@@ -49,6 +70,7 @@ const ticketSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //fetchAllTickets
       .addCase(fetchAllTickets.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -61,6 +83,19 @@ const ticketSlice = createSlice({
         }
       )
       .addCase(fetchAllTickets.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //postFeedback
+      .addCase(postFeedback.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(postFeedback.fulfilled, (state, action: PayloadAction<void>) => {
+        state.loading = false;
+        // state.tickets = action.payload;
+      })
+      .addCase(postFeedback.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

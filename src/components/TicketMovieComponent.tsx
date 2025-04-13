@@ -6,7 +6,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/type";
 import { TicketType } from "../data/Data";
 
-// Định nghĩa kiểu cho navigation
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 interface Props {
   nameMovie: string;

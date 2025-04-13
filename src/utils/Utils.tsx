@@ -55,6 +55,5 @@ export const compareDates = (a: string, b: string) => {
 
   const dateA = new Date(yearA, monthA - 1, dayA);
   const dateB = new Date(yearB, monthB - 1, dayB);
-  console.log("dang compareDates");
   return dateA.getTime() - dateB.getTime();
 };

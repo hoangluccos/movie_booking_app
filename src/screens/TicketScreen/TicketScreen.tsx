@@ -1,5 +1,13 @@
-import { View, Image, Text, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Pressable,
+  Alert,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -8,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { findMovieById } from "../../redux/slices/movieSlice";
 import { MovieType } from "../../data/Data";
+import StarRating from "../../components/StarRating";
+import { postFeedback } from "../../redux/slices/ticketSlice";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 type TicketScreenRouteProp = RouteProp<RootStackParamList, "TicketScreen">;
@@ -20,20 +30,30 @@ const TicketScreen = () => {
   const movieDetail = useSelector<RootState, MovieType | null>(
     (state) => state.movies.movieDetail
   );
-  // const {loading, error} = useSelector<RootState>(
-  //   (state) => state.movies.movieDetail
-  // );
 
+  const [rating, setRating] = useState(4);
+  const [contentRating, setContentRating] = useState("");
   useEffect(() => {
     dispatch(findMovieById(ticket.movieId));
   }, [ticket.movieId]);
   console.log("ticket", ticket);
   console.log("movieDetail-From-Redux", movieDetail);
 
+  const handleSendRating = () => {
+    const dataSend = {
+      movieId: ticket.movieId,
+      content: contentRating,
+      rate: rating,
+    };
+    console.log("dataSend ", dataSend);
+    dispatch(postFeedback(dataSend));
+    Alert.alert("We have send your feedback to the Admin");
+  };
+
   if (!movieDetail) {
     return (
       <View className="flex flex-1 bg-black">
-        <Text className="text-red-500">Loi He Thong</Text>
+        <Text className="text-red-500 text-center font-bold">Loi He Thong</Text>
       </View>
     );
   }
@@ -162,7 +182,25 @@ const TicketScreen = () => {
             className="absolute top-0 right-[-50]"
           />
         </View>
-
+        {/* Rating movie afterwatch */}
+        <View className="flex items-center">
+          <Text className="text-xl font-bold my-3">Rating this film</Text>
+          <StarRating rating={rating} onRatingChange={setRating} />
+          <View className="flex flex-row w-full justify-between items-center">
+            <TextInput
+              className="p-2 w-[80%] h-[50] mt-3 border border-gray-300 rounded-md"
+              placeholder="Express your thinking"
+              value={contentRating}
+              onChangeText={setContentRating}
+            />
+            <TouchableOpacity
+              onPress={() => handleSendRating()}
+              className="flex items-center justify-center px-3 mt-2 bg-slate-300 rounded-lg h-[50]"
+            >
+              <Text>Send</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         {/* QR code */}
         <View className="flex flex-col gap-2">
           <Image

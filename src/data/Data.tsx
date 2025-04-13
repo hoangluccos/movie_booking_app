@@ -100,3 +100,9 @@ export interface CouponType {
   publicId: string;
   status: boolean;
 }
+
+export interface FeedbackType {
+  movieId: string;
+  content: string;
+  rate: Double;
+}

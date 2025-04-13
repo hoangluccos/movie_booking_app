@@ -30,6 +30,7 @@ const MyTicketScreen = () => {
       dispatch(sortByFarthestDate());
     }
   }, [filterBy]);
+
   const handleClickFilterIcon = () => {
     setOpeModalFilter(true);
   };
@@ -83,7 +84,7 @@ const MyTicketScreen = () => {
                   <View className="w-2.5 h-2.5 bg-blue-600 rounded-full" />
                 )}
               </View>
-              <Text className="text-base">Ngày gần nhất</Text>
+              <Text className="text-base">Ngày xa nhất</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -101,7 +102,7 @@ const MyTicketScreen = () => {
                   <View className="w-2.5 h-2.5 bg-blue-600 rounded-full" />
                 )}
               </View>
-              <Text className="text-base">Ngày xa nhất</Text>
+              <Text className="text-base">Ngày gần nhất</Text>
             </TouchableOpacity>
           </View>
         </View>
