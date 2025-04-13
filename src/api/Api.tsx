@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://172.16.0.225:8080";
+// export const API_URL = "http://172.16.0.225:8080";
+export const API_URL = "http://10.0.2.2:8080";
 // export const API_URL = 'http://localhost:8080';
 
 export const getToken = async (): Promise<string | null> => {
