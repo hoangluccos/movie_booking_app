@@ -183,24 +183,33 @@ const TicketScreen = () => {
           />
         </View>
         {/* Rating movie afterwatch */}
-        <View className="flex items-center">
-          <Text className="text-xl font-bold my-3">Rating this film</Text>
-          <StarRating rating={rating} onRatingChange={setRating} />
-          <View className="flex flex-row w-full justify-between items-center">
-            <TextInput
-              className="p-2 w-[80%] h-[50] mt-3 border border-gray-300 rounded-md"
-              placeholder="Express your thinking"
-              value={contentRating}
-              onChangeText={setContentRating}
-            />
-            <TouchableOpacity
-              onPress={() => handleSendRating()}
-              className="flex items-center justify-center px-3 mt-2 bg-slate-300 rounded-lg h-[50]"
-            >
-              <Text>Send</Text>
-            </TouchableOpacity>
+        {ticket.canComment ? (
+          <View className="flex items-center">
+            <Text className="text-xl font-bold my-3">Rating this film</Text>
+            <StarRating rating={rating} onRatingChange={setRating} />
+            <View className="flex flex-row w-full justify-between items-center">
+              <TextInput
+                className="p-2 w-[80%] h-[50] mt-3 border border-gray-300 rounded-md"
+                placeholder="Express your thinking"
+                value={contentRating}
+                onChangeText={setContentRating}
+              />
+              <TouchableOpacity
+                onPress={() => handleSendRating()}
+                className="flex items-center justify-center px-3 mt-2 bg-blue-300 rounded-lg h-[50]"
+              >
+                <Text>Send</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View className="flex items-center">
+            <Text className="font-bold text-xl underline uppercase text-[#facc15]">
+              You can not rating this film
+            </Text>
+          </View>
+        )}
+
         {/* QR code */}
         <View className="flex flex-col gap-2">
           <Image

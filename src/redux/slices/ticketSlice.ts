@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FeedbackType, TicketType } from "../../data/Data";
+import { FeedbackRequestType, TicketType } from "../../data/Data";
 import { ResponseApiType } from "../../data/Response";
 import { getApi, postApi } from "../../api/Api";
 import { compareDates } from "../../utils/Utils";
@@ -38,7 +38,7 @@ export const fetchAllTickets = createAsyncThunk(
 );
 export const postFeedback = createAsyncThunk(
   "tickets/postFeedback",
-  async (obj: FeedbackType, { rejectWithValue }) => {
+  async (obj: FeedbackRequestType, { rejectWithValue }) => {
     try {
       const response = await new Promise<ResponseApiType>((resolve, reject) => {
         postApi("/api/feedbacks/", null, obj, true, (error, res) => {

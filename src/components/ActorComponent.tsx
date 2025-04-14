@@ -14,7 +14,7 @@ const ActorComponent = ({ nameActor, gender, image }: ActorProps) => {
     setImageSource(defaultImage);
   };
   return (
-    <View className="bg-gray-700 max-w-[130] h-[50] rounded-[10] flex flex-row items-center gap-2">
+    <View className="bg-gray-700 max-w-[130] h-[50] rounded-[10] flex flex-row items-center gap-2 mx-1">
       <View className="flex flex-row items-center justify-center gap-1 mx-2">
         <Image
           source={imageSource} // Nguồn ảnh động

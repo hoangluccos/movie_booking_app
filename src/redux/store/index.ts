@@ -4,6 +4,7 @@ import userReducer from "../slices/userSlice";
 import foodReducer from "../slices/foodSlice";
 import ticketReducer from "../slices/ticketSlice";
 import couponReducer from "../slices/couponSlice";
+import feedbackReducer from "../slices/feedbackSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     foods: foodReducer,
     tickets: ticketReducer,
     coupons: couponReducer,
+    feedbacks: feedbackReducer,
   },
 });
 

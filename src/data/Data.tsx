@@ -101,8 +101,20 @@ export interface CouponType {
   status: boolean;
 }
 
-export interface FeedbackType {
+export interface FeedbackRequestType {
   movieId: string;
   content: string;
   rate: Double;
+}
+
+export interface FeedbackType {
+  id: string;
+  content: string;
+  rate: Double;
+  date: string;
+  time: string;
+  byName: string;
+  byEmail: string;
+  movieId: string;
+  status: boolean;
 }

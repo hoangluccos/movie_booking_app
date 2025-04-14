@@ -5,6 +5,7 @@ import {
   ScrollView,
   ImageBackground,
   Modal,
+  AppState,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, RouteProp } from "@react-navigation/native";
@@ -16,9 +17,11 @@ import { MovieType, ShowtimeType } from "../../data/Data";
 import { RootStackParamList } from "../../navigation/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { addDays, format, parse } from "date-fns";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllCoupons } from "../../redux/slices/couponSlice";
+import { fetchAllFeedbackByMovie } from "../../redux/slices/feedbackSlice";
+import DetailFeedback from "../../components/DetailFeedback";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type MovieDetailRouteProp = RouteProp<RootStackParamList, "MovieDetail">;
@@ -35,6 +38,9 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   const [listCinemaSelected, setListCinemaSelected] = useState<ShowtimeType[]>(
     []
   );
+  const listFeedback = useSelector(
+    (state: RootState) => state.feedbacks.feedbacks
+  );
   const [isSelectedDate, setIsSelectedDate] = useState<Array<string>>([]);
   const [listCinema, setListCinema] = useState<ShowtimeType[] | []>([]);
   const dispatch = useDispatch<AppDispatch>();
@@ -43,9 +49,6 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
     console.log("go back");
     navigation.goBack();
   };
-
-  // const movies = useSelector((state: any) => state.movies);
-  // console.log("redux movies:", movies);
 
   const handleClickBooking = () => {
     //show the modal select date and theater
@@ -64,7 +67,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
     });
   };
   console.log("selected cinema:", listCinemaSelected[0]);
-
+  console.log("Route params ", route.params);
   const getNextFiveDays = () => {
     const today = new Date();
     const dates = [];
@@ -96,12 +99,14 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
       if (error) {
         console.error("Error:", error);
       } else {
-        console.log("Response:", response);
+        console.log("Response MovieDetail:", response);
+
         setMovieDetail(response.result);
       }
     });
     console.log("Bat dau fetch API coupon");
     dispatch(fetchAllCoupons());
+    dispatch(fetchAllFeedbackByMovie(route.params));
   }, []);
 
   //fetch api showtime- finding showtime of this movieID, date
@@ -233,15 +238,38 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
             <Text className="text-2xl font-bold text-white">Actors</Text>
             {/* Actors, Directors Component */}
             <View className="flex flex-row gap-2">
-              {movieDetail.actors.map((actor, index) => (
-                <ActorComponent
-                  key={index}
-                  nameActor={actor.name}
-                  gender={actor.gender}
-                  image={actor.image}
-                />
-              ))}
+              <ScrollView horizontal={true} className="flex flex-row gap-2">
+                {movieDetail.actors.map((actor, index) => (
+                  <ActorComponent
+                    key={index}
+                    nameActor={actor.name}
+                    gender={actor.gender}
+                    image={actor.image}
+                  />
+                ))}
+              </ScrollView>
             </View>
+          </View>
+          <View className="flex flex-col w-full mb-10 gap-2">
+            {/* List feedback */}
+            <Text className="text-2xl font-bold text-white">
+              Feedback from audience
+            </Text>
+            {listFeedback.length === 0 ? (
+              <Text className="text-sm font-bold text-white">
+                {" "}
+                Now dont have any feedback
+              </Text>
+            ) : (
+              listFeedback.map((feedback, i) => (
+                <DetailFeedback
+                  content={feedback.content}
+                  name={feedback.byName}
+                  rate={feedback.rate}
+                  key={i}
+                />
+              ))
+            )}
           </View>
         </View>
       </ScrollView>
