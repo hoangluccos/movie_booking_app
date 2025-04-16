@@ -1,52 +1,72 @@
-import { View, Text, Image, Dimensions, TouchableOpacity } from "react-native";
-import React from "react";
+import { TouchableOpacity, View, Text, Image } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
+import { MovieType } from "../data/Data";
+import { formatDuration } from "../utils/Utils";
 
-const MovieComponent = () => {
-  const width = Dimensions.get("window").width;
-  const height = Dimensions.get("window").height;
+const { width } = Dimensions.get("window");
+
+const MovieComponent = ({ item }: { item: MovieType }) => {
   return (
     <TouchableOpacity>
       <View
-        className="flex bg-gray-400 h-auto rounded-lg"
-        style={{ width: width * 0.4 }}
+        className="bg-gray-400 rounded-lg"
+        style={{
+          width: width * 0.42,
+          height: 340,
+        }}
       >
         <View className="w-full h-[200]">
           <Image
-            source={require("../../assets/images/movie_sample.jpg")}
+            source={{ uri: item.image }}
             className="w-full h-full rounded-t-lg"
-            //     object-cover-contain khong hieu dung vs Image
             resizeMode="cover"
           />
         </View>
-        <View className="p-2 flex-col gap-1">
-          <Text className="text-xl font-bold">Avengers:Infinity War</Text>
-          <View className="flex flex-row items-center gap-2">
-            <FontAwesome5
-              name="star"
-              size={16}
-              color="yellow"
-              className="rounded-lg"
-            />
-            <Text>4.0</Text>
-          </View>
-          <View className="flex flex-row items-center gap-2">
-            <FontAwesome5
-              name="clock"
-              size={16}
-              color="yellow"
-              className="rounded-lg"
-            />
-            <Text>2hour 5min</Text>
-          </View>
-          <View className="flex flex-row items-center gap-2">
-            <FontAwesome5
-              name="film"
-              size={16}
-              color="yellow"
-              className="rounded-lg"
-            />
-            <Text>Action, Science</Text>
+
+        <View className="p-2 flex-col justify-between h-[120]">
+          <Text
+            className="text-xl font-bold"
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={{ minHeight: 48 }}
+          >
+            {item.name || "Untitled"}
+          </Text>
+
+          <View className="flex-col">
+            <View
+              className="flex flex-row items-center gap-2"
+              style={{ minHeight: 20 }}
+            >
+              <FontAwesome5 name="star" size={16} color="yellow" />
+              <Text numberOfLines={1}>{item.rate || "N/A"}</Text>
+            </View>
+
+            <View
+              className="flex flex-row items-center gap-2"
+              style={{ minHeight: 20 }}
+            >
+              <FontAwesome5 name="clock" size={16} color="yellow" />
+              <Text numberOfLines={1}>
+                {formatDuration(item.duration) || "N/A"}
+              </Text>
+            </View>
+
+            <View
+              className="flex flex-row items-center gap-2"
+              style={{ minHeight: 20 }}
+            >
+              <FontAwesome5 name="film" size={16} color="yellow" />
+              <Text numberOfLines={2} ellipsizeMode="tail">
+                {item.genres && item.genres.length > 0
+                  ? item.genres
+                      .slice(0, 2)
+                      .map((genre) => genre.name)
+                      .join(", ")
+                  : "N/A"}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
