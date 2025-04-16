@@ -8,7 +8,7 @@ type Props = {
   content: string;
 };
 
-const DetailFeedback: React.FC<Props> = ({ name, rate, content }) => {
+const DetailFeedback = ({ name, rate, content }: Props) => {
   const renderStars = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
