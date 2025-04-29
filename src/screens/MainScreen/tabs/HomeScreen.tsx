@@ -1,6 +1,7 @@
 import {
   Dimensions,
   Image,
+  ImageBackground,
   Keyboard,
   ScrollView,
   Text,
@@ -13,10 +14,9 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import InputSearchComponent from "../../../components/InputSearchComponent";
 import { useEffect, useState } from "react";
 import { GenreType, MovieType } from "../../../data/Data";
-import { getApi } from "../../../api/Api";
 import { formatDuration } from "../../../utils/Utils";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllMovies, setMovies } from "../../../redux/slices/movieSlice";
+import { fetchAllMovies } from "../../../redux/slices/movieSlice";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { setIsLogOut } from "../../../redux/slices/userSlice";
 
@@ -154,6 +154,18 @@ const HomeScreen = ({ navigation }: any) => {
               listMovie={listMovie}
             />
           </View>
+          <View className="matching_feature w-full my-2">
+            <Text className="text-white my-1 text-xl font-bold">
+              New feature
+            </Text>
+            <TouchableOpacity className="">
+              <ImageBackground
+                source={require("../../../../assets/images/canva_matching1.png")}
+                className="w-full h-[150px] rounded-md overflow-hidden"
+                resizeMode="cover"
+              ></ImageBackground>
+            </TouchableOpacity>
+          </View>
           <View>
             <View className="flex-row justify-between items-center py-4">
               <Text className="text-white text-xl">Now Playing</Text>
@@ -171,8 +183,8 @@ const HomeScreen = ({ navigation }: any) => {
                 renderItem={showMovieNowPlayingCus}
                 sliderWidth={sliderWidth}
                 itemWidth={300}
-                inactiveSlideOpacity={0.5} //làm mờ ảnh
-                inactiveSlideScale={0.85} //làm nhỏ ảnh
+                inactiveSlideOpacity={0.5}
+                inactiveSlideScale={0.85}
                 onSnapToItem={(index) => setActiveSlide(index)}
                 loop
                 containerCustomStyle={{}} // Thêm dòng này

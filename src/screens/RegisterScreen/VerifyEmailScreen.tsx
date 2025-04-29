@@ -86,7 +86,7 @@ const VerifyEmailScreen = ({ navigation }: any) => {
               </Text>
               <View className="bg-white flex-1 h-[1px]" />
             </View>
-            <View className="h-[50px] w-full bg-[#1A1A1A] justify-center items-center rounded-full flex-row space-x-2">
+            <View className="h-[50px] w-full bg-[#1A1A1A] justify-center items-center rounded-full flex-row gap-x-2 my-1">
               <View>
                 <Image
                   source={require("../../../assets/images/facebook_icon.png")}
@@ -94,7 +94,7 @@ const VerifyEmailScreen = ({ navigation }: any) => {
               </View>
               <Text className="text-white font-base">Facebook</Text>
             </View>
-            <View className="h-[50px] w-full bg-[#1A1A1A] justify-center items-center rounded-full flex-row space-x-2">
+            <View className="h-[50px] w-full bg-[#1A1A1A] justify-center items-center rounded-full flex-row gap-x-2 my-1">
               <View>
                 <Image
                   source={require("../../../assets/images/google_icon.png")}

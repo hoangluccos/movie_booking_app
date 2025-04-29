@@ -23,6 +23,7 @@ type Movie = {
 
 const InputSearchComponent = (props: InputSearchComponentProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   const { onChangeValue, value, listMovie } = props;
   const [movieSearched, setMovieSearched] = useState<Movie[]>([]);
   useEffect(() => {

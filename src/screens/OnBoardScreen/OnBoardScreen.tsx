@@ -1,8 +1,9 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import ButtonComponent from "../../components/ButtonComponent";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
 import { useState } from "react";
+import GoogleLoginButton from "../../components/GoogleLoginButton";
 
 const OnBoardSceeen = ({ navigation }: any) => {
   const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
@@ -14,7 +15,10 @@ const OnBoardSceeen = ({ navigation }: any) => {
     navigation.navigate("VerifyEmail");
     setStateSendOtp("Register");
   };
-
+  const handleLoginSuccess = (token: string) => {
+    console.log("JWT Token:", token);
+    // lưu vào Redux, AsyncStorage,...
+  };
   return (
     <View className="w-full h-full flex-col justify-center items-center gap-y-5 bg-black">
       <View>
@@ -40,10 +44,18 @@ const OnBoardSceeen = ({ navigation }: any) => {
       </View>
       <View className="justify-center items-center">
         <Text className="text-gray-400 text-sm font-base text-center">
-          Bằng cách đăng nhập hoặc đăng ký, bạn đồng ý với Điều khoản dịch vụ và
+          Bằng cách đăng nhập hoặc đăng ký, bạn đồng ý với Điều khoản dịch vụ
           Chính sách bảo mật của chúng tôi
         </Text>
       </View>
+      {/* <TouchableOpacity
+        onPress={handleLoginGoogle}
+        className="flex flex-row items-center justify-center gap-x-2 p-3 bg-slate-400 rounded-[50]"
+      >
+        <AntDesign name="google" size={20} color="white" />
+        <Text className="text-white">Login with Google</Text>
+      </TouchableOpacity> */}
+      <GoogleLoginButton onLoginSuccess={handleLoginSuccess} />
     </View>
   );
 };

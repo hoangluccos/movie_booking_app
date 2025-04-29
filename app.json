@@ -2,6 +2,8 @@
   "expo": {
     "name": "movie_booking_app",
     "slug": "movie_booking_app",
+    "owner": "hoangluccos",
+    "scheme": "movie_booking_app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,11 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.hoangluccos.moviebookingapp"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bc6af361-888a-461b-aa53-b24b1b73d866"
+      }
     }
   }
 }
