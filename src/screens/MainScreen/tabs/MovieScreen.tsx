@@ -6,7 +6,7 @@ import { getApi } from "../../../api/Api";
 import { MovieType } from "../../../data/Data";
 
 const MovieScreen = () => {
-  const [isSelectFirst, setIsSelectFirst] = useState(false); //default select first element in ToggleComponent
+  const [isSelectFirst, setIsSelectFirst] = useState(true); //default select first element in ToggleComponent
   const [listMovie, setListMovie] = useState<MovieType[]>([]);
   console.log("thay doi ");
   //uef, depen[isSelectFirst]
@@ -49,7 +49,7 @@ const MovieScreen = () => {
         setIsSelectFirst={setIsSelectFirst}
       />
       {/* List movies */}
-      <View className="flex flex-row flex-wrap gap-5 justify-start ml-5">
+      <View className="flex flex-row flex-wrap gap-5 justify-start ml-4">
         {/* mặc định flex của View la column */}
         {movies.length > 0 ? (
           movies.map((movie) => <MovieComponent key={movie.id} item={movie} />)

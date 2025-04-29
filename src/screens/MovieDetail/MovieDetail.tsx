@@ -5,12 +5,11 @@ import {
   ScrollView,
   ImageBackground,
   Modal,
-  AppState,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, RouteProp } from "@react-navigation/native";
 import { getApi, postApi } from "../../api/Api";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import ActorComponent from "../../components/ActorComponent";
 import CinemaComponent from "../../components/CinemaComponent";
 import { MovieType, ShowtimeType } from "../../data/Data";
@@ -95,7 +94,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
   //uef
   //fetch api for movieDetail
   useEffect(() => {
-    getApi(`/api/movies/${route.params}`, true, (error, response) => {
+    getApi(`/api/movies/${route.params.id}`, true, (error, response) => {
       if (error) {
         console.error("Error:", error);
       } else {
@@ -106,7 +105,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
     });
     console.log("Bat dau fetch API coupon");
     dispatch(fetchAllCoupons());
-    dispatch(fetchAllFeedbackByMovie(route.params));
+    dispatch(fetchAllFeedbackByMovie(route.params.id));
   }, []);
 
   //fetch api showtime- finding showtime of this movieID, date
@@ -290,7 +289,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
             className="flex-1"
             onPress={() => setIsShowModal(false)}
           />
-          <View className="flex bg-yellow-400 w-full h-[400] px-10 absolute bottom-0">
+          <View className="flex bg-[#faad14] w-full h-[400] px-10 absolute bottom-0">
             <TouchableOpacity
               onPress={() => setIsShowModal(!isShowModal)}
               className="absolute top-1 right-1"
@@ -310,8 +309,8 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
                     <Text
                       className={
                         !isSelectedDate.includes(date)
-                          ? "p-3 bg-gray-400 rounded-lg"
-                          : "p-3 bg-red-400 rounded-lg"
+                          ? "p-3 bg-[#fffbe6] rounded-lg"
+                          : "p-3 bg-[#871400] rounded-lg text-white"
                       }
                     >
                       {date}

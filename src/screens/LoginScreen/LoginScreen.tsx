@@ -2,8 +2,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -17,7 +15,7 @@ import { loginApi } from "../../api/Api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import InputInfoComponent from "../../components/InputInfoComponent";
-import Icon from "react-native-vector-icons/Entypo";
+import { Entypo } from "@expo/vector-icons";
 import { useRecoilState } from "recoil";
 import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
 
@@ -61,28 +59,28 @@ const LoginScreen = ({ navigation }: any) => {
         }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="w-full h-full items-center justify-center px-4 space-y-6">
+        <View className="w-full h-full items-center justify-center px-4 space-y-2">
           <View>
             <Image source={require("../../../assets/images/logo.png")} />
           </View>
-          <View className="w-full">
-            <InputInfoComponent
+          <View className="relative border-b border-gray-400 w-full">
+            <View className="flex-row justify-between">
+              <Text className="text-[#FCC434] font-base text-base">
+                Username
+              </Text>
+            </View>
+            <TextInput
               value={username}
-              onChangeValue={setUsername}
+              onChangeText={setUsername}
               placeholder=""
-              title="Username"
+              className="border-white text-white font-base text-lg w-full"
             />
           </View>
-          <View className="relative border-b border-gray-400 w-full mb-20">
+          <View className="relative border-b border-gray-400 w-full">
             <View className="flex-row justify-between">
               <Text className="text-[#FCC434] font-base text-base">
                 Password
               </Text>
-              <TouchableOpacity onPress={() => handleClickForgotPassword()}>
-                <Text className="text-[#FCC434] font-base text-base underline">
-                  Forgot your password?
-                </Text>
-              </TouchableOpacity>
             </View>
             <TextInput
               value={password}
@@ -96,10 +94,17 @@ const LoginScreen = ({ navigation }: any) => {
               className="absolute right-4 top-10"
             >
               {isShowPass ? (
-                <Icon name="eye" size={24} color="white" />
+                <Entypo name="eye" size={24} color="white" />
               ) : (
-                <Icon name="eye-with-line" size={24} color="white" />
+                <Entypo name="eye-with-line" size={24} color="white" />
               )}
+            </TouchableOpacity>
+          </View>
+          <View className="my-5 flex flex-row justify-end">
+            <TouchableOpacity onPress={() => handleClickForgotPassword()}>
+              <Text className="text-[#FCC434] font-base text-base underline">
+                Forgot your password?
+              </Text>
             </TouchableOpacity>
           </View>
           <View className="w-full items-center">

@@ -11,7 +11,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import MyTicketComponent from "../../components/MyTicketComponent";
 import DetailBetween from "../../components/DetailBetweenComponent";
 import PaymentComponent from "../../components/PaymentComponent";
-import { postApi } from "../../api/Api";
+import { getApi, postApi } from "../../api/Api";
 import { ResponseApiType } from "../../data/Response";
 import { WebView } from "react-native-webview";
 import { ScrollView } from "react-native-gesture-handler";
@@ -80,7 +80,12 @@ const PaymentScreen = () => {
 
   useEffect(() => {
     dispatch(fetchAllFoods());
+    //fetch api seat
+    // const fetchSeats = async () => {
+    //   const res = await getApi("/api/seats/", true, )
+    // }
   }, [dispatch]);
+
   useEffect(() => {
     if (foodListRedux.length > 0) {
       //create initial value FoodQuantities and display them
@@ -94,6 +99,7 @@ const PaymentScreen = () => {
       setFoodQuantities(initialFoodQuantities);
     }
   }, [foodListRedux]);
+
   console.log("ListFood From reduxt call API: ", foodListRedux);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
@@ -279,15 +285,11 @@ const PaymentScreen = () => {
                 Chọn Voucher Discount
               </Text>
               <ScrollView className="max-h-full">
-                {/* Giới hạn chiều cao của ScrollView */}
-                {/* Dùng ScrollView để cuộn nội dung */}
-
                 {/* Thanh tìm kiếm */}
                 <View className="mb-3">
                   <TextInput
                     className="border border-gray-300 rounded-md p-2 w-full"
                     placeholder="Nhập mã voucher"
-                    // xử lý sự kiện onChangeText ở đây
                   />
 
                   <ScrollView className="max-h-[calc(80%-150px)]">
@@ -364,7 +366,7 @@ const PaymentScreen = () => {
                 </View>
                 <ScrollView
                   className="flex-1"
-                  contentContainerStyle={{ paddingBottom: 80 }} // Thêm padding để tránh nội dung bị che bởi nút
+                  contentContainerStyle={{ paddingBottom: 80 }}
                 >
                   <MyTicketComponent
                     nameMovie={route.params.Movie.name}
@@ -383,6 +385,7 @@ const PaymentScreen = () => {
                         route.params.showTime.startTime
                       }
                     />
+                    {/*  */}
                     <DetailBetween title="Seats" value="Seat???" />
 
                     <TouchableOpacity
@@ -455,11 +458,6 @@ const PaymentScreen = () => {
                       Payment Method
                     </Text>
                     <PaymentComponent nameMethod="Zalo Pay" image="nothing" />
-                    <PaymentComponent nameMethod="Momo" image="nothing" />
-                    <PaymentComponent
-                      nameMethod="Credit Card"
-                      image="nothing"
-                    />
                   </View>
                 </ScrollView>
                 <TouchableOpacity

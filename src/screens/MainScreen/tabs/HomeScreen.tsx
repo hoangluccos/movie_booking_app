@@ -41,7 +41,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const handleClickMovie = (id: string) => {
     console.log("Click on movie", id);
-    navigation.navigate("MovieDetail", id);
+    navigation.navigate("MovieDetail", { id: id });
   };
 
   const showMovieNowPlayingCus = ({ item }: { item: MovieType }) => {

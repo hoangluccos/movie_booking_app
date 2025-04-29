@@ -40,7 +40,7 @@ const CouponComponent = ({
       <View>
         <Text className="font-bold">{title}</Text>
         <Text className="text-sm">Hết hạn: {expireTime}</Text>
-        <Text className="text-sm">Giảm: {discount}</Text>
+        <Text className="text-sm">Giảm: {discount.toLocaleString()} VND</Text>
       </View>
     </TouchableOpacity>
   );
