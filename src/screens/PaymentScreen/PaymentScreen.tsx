@@ -23,6 +23,7 @@ import { fetchAllFoods } from "../../redux/slices/foodSlice";
 import { CouponType, FoodType } from "../../data/Data";
 import { formatVND, getTypeOfCoupon, totalPrice } from "../../utils/Utils";
 import CouponComponent from "../../components/CouponComponent";
+import { fetchAllTickets } from "../../redux/slices/ticketSlice";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -204,6 +205,8 @@ const PaymentScreen = () => {
         console.log("Thanh toán thành công");
         confirmPayment(responseCode, ticketId); // Gọi GET để xác nhận
         setPaymentUrl(null);
+        // fix not auto fetch all_tickets in tickets screen
+        dispatch(fetchAllTickets());
         navigation.navigate("SuccessScreen", {
           amount: amount ? Number(amount) / 100 : 0,
           orderInfo: orderInfo || "",

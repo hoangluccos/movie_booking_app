@@ -11,6 +11,8 @@ import {
   updateVariablePw,
 } from "../../redux/slices/userSlice";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Ionicons } from "@expo/vector-icons";
+
 const OTP_LENGTH = 6;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -105,9 +107,19 @@ const ChangePasswordScreen = () => {
     }
     setIsOpenOTP(true);
   };
-
+  const handleBack = () => {
+    navigation.goBack();
+  };
   return (
     <View className="flex flex-1 bg-gray-900 mt-7 px-4 py-3">
+      <TouchableOpacity onPress={handleBack}>
+        <Ionicons
+          className="relative top-2 left-2"
+          name="arrow-back"
+          size={36}
+          color="white"
+        />
+      </TouchableOpacity>
       <View className="flex items-center mt-10 mb-5">
         <TouchableOpacity
           onPress={handleClickOTP}

@@ -8,13 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import InputComponent from "../../components/InputComponent";
 import { useEffect, useState } from "react";
 import ButtonComponent from "../../components/ButtonComponent";
 import { loginApi } from "../../api/Api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import InputInfoComponent from "../../components/InputInfoComponent";
 import { Entypo } from "@expo/vector-icons";
 import { useRecoilState } from "recoil";
 import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
@@ -63,9 +60,9 @@ const LoginScreen = ({ navigation }: any) => {
           <View>
             <Image source={require("../../../assets/images/logo.png")} />
           </View>
-          <View className="relative border-b border-gray-400 w-full">
+          <View className="relative border-b border-gray-400 w-full my-1">
             <View className="flex-row justify-between">
-              <Text className="text-[#FCC434] font-base text-base">
+              <Text className="text-[#FCC434] font-base text-base font-semibold ">
                 Username
               </Text>
             </View>
@@ -76,9 +73,9 @@ const LoginScreen = ({ navigation }: any) => {
               className="border-white text-white font-base text-lg w-full"
             />
           </View>
-          <View className="relative border-b border-gray-400 w-full">
+          <View className="relative border-b border-gray-400 w-full my-1">
             <View className="flex-row justify-between">
-              <Text className="text-[#FCC434] font-base text-base">
+              <Text className="text-[#FCC434] font-base text-base font-semibold ">
                 Password
               </Text>
             </View>

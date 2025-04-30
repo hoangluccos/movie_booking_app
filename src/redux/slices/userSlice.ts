@@ -212,7 +212,9 @@ const userSlice = createSlice({
       })
       .addCase(changeImage.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        // state.user = action.payload; //pull commit moi nhat github
+        if (state.user) {
+          state.user.avatar = action.payload.imageUrl;
+        }
       })
       .addCase(changeImage.rejected, (state, action) => {
         state.loading = false;

@@ -4,14 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { User } from "../../data/Data";
 import InputInfoComponent from "../../components/InputInfoComponent";
-import { putApi } from "../../api/Api";
 import { changeImage, updateUser } from "../../redux/slices/userSlice";
 import * as ImagePicker from "expo-image-picker";
 import { transStringToDate } from "../../utils/Utils";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/type";
+import Toast from "react-native-toast-message";
 
 interface UserState {
   user: User | null;
 }
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
 type ImageSource =
   | {
       uri: string;
@@ -20,7 +26,7 @@ type ImageSource =
 const ProfileInfoScreen = () => {
   //Dimensions
   const widthDevice = Dimensions.get("window").width;
-
+  const nav = useNavigation<NavigationProps>();
   const userInfo = useSelector<RootState, UserState>((state) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -65,6 +71,8 @@ const ProfileInfoScreen = () => {
       if (updateUser.fulfilled.match(resultAction)) {
         console.log("Update successfully", resultAction.payload);
         setUserData(resultAction.payload);
+        showToast("Update profile successfully");
+        nav.goBack();
       } else {
         console.log("update failed", resultAction.payload);
       }
@@ -72,8 +80,7 @@ const ProfileInfoScreen = () => {
       console.log("Error dispatching updateUser", error);
     }
   };
-
-  const handlePick = async () => {
+  const handlePickImage = async () => {
     // No permissions request is necessary for launching the image library
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
@@ -101,6 +108,7 @@ const ProfileInfoScreen = () => {
         if (changeImage.fulfilled.match(resultAction)) {
           console.log("Update Image successfully", resultAction.payload);
           setAvatar({ uri: selectedImg });
+          showToast("Update Image successfully");
         } else {
           console.log("update failed", resultAction.payload);
         }
@@ -109,15 +117,33 @@ const ProfileInfoScreen = () => {
       }
     }
   };
-
+  const handleBack = () => {
+    nav.goBack();
+  };
+  const showToast = (message: string) => {
+    Toast.show({
+      type: "success",
+      text1: message,
+    });
+  };
   return (
-    <View className="bg-gray-600 flex flex-1">
-      <View className="bg-yellow-400 h-[150] w-full"></View>
+    <View className="bg-gray-600 flex flex-1 mt-7">
+      <View className=" bg-yellow-600">
+        <TouchableOpacity onPress={handleBack}>
+          <Ionicons
+            className="relative top-2 left-2"
+            name="arrow-back"
+            size={36}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
+      <View className="bg-yellow-600 h-[150] w-full"></View>
       <View className="flex justify-center items-center">
         <View className="  flex h-auto" style={{ width: widthDevice * 0.9 }}>
           <View className="relative flex justify-center items-center">
             <TouchableOpacity
-              onPress={() => handlePick()}
+              onPress={() => handlePickImage()}
               className="flex justify-center items-center"
             >
               <Image
@@ -175,12 +201,12 @@ const ProfileInfoScreen = () => {
           />
 
           <TouchableOpacity
-            className="bg-yellow-300 p-4 w-[100] h-[50]
+            className="bg-yellow-600 p-4 w-[100] h-[50]
             self-center rounded-[30]"
             onPress={() => handleSaveUserInfo(userData)}
             // onPress={() => console.log(userData)}
           >
-            <Text className="my-auto mx-auto">Save</Text>
+            <Text className="my-auto mx-auto font-bold">Save</Text>
           </TouchableOpacity>
         </View>
       </View>

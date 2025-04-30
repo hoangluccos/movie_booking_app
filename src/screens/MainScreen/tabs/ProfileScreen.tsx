@@ -122,7 +122,7 @@ const ProfileScreen = () => {
           nameIcon={"lock"}
           navigateTo={{
             screen: "ChangePasswordScreen",
-            params: { email: infoUser.user?.email },
+            params: { email: infoUser.user?.email || "" },
           }}
         />
       </View>
