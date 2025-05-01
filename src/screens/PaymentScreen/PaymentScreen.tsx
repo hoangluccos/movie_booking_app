@@ -58,6 +58,7 @@ const PaymentScreen = () => {
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [ticketId, setTicketId] = useState<string | null>(null);
 
+  const [isSelectPaymentType, setIsSelectPaymentType] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(true);
   const [isOpenModalDiscount, setIsOpenModalDiscount] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
@@ -460,12 +461,22 @@ const PaymentScreen = () => {
                     <Text className="text-white font-bold text-xl">
                       Payment Method
                     </Text>
-                    <PaymentComponent nameMethod="Zalo Pay" image="nothing" />
+                    <PaymentComponent
+                      isSelect={isSelectPaymentType}
+                      onSelect={() =>
+                        setIsSelectPaymentType(!isSelectPaymentType)
+                      }
+                      nameMethod="Zalo Pay"
+                      image="nothing"
+                    />
                   </View>
                 </ScrollView>
                 <TouchableOpacity
+                  disabled={!isSelectPaymentType}
                   onPress={() => handleClickPayment()}
-                  className="bg-yellow-400 absolute w-full bottom-0 left-5 justify-items-center py-5 flex items-center rounded-[50]"
+                  className={`absolute w-full bottom-0 left-5 justify-items-center py-5 flex items-center rounded-[50] ${
+                    isSelectPaymentType ? "bg-yellow-400 " : "bg-gray-300"
+                  }`}
                 >
                   <Text className="text-black font-bold">Booking Ticket</Text>
                 </TouchableOpacity>
