@@ -65,6 +65,7 @@ export interface TicketType {
   id: string;
   date: string;
   time: string;
+  dateScreenTime: string;
   startTime: string;
   endTime: string;
   movieName: string;

@@ -17,7 +17,8 @@ const MyTicketScreen = () => {
   const { movies } = useSelector((state: RootState) => state.movies);
   const movieIds = generateMovieId_Image(movies);
   const [openModalFilter, setOpeModalFilter] = useState(false);
-  const [filterBy, setFilterBy] = useState<"nearest" | "farthest">("nearest");
+  const [filterBy, setFilterBy] = useState<"nearest" | "farthest">("farthest");
+
   useEffect(() => {
     dispatch(fetchAllTickets());
   }, []);
@@ -35,7 +36,7 @@ const MyTicketScreen = () => {
     setOpeModalFilter(true);
   };
 
-  const handleSelect = (option: "nearest" | "farthest") => {
+  const handleSelectFilterOption = (option: "nearest" | "farthest") => {
     setFilterBy(option);
     setOpeModalFilter(false);
   };
@@ -73,7 +74,7 @@ const MyTicketScreen = () => {
 
             <TouchableOpacity
               className="flex-row items-center gap-x-3 mb-4"
-              onPress={() => handleSelect("nearest")}
+              onPress={() => handleSelectFilterOption("nearest")}
             >
               <View
                 className={`w-5 h-5 rounded-full border-2 ${
@@ -89,7 +90,7 @@ const MyTicketScreen = () => {
 
             <TouchableOpacity
               className="flex-row items-center gap-x-3 mb-2"
-              onPress={() => handleSelect("farthest")}
+              onPress={() => handleSelectFilterOption("farthest")}
             >
               <View
                 className={`w-5 h-5 rounded-full border-2 ${
@@ -128,7 +129,7 @@ const MyTicketScreen = () => {
               key={i}
               ticket={ticket}
               nameMovie={ticket.movieName}
-              time={`${ticket.time} - ${ticket.date}`}
+              time={`${ticket.startTime} - ${ticket.dateScreenTime}`}
               place={ticket.theaterName}
               image={movieIds[ticket.movieId]}
             />

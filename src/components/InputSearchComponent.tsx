@@ -65,7 +65,7 @@ const InputSearchComponent = (props: InputSearchComponentProps) => {
               key={item.id}
               onPress={() => handleSearchItem(item.id)}
             >
-              <View className="p-3 bg-teal-700 rounded-sm flex-row gap-3 items-center">
+              <View className="p-3 bg-yellow-500 rounded-sm flex-row gap-3 items-center">
                 <Image
                   source={{ uri: item.image }}
                   className="w-7 h-7 rounded-sm"

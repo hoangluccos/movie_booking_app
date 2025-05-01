@@ -200,12 +200,12 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
                     />
                   ))}
               </View>
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <View className="flex flex-row gap-2 items-center border border-white p-2 rounded-sm">
                   <FontAwesome name="play" size={20} color="white" />
                   <Text className="text-white">Watch trailer</Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
 

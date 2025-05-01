@@ -124,7 +124,9 @@ const TicketScreen = () => {
             {/* Time date */}
             <View>
               <Text className="font-bold text-2xl">{ticket.startTime}</Text>
-              <Text className="font-bold text-2xl">{ticket.date}</Text>
+              <Text className="font-bold text-2xl">
+                {ticket.dateScreenTime}
+              </Text>
             </View>
           </View>
           <View className="flex-1 h-[100] flex-row gap-2 justify-center items-center">
@@ -152,7 +154,9 @@ const TicketScreen = () => {
         <View className="flex flex-col gap-2">
           <View className="flex flex-row items-center gap-2">
             <FontAwesome5 name="money-bill-alt" size={18} color="black" />
-            <Text className="text-xl">{ticket.totalPrice}-VND</Text>
+            <Text className="text-xl">
+              {ticket.totalPrice.toLocaleString()}VND
+            </Text>
           </View>
           <View className="flex flex-row items-center gap-2">
             <FontAwesome5 name="paper-plane" size={18} color="black" />

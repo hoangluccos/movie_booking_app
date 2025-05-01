@@ -19,8 +19,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMovies } from "../../../redux/slices/movieSlice";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { setIsLogOut } from "../../../redux/slices/userSlice";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../../navigation/type";
+import { useNavigation } from "@react-navigation/native";
 
-const HomeScreen = ({ navigation }: any) => {
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+const HomeScreen = () => {
+  const navigation = useNavigation<NavigationProps>();
   const { width: screenWidth } = Dimensions.get("window");
   const sliderWidth = screenWidth;
 
@@ -154,6 +159,7 @@ const HomeScreen = ({ navigation }: any) => {
               listMovie={listMovie}
             />
           </View>
+          {/* Begin matching feature */}
           <View className="matching_feature w-full my-2">
             <Text className="text-white my-1 text-xl font-bold">
               New feature
@@ -174,8 +180,8 @@ const HomeScreen = ({ navigation }: any) => {
                 <FontAwesome name="caret-right" color="#FCC434" size={15} />
               </View>
             </View>
-
-            {/* Đang chiếu */}
+            {/* End matching feature */}
+            {/* Begin Now playing feature */}
             <View className="items-center pb-4">
               <Carousel
                 layout="default"
@@ -187,22 +193,7 @@ const HomeScreen = ({ navigation }: any) => {
                 inactiveSlideScale={0.85}
                 onSnapToItem={(index) => setActiveSlide(index)}
                 loop
-                containerCustomStyle={{}} // Thêm dòng này
               />
-              {/* <Pagination
-              dotsLength={listMovie.length}
-              activeDotIndex={activeSlide}
-              containerStyle={{paddingVertical: 10}}
-              dotStyle={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                backgroundColor: '#3498db',
-              }}
-              inactiveDotStyle={{backgroundColor: '#ccc'}}
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
-            /> */}
             </View>
           </View>
 
