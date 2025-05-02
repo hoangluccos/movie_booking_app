@@ -52,6 +52,7 @@ export interface SeatType {
   price: number;
   status: boolean;
   showtimeId: string;
+  isCouple: boolean;
 }
 
 export interface FoodType {

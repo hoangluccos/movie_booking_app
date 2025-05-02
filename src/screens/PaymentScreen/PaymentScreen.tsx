@@ -11,7 +11,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import MyTicketComponent from "../../components/MyTicketComponent";
 import DetailBetween from "../../components/DetailBetweenComponent";
 import PaymentComponent from "../../components/PaymentComponent";
-import { getApi, postApi } from "../../api/Api";
+import { postApi } from "../../api/Api";
 import { ResponseApiType } from "../../data/Response";
 import { WebView } from "react-native-webview";
 import { ScrollView } from "react-native-gesture-handler";
@@ -20,7 +20,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllFoods } from "../../redux/slices/foodSlice";
-import { CouponType, FoodType } from "../../data/Data";
+import { CouponType, FoodType, SeatType } from "../../data/Data";
 import { formatVND, getTypeOfCoupon, totalPrice } from "../../utils/Utils";
 import CouponComponent from "../../components/CouponComponent";
 import { fetchAllTickets } from "../../redux/slices/ticketSlice";
@@ -28,13 +28,12 @@ import { fetchAllTickets } from "../../redux/slices/ticketSlice";
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
 
-// Tạo hàm getApi (nếu chưa có)
 export const getPaymentApi = (
   url: string,
   params: Record<string, string> | null,
   callback: (error: any, response: any) => void
 ) => {
-  const baseUrl = "http://192.168.1.4:8080";
+  const baseUrl = "http://10.0.2.2:8080";
   let queryString = "";
   if (params) {
     queryString = "?" + new URLSearchParams(params).toString();
@@ -57,6 +56,7 @@ const PaymentScreen = () => {
 
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [ticketId, setTicketId] = useState<string | null>(null);
+  const [listSeats, setListSeats] = useState<SeatType[]>([]);
 
   const [isSelectPaymentType, setIsSelectPaymentType] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(true);
@@ -73,19 +73,34 @@ const PaymentScreen = () => {
   console.log("Route PaymentScreen", route.params);
   const listCoupons = useSelector((state: RootState) => state.coupons.coupons);
   console.log("Coupons ", listCoupons);
-  const [selectCoupon, setSelectCoupon] = useState<CouponType>(listCoupons[0]);
+  const [selectCoupon, setSelectCoupon] = useState<CouponType | null>(null);
 
   const handleSelectCoupon = (objCoupon: CouponType) => {
     console.log("selectCoupon: ", objCoupon.id);
-    setSelectCoupon(objCoupon);
+    if (selectCoupon?.id === objCoupon.id) {
+      setSelectCoupon(null);
+    } else {
+      setSelectCoupon(objCoupon);
+    }
   };
 
   useEffect(() => {
     dispatch(fetchAllFoods());
     //fetch api seat
-    // const fetchSeats = async () => {
-    //   const res = await getApi("/api/seats/", true, )
-    // }
+    postApi(
+      "/api/seats/",
+      null,
+      { seatIds: route.params.seats },
+      true,
+      (error, response: ResponseApiType) => {
+        if (error) {
+          console.log("Fail to load seat: ", error);
+        } else {
+          console.log("Seat data api : ", response);
+          setListSeats(response.result);
+        }
+      }
+    );
   }, [dispatch]);
 
   useEffect(() => {
@@ -137,11 +152,11 @@ const PaymentScreen = () => {
     const requestBook = {
       showtimeId: route.params.showTime.id,
       seatId: route.params.seats,
-      couponId: selectCoupon.id,
+      ...(selectCoupon && { couponId: selectCoupon.id }),
       orderRequests: handleEntries(foodQuantities),
       // orderRequests: [],
     };
-    console.log("foodQuantities", foodQuantities);
+    console.log("foodQuantities", handleEntries(foodQuantities));
     console.log("requestBook orderRequests nha: ", requestBook);
     postApi(
       "/api/book/",
@@ -307,9 +322,7 @@ const PaymentScreen = () => {
                         expireTime={coupon.endDate}
                         minValue={coupon.minValue}
                         handleSelect={() => handleSelectCoupon(coupon)}
-                        isSelected={
-                          selectCoupon.id === coupon.id ? true : false
-                        }
+                        isSelected={selectCoupon?.id === coupon.id}
                       />
                     ))}
                   </ScrollView>
@@ -319,12 +332,15 @@ const PaymentScreen = () => {
                 <Text className="text-lg font-bold mb-2">
                   Giảm giá:{" "}
                   {formatVND(
-                    getTypeOfCoupon(
-                      selectCoupon,
-                      totalPrice(route.params.seats.length) + totalFoodCost
-                    )
+                    selectCoupon
+                      ? getTypeOfCoupon(
+                          selectCoupon,
+                          totalPrice(route.params.seats.length) + totalFoodCost
+                        )
+                      : 0
                   )}
                 </Text>
+
                 <TouchableOpacity
                   className="bg-green-600 py-2 px-5 rounded-md"
                   onPress={handleConfirmCoupon}
@@ -390,7 +406,12 @@ const PaymentScreen = () => {
                       }
                     />
                     {/*  */}
-                    <DetailBetween title="Seats" value="Seat???" />
+                    <DetailBetween
+                      title="Seats"
+                      value={listSeats
+                        .map((seat) => `${seat.locateRow}${seat.locateColumn}`)
+                        .join("-")}
+                    />
 
                     <TouchableOpacity
                       className="flex flex-row justify-between mt-3 items-center p-2 bg-yellow-500 rounded-md"
@@ -431,11 +452,13 @@ const PaymentScreen = () => {
                       <Text className="text-red-700 font-bold text-xl">
                         -{" "}
                         {formatVND(
-                          getTypeOfCoupon(
-                            selectCoupon,
-                            totalPrice(route.params.seats.length) +
-                              totalFoodCost
-                          )
+                          selectCoupon
+                            ? getTypeOfCoupon(
+                                selectCoupon,
+                                totalPrice(route.params.seats.length) +
+                                  totalFoodCost
+                              )
+                            : 0
                         )}
                       </Text>
                     </TouchableOpacity>
@@ -446,13 +469,15 @@ const PaymentScreen = () => {
                     <Text className="text-white text-xl">Total</Text>
                     <Text className="text-white text-xl font-bold">
                       {formatVND(
-                        totalPrice(route.params.seats.length) +
-                          totalFoodCost -
-                          getTypeOfCoupon(
-                            selectCoupon,
-                            totalPrice(route.params.seats.length) +
+                        selectCoupon
+                          ? totalPrice(route.params.seats.length) +
+                              totalFoodCost -
+                              getTypeOfCoupon(
+                                selectCoupon,
+                                totalPrice(route.params.seats.length)
+                              )
+                          : totalPrice(route.params.seats.length) +
                               totalFoodCost
-                          )
                       )}
                     </Text>
                   </View>
