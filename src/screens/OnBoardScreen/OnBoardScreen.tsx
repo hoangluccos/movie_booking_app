@@ -55,7 +55,7 @@ const OnBoardSceeen = ({ navigation }: any) => {
         <AntDesign name="google" size={20} color="white" />
         <Text className="text-white">Login with Google</Text>
       </TouchableOpacity> */}
-      <GoogleLoginButton onLoginSuccess={handleLoginSuccess} />
+      {/* <GoogleLoginButton onLoginSuccess={handleLoginSuccess} /> */}
     </View>
   );
 };

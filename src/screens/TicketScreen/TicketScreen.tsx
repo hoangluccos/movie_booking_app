@@ -18,6 +18,7 @@ import { findMovieById } from "../../redux/slices/movieSlice";
 import { MovieType } from "../../data/Data";
 import StarRating from "../../components/StarRating";
 import { postFeedback } from "../../redux/slices/ticketSlice";
+import Toast from "react-native-toast-message";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 type TicketScreenRouteProp = RouteProp<RootStackParamList, "TicketScreen">;
@@ -31,6 +32,8 @@ const TicketScreen = () => {
     (state) => state.movies.movieDetail
   );
 
+  //chong chay sau khi feedback
+  const [isRated, setIsRated] = useState(false);
   const [rating, setRating] = useState(4);
   const [contentRating, setContentRating] = useState("");
   useEffect(() => {
@@ -47,9 +50,15 @@ const TicketScreen = () => {
     };
     console.log("dataSend ", dataSend);
     dispatch(postFeedback(dataSend));
-    Alert.alert("We have send your feedback to the Admin");
+    setIsRated(true);
+    showToast("You have send a feedback this movie");
   };
-
+  const showToast = (message: string) => {
+    Toast.show({
+      type: "success",
+      text1: message,
+    });
+  };
   if (!movieDetail) {
     return (
       <View className="flex flex-1 bg-black">
@@ -189,22 +198,29 @@ const TicketScreen = () => {
         {/* Rating movie afterwatch */}
         {ticket.canComment ? (
           <View className="flex items-center">
-            <Text className="text-xl font-bold my-3">Rating this film</Text>
-            <StarRating rating={rating} onRatingChange={setRating} />
-            <View className="flex flex-row w-full justify-between items-center">
-              <TextInput
-                className="p-2 w-[80%] h-[50] mt-3 border border-gray-300 rounded-md"
-                placeholder="Express your thinking"
-                value={contentRating}
-                onChangeText={setContentRating}
-              />
-              <TouchableOpacity
-                onPress={() => handleSendRating()}
-                className="flex items-center justify-center px-3 mt-2 bg-blue-300 rounded-lg h-[50]"
-              >
-                <Text>Send</Text>
-              </TouchableOpacity>
-            </View>
+            {isRated ? (
+              <Text>You have rated this movie</Text>
+            ) : (
+              <>
+                {" "}
+                <Text className="text-xl font-bold my-3">Rating this film</Text>
+                <StarRating rating={rating} onRatingChange={setRating} />
+                <View className="flex flex-row w-full justify-between items-center">
+                  <TextInput
+                    className="p-2 w-[80%] h-[50] mt-3 border border-gray-300 rounded-md"
+                    placeholder="Express your thinking"
+                    value={contentRating}
+                    onChangeText={setContentRating}
+                  />
+                  <TouchableOpacity
+                    onPress={() => handleSendRating()}
+                    className="flex items-center justify-center px-3 mt-2 bg-blue-300 rounded-lg h-[50]"
+                  >
+                    <Text>Send</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </View>
         ) : (
           <View className="flex items-center">

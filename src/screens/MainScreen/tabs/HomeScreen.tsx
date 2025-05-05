@@ -148,9 +148,9 @@ const HomeScreen = () => {
               <Text className="text-lg text-white">Hi, Friends</Text>
               <Text className="text-2xl text-white">Wellcome Back</Text>
             </View>
-            <View className="justify-center">
+            {/* <View className="justify-center">
               <FontAwesome name="bell-o" color="white" size={35} />
-            </View>
+            </View> */}
           </View>
           <View>
             <InputSearchComponent
@@ -160,7 +160,7 @@ const HomeScreen = () => {
             />
           </View>
           {/* Begin matching feature */}
-          <View className="matching_feature w-full my-2">
+          {/* <View className="matching_feature w-full my-2">
             <Text className="text-white my-1 text-xl font-bold">
               New feature
             </Text>
@@ -171,7 +171,8 @@ const HomeScreen = () => {
                 resizeMode="cover"
               ></ImageBackground>
             </TouchableOpacity>
-          </View>
+          </View> */}
+          {/* End matching feature */}
           <View>
             <View className="flex-row justify-between items-center py-4">
               <Text className="text-white text-xl">Now Playing</Text>
@@ -180,7 +181,6 @@ const HomeScreen = () => {
                 <FontAwesome name="caret-right" color="#FCC434" size={15} />
               </View>
             </View>
-            {/* End matching feature */}
             {/* Begin Now playing feature */}
             <View className="items-center pb-4">
               <Carousel

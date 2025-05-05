@@ -123,7 +123,10 @@ const MyTicketScreen = () => {
             className="rounded-lg"
           />
         </TouchableOpacity>
-        {tickets.tickets.map((ticket, i) => {
+        {
+          tickets.tickets.length > 0 ? 
+        
+        tickets.tickets.map((ticket, i) => {
           return (
             <TicketMovieComponent
               key={i}
@@ -134,7 +137,7 @@ const MyTicketScreen = () => {
               image={movieIds[ticket.movieId]}
             />
           );
-        })}
+        })  : <Text>Hiện tại bạn chưa có vé nào</Text>}
       </ScrollView>
     </View>
   );
