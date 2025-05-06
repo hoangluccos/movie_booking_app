@@ -2,6 +2,9 @@ import { MovieType, ShowtimeType, TicketType } from "../data/Data";
 
 // Định nghĩa các màn hình trong stack navigator
 export type RootStackParamList = {
+  MainScreen: undefined;
+  OnBoardScreen: undefined;
+  VerifyEmailScreen: undefined;
   TicketScreen: { ticket: TicketType };
   MovieDetail: { id: string };
   Home: undefined;

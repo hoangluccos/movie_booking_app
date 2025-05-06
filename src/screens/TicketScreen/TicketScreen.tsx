@@ -202,7 +202,6 @@ const TicketScreen = () => {
               <Text>You have rated this movie</Text>
             ) : (
               <>
-                {" "}
                 <Text className="text-xl font-bold my-3">Rating this film</Text>
                 <StarRating rating={rating} onRatingChange={setRating} />
                 <View className="flex flex-row w-full justify-between items-center">

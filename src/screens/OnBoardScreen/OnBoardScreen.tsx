@@ -5,14 +5,14 @@ import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
 import { useState } from "react";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 
-const OnBoardSceeen = ({ navigation }: any) => {
+const OnBoardScreen = ({ navigation }: any) => {
   const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
   const handleClickSignin = () => {
     navigation.navigate("Login");
   };
 
   const handleClickSignUp = () => {
-    navigation.navigate("VerifyEmail");
+    navigation.navigate("VerifyEmailScreen");
     setStateSendOtp("Register");
   };
   const handleLoginSuccess = (token: string) => {
@@ -60,4 +60,4 @@ const OnBoardSceeen = ({ navigation }: any) => {
   );
 };
 
-export default OnBoardSceeen;
+export default OnBoardScreen;

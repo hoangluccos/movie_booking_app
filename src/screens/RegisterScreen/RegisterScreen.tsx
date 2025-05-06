@@ -1,4 +1,6 @@
+import DateTimePicker from "@react-native-community/datetimepicker";
 import {
+  Platform,
   Keyboard,
   Pressable,
   ScrollView,
@@ -8,13 +10,13 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+
 import ButtonComponent from "../../components/ButtonComponent";
 import { useState } from "react";
-import InputInfoComponent from "../../components/InputInfoComponent";
-import Icon from "react-native-vector-icons/Entypo";
-import DatePickerModal from "./Modal/DatePickerModal";
+import { Entypo } from "@expo/vector-icons";
 import { RadioButtonProps, RadioGroup } from "react-native-radio-buttons-group";
 import { postApi } from "../../api/Api";
+import TitleInputComponent from "../../components/TitleInputComponent";
 
 const RegisterScreen = ({ route, navigation }: any) => {
   const email = route.params?.email || "No value";
@@ -34,8 +36,8 @@ const RegisterScreen = ({ route, navigation }: any) => {
 
   const [usernameValue, setUsernameValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
-  const [firstnameValue, setFirstnameValue] = useState("");
-  const [lastnameValue, setLastnameValue] = useState("");
+  const [firstNameValue, setFirstNameValue] = useState("");
+  const [lastNameValue, setLastNameValue] = useState("");
   const [dateOfBirthValue, setDateOfBirthValue] = useState(new Date());
   const [genderValue, setGenderValue] = useState(genderData[0].id);
 
@@ -47,14 +49,14 @@ const RegisterScreen = ({ route, navigation }: any) => {
     if (
       usernameValue.trim() !== "" &&
       passwordValue.trim() !== "" &&
-      firstnameValue.trim() !== "" &&
-      lastnameValue.trim() !== ""
+      firstNameValue.trim() !== "" &&
+      lastNameValue.trim() !== ""
     ) {
       const params = {
         username: usernameValue,
         password: passwordValue,
-        firstName: firstnameValue,
-        lastName: lastnameValue,
+        firstName: firstNameValue,
+        lastName: lastNameValue,
         dateOfBirth: dateOfBirthValue,
         gender: Number(genderValue),
         email: email,
@@ -79,10 +81,6 @@ const RegisterScreen = ({ route, navigation }: any) => {
     setIsShowPass(!isShowPass);
   };
 
-  const toggleDatePickerModal = () => {
-    setOpenDatePickerModal(!openDatePickerModal);
-  };
-
   const handleClickDateOfBirth = () => {
     setOpenDatePickerModal(true);
   };
@@ -97,11 +95,11 @@ const RegisterScreen = ({ route, navigation }: any) => {
           <View className="space-y-28">
             <View className="space-y-4">
               <View className="space-y-2">
-                <InputInfoComponent
-                  value={usernameValue}
-                  onChangeValue={setUsernameValue}
-                  placeholder=""
+                <TitleInputComponent
                   title="Username"
+                  value={usernameValue}
+                  setState={setUsernameValue}
+                  placeholder=""
                 />
                 {/* input password cus */}
                 <View className="relative border-b border-gray-400">
@@ -120,23 +118,23 @@ const RegisterScreen = ({ route, navigation }: any) => {
                     className="absolute right-4 top-10"
                   >
                     {isShowPass ? (
-                      <Icon name="eye" size={24} color="white" />
+                      <Entypo name="eye" size={24} color="white"></Entypo>
                     ) : (
-                      <Icon name="eye-with-line" size={24} color="white" />
+                      <Entypo name="eye-with-line" size={24} color="white" />
                     )}
                   </TouchableOpacity>
                 </View>
-                <InputInfoComponent
-                  value={firstnameValue}
-                  onChangeValue={setFirstnameValue}
-                  placeholder=""
+                <TitleInputComponent
                   title="First Name"
-                />
-                <InputInfoComponent
-                  value={lastnameValue}
-                  onChangeValue={setLastnameValue}
+                  value={firstNameValue}
+                  setState={setFirstNameValue}
                   placeholder=""
+                />
+                <TitleInputComponent
                   title="Last Name"
+                  value={lastNameValue}
+                  setState={setLastNameValue}
+                  placeholder=""
                 />
               </View>
 
@@ -155,13 +153,24 @@ const RegisterScreen = ({ route, navigation }: any) => {
                       : "Select Date"}
                   </Text>
                 </Pressable>
+
+                {openDatePickerModal && (
+                  <DateTimePicker
+                    value={dateOfBirthValue}
+                    mode="date"
+                    display={Platform.OS === "ios" ? "spinner" : "default"}
+                    onChange={(event, selectedDate) => {
+                      setOpenDatePickerModal(false);
+                      if (selectedDate) setDateOfBirthValue(selectedDate);
+                    }}
+                    maximumDate={new Date()} // Giới hạn không chọn ngày trong tương lai
+                  />
+                )}
               </View>
 
               {/* Gender */}
-              <View className="space-y-4">
-                <Text className="text-[#FCC434] font-base text-nase">
-                  Gender
-                </Text>
+              <View className="my-2">
+                <Text className="text-[#FCC434] font-base text-lg">Gender</Text>
                 <View className="justify-between">
                   <RadioGroup
                     radioButtons={genderData.map((item) => ({
@@ -192,14 +201,6 @@ const RegisterScreen = ({ route, navigation }: any) => {
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
-      {
-        <DatePickerModal
-          dateValue={dateOfBirthValue}
-          setDateValue={setDateOfBirthValue}
-          toggleModal={toggleDatePickerModal}
-          onOpen={openDatePickerModal}
-        />
-      }
     </>
   );
 };

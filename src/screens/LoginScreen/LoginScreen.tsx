@@ -12,11 +12,16 @@ import { useEffect, useState } from "react";
 import ButtonComponent from "../../components/ButtonComponent";
 import { loginApi } from "../../api/Api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useRecoilState } from "recoil";
 import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/type";
 
-const LoginScreen = ({ navigation }: any) => {
+const LoginScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPass, setIsShowPass] = useState(false);
@@ -31,9 +36,12 @@ const LoginScreen = ({ navigation }: any) => {
         console.log("Response: ", response);
         // console.log("Token: ", response.result.token);
         AsyncStorage.setItem("token", response.result.token);
-        navigation.navigate("Main");
+        navigation.navigate("MainScreen");
       }
     });
+  };
+  const handleClickToOnboard = () => {
+    navigation.navigate("OnBoardScreen");
   };
 
   const handleClickShowPassword = () => {
@@ -41,7 +49,7 @@ const LoginScreen = ({ navigation }: any) => {
   };
 
   const handleClickForgotPassword = () => {
-    navigation.navigate("VerifyEmail");
+    navigation.navigate("VerifyEmailScreen");
     setStateSendOtp("ForgotPassword");
   };
 
@@ -107,6 +115,15 @@ const LoginScreen = ({ navigation }: any) => {
           <View className="w-full items-center">
             <ButtonComponent onClick={handleClickLogIn} title="Log in" />
           </View>
+          <TouchableOpacity
+            className="mt-3 flex flex-row items-center gap-2"
+            onPress={handleClickToOnboard}
+          >
+            <Ionicons name="arrow-back" color="white" size={26} />
+            <Text className=" underline text-yellow-500">
+              Back to OnBoardScreen
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

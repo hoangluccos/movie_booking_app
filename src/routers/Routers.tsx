@@ -4,7 +4,7 @@ import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen/RegisterScreen";
 import ForgotPassScreen from "../screens/ForgotPassScreen/ForgotPassScreen";
 import HomeScreen from "../screens/MainScreen/MainScreen";
-import OnBoardSceeen from "../screens/OnBoardScreen/OnBoardScreen";
+import OnBoardScreen from "../screens/OnBoardScreen/OnBoardScreen";
 import VerifyEmailScreen from "../screens/RegisterScreen/VerifyEmailScreen";
 import VerifyOtpScreen from "../screens/RegisterScreen/VerifyOtpScreen";
 import MainScreen from "../screens/MainScreen/MainScreen";
@@ -23,10 +23,10 @@ const Routers = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="OnBoard">
+      <Stack.Navigator initialRouteName="OnBoardScreen">
         <Stack.Screen
-          name="OnBoard"
-          component={OnBoardSceeen}
+          name="OnBoardScreen"
+          component={OnBoardScreen}
           options={{
             headerShown: false,
           }}
@@ -66,7 +66,7 @@ const Routers = () => {
           }}
         />
         <Stack.Screen
-          name="VerifyEmail"
+          name="VerifyEmailScreen"
           component={VerifyEmailScreen}
           options={{
             headerShown: true,
@@ -86,7 +86,7 @@ const Routers = () => {
           }}
         />
         <Stack.Screen
-          name="Main"
+          name="MainScreen"
           component={MainScreen}
           options={{
             headerShown: false,
