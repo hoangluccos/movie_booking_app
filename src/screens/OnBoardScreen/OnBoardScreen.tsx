@@ -6,14 +6,14 @@ import { useState } from "react";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 
 const OnBoardScreen = ({ navigation }: any) => {
-  const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
+  // const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
   const handleClickSignin = () => {
     navigation.navigate("Login");
   };
 
   const handleClickSignUp = () => {
     navigation.navigate("VerifyEmailScreen");
-    setStateSendOtp("Register");
+    // setStateSendOtp("Register");
   };
   const handleLoginSuccess = (token: string) => {
     console.log("JWT Token:", token);

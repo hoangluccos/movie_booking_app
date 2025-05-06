@@ -123,21 +123,24 @@ const MyTicketScreen = () => {
             className="rounded-lg"
           />
         </TouchableOpacity>
-        {
-          tickets.tickets.length > 0 ? 
-        
-        tickets.tickets.map((ticket, i) => {
-          return (
-            <TicketMovieComponent
-              key={i}
-              ticket={ticket}
-              nameMovie={ticket.movieName}
-              time={`${ticket.startTime} - ${ticket.dateScreenTime}`}
-              place={ticket.theaterName}
-              image={movieIds[ticket.movieId]}
-            />
-          );
-        })  : <Text>Hiện tại bạn chưa có vé nào</Text>}
+        {tickets.tickets.length > 0 ? (
+          tickets.tickets.map((ticket, i) => {
+            return (
+              <TicketMovieComponent
+                key={i}
+                ticket={ticket}
+                nameMovie={ticket.movieName}
+                time={`${ticket.startTime} - ${ticket.dateScreenTime}`}
+                place={ticket.theaterName}
+                image={movieIds[ticket.movieId]}
+              />
+            );
+          })
+        ) : (
+          <View className="flex flex-1 justify-center items-center">
+            <Text className="text-white">Hiện tại bạn chưa có vé nào</Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
