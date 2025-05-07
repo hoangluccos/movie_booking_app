@@ -1,14 +1,19 @@
 import React, { useEffect } from "react";
 import { Alert, Text, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import * as AuthSession from "expo-auth-session";
 import { AntDesign } from "@expo/vector-icons";
-import { GOOGLE_CLIENT_ID } from "@env";
+import {
+  makeRedirectUri,
+  useAuthRequest,
+  ResponseType,
+} from "expo-auth-session";
+// import { GOOGLE_CLIENT_ID } from "@env";
 
+// ✅ Expo proxy yêu cầu phải có dòng này
 WebBrowser.maybeCompleteAuthSession();
 
 const discovery = {
-  authorizationEndpoint: "https://accounts.google.com/o/oauth2/auth",
+  authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenEndpoint: "https://oauth2.googleapis.com/token",
   revocationEndpoint: "https://oauth2.googleapis.com/revoke",
 };
@@ -18,84 +23,51 @@ interface GoogleLoginButtonProps {
 }
 
 const GoogleLoginButton = ({ onLoginSuccess }: GoogleLoginButtonProps) => {
-  const redirectUri = AuthSession.makeRedirectUri({
-    useProxy: true,
-  });
-  console.log("Redirect URI:", redirectUri);
+  const redirectUri = `https://auth.expo.io/@hoangluccos/movie_booking_app`;
 
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+  console.log("🔁 Redirect URI:", redirectUri);
+
+  const [request, response, promptAsync] = useAuthRequest(
     {
-      clientId: GOOGLE_CLIENT_ID,
+      responseType: ResponseType.IdToken,
+      clientId:
+        "715291353144-ft6d5b07t3rdkgvvaa322q5tbovq60hd.apps.googleusercontent.com",
       redirectUri,
-      responseType: "code",
       scopes: ["openid", "profile", "email"],
-      usePKCE: true,
     },
     discovery
   );
 
   useEffect(() => {
-    const handleAuth = async () => {
-      if (!response) return;
-
-      if (response.type === "success") {
-        const authCode = response.params.code;
-        try {
-          const res = await fetch(
-            `http://192.168.1.12:3000/api/auth/outbound/authentication?code=${authCode}`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          const data = await res.json();
-
-          if (data.code === 200) {
-            onLoginSuccess(data.result.token);
-            Alert.alert("Đăng nhập thành công!");
-          } else {
-            Alert.alert(
-              "Đăng nhập thất bại",
-              data.message || "Lỗi không xác định"
-            );
-          }
-        } catch (err) {
-          console.error("Lỗi gửi mã xác thực:", err);
-          Alert.alert("Lỗi", "Không thể gửi mã xác thực lên backend.");
-        }
-      } else if (response.type === "error") {
-        console.error("Lỗi OAuth:", response.params);
-        Alert.alert(
-          "Lỗi",
-          `Đăng nhập thất bại: ${
-            response.params.error_description || "Lỗi không xác định"
-          }`
-        );
-      } else if (response.type === "dismiss") {
-        Alert.alert("Đã hủy", "Bạn đã hủy đăng nhập.");
-      }
-    };
-
-    handleAuth();
-  }, [response, onLoginSuccess]);
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      onLoginSuccess(id_token);
+      Alert.alert("✅ Thành công", "Đăng nhập Google thành công!");
+    } else if (response?.type === "error") {
+      Alert.alert("❌ Lỗi", "Không thể đăng nhập với Google");
+      console.log("Google login error:", response.error);
+      console.log("Error details:", response);
+    }
+  }, [response]);
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        if (request) {
-          promptAsync({ useProxy: true });
-        } else {
-          Alert.alert("Lỗi", "Yêu cầu đăng nhập chưa sẵn sàng.");
-        }
-      }}
+      onPress={() => promptAsync()}
       disabled={!request}
-      className="flex flex-row items-center justify-center gap-x-2 p-3 bg-slate-400 rounded-[50]"
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 12,
+        backgroundColor: "#4285F4",
+        borderRadius: 25,
+        gap: 10,
+      }}
     >
       <AntDesign name="google" size={20} color="white" />
-      <Text className="text-white">Login with Google</Text>
+      <Text style={{ color: "white", fontWeight: "bold" }}>
+        Đăng nhập với Google
+      </Text>
     </TouchableOpacity>
   );
 };

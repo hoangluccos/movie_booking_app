@@ -23,6 +23,7 @@
     "expo": "~52.0.37",
     "expo-auth-session": "~6.0.3",
     "expo-constants": "~17.0.8",
+    "expo-crypto": "^14.1.4",
     "expo-image-picker": "~16.0.6",
     "expo-status-bar": "~2.0.1",
     "nativewind": "^4.1.23",

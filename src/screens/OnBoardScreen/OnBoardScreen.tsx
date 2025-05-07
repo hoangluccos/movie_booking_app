@@ -1,16 +1,16 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import ButtonComponent from "../../components/ButtonComponent";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
+// import { useRecoilState, useSetRecoilState } from "recoil";
+// import { StateSendOtpAtom } from "../../Atom/StateSendOtpAtom";
 import { useState } from "react";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
+import { GOOGLE_CLIENT_ID } from "@env";
 
 const OnBoardScreen = ({ navigation }: any) => {
   // const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
   const handleClickSignin = () => {
     navigation.navigate("Login");
   };
-
   const handleClickSignUp = () => {
     navigation.navigate("VerifyEmailScreen");
     // setStateSendOtp("Register");
