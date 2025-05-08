@@ -48,6 +48,9 @@ const HomeScreen = () => {
     console.log("Click on movie", id);
     navigation.navigate("MovieDetail", { id: id });
   };
+  const handleClickMatchingFeature = () => {
+    navigation.navigate("MatchingScreen");
+  };
 
   const showMovieNowPlayingCus = ({ item }: { item: MovieType }) => {
     return (
@@ -160,18 +163,18 @@ const HomeScreen = () => {
             />
           </View>
           {/* Begin matching feature */}
-          {/* <View className="matching_feature w-full my-2">
+          <View className="matching_feature w-full my-2">
             <Text className="text-white my-1 text-xl font-bold">
               New feature
             </Text>
-            <TouchableOpacity className="">
+            <TouchableOpacity className="" onPress={handleClickMatchingFeature}>
               <ImageBackground
                 source={require("../../../../assets/images/canva_matching1.png")}
                 className="w-full h-[150px] rounded-md overflow-hidden"
                 resizeMode="cover"
               ></ImageBackground>
             </TouchableOpacity>
-          </View> */}
+          </View>
           {/* End matching feature */}
           <View>
             <View className="flex-row justify-between items-center py-4">

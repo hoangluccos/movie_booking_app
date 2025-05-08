@@ -21,4 +21,5 @@ export type RootStackParamList = {
   ErrorScreen: undefined;
   LogInScreen: undefined;
   ChangePasswordScreen: { email: string };
+  MatchingScreen: undefined;
 };

@@ -57,3 +57,13 @@ export const compareDates = (a: string, b: string) => {
   const dateB = new Date(yearB, monthB - 1, dayB);
   return dateA.getTime() - dateB.getTime();
 };
+//dd-mm-yyyy input -> string ;
+export const transferStringToDateCheckToDay = (typeString: string) => {
+  const [day, month, year] = typeString.split("-").map(Number);
+  //   console.log(day, month, year);
+  const newDate = new Date(year, month - 1, day);
+  const today = new Date();
+  // am thi truoc, duong thi sau
+  // console.log("Truoc ngay hien tai?: ", newDate.getTime() - today.getTime());
+  return newDate.getTime() - today.getTime() > 0;
+};
