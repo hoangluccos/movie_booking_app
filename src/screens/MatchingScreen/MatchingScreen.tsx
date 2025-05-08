@@ -2,18 +2,26 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Button,
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import { useNavigation } from "@react-navigation/native";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { transferStringToDateCheckToDay } from "../../utils/Utils";
-// import { Spinner } from "tamagui";
 import Toast from "react-native-toast-message";
 import instance from "../../api/instance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../navigation/type";
+import {
+  MovieType,
+  NotiTypeSocket,
+  ShowtimeType,
+  TheaterType,
+} from "../../data/Data";
 
 const showToast = (typeToast: string, message: string) => {
   Toast.show({
@@ -23,16 +31,16 @@ const showToast = (typeToast: string, message: string) => {
 };
 
 const MatchingScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [userId, setUserId] = useState("");
 
   const { connect, disconnect, isConnected, isLoading } = useWebSocket();
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<NotiTypeSocket[] | []>([]);
 
   const [listMovies, setListMovies] = useState([]);
   const [listTheaters, setListTheaters] = useState([]);
-  const [allShowtimesAccessible, setAllShowtimesAccessible] = useState([]);
-  const [showtimesCanPick, setShowtimesCanPick] = useState([]);
+  const [allShowTimesAccessible, setAllShowTimesAccessible] = useState([]);
+  const [showTimesCanPick, setShowTimesCanPick] = useState([]);
 
   const [selectMovieId, setSelectMovie] = useState("");
   const [selectTheaterName, setSelectTheaterName] = useState("");
@@ -57,11 +65,11 @@ const MatchingScreen = () => {
 
   useEffect(() => {
     const fetchAPI = async () => {
-      //   const token = await AsyncStorage.getItem("token");
-      //   if (!token) {
-      //     navigation.navigate("Login");
-      //     return;
-      //   }
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        navigation.navigate("LogInScreen");
+        return;
+      }
 
       const [resMovies, resTheaters, resMybio] = await Promise.all([
         instance.get("/movies/"),
@@ -81,25 +89,25 @@ const MatchingScreen = () => {
     if (selectMovieId) {
       const fetchShowtimes = async () => {
         const res = await instance.get(`/showtimes/${selectMovieId}/all`);
-        const filtered = res.data.result.filter((d: any) =>
+        const filtered = res.data.result.filter((d: ShowtimeType) =>
           transferStringToDateCheckToDay(d.date)
         );
-        setAllShowtimesAccessible(filtered);
+        setAllShowTimesAccessible(filtered);
       };
       fetchShowtimes();
     }
   }, [selectMovieId]);
 
   useEffect(() => {
-    const filtered = allShowtimesAccessible.filter(
-      (s: any) => s.theater.name === selectTheaterName
+    const filtered = allShowTimesAccessible.filter(
+      (s: ShowtimeType) => s.theater.name === selectTheaterName
     );
-    setShowtimesCanPick(filtered);
-  }, [allShowtimesAccessible, selectTheaterName]);
+    setShowTimesCanPick(filtered);
+  }, [allShowTimesAccessible, selectTheaterName]);
 
   useEffect(() => {
     const isCreateTicket = notifications.find(
-      (noti: any) => noti.message === "Tạo vé thành công"
+      (noti) => noti.message === "Tạo vé thành công"
     );
     const isMatched = notifications.find(
       (noti: any) => noti.message === "Ghép đôi thành công"
@@ -125,8 +133,10 @@ const MatchingScreen = () => {
       await connect(userId, handleNotificationSocket);
 
       const movieName = listMovies.find(
-        (m: any) => m.id === selectMovieId
+        (m: MovieType) => m.id === selectMovieId
       )?.name;
+      // const movie = listMovies.find((m: MovieType) => m.id === selectMovieId) á;
+      // const movieName = movie ? movie.name : "";
       await instance.post("/matching/", {
         movieName,
         theaterName: selectTheaterName,
@@ -147,25 +157,32 @@ const MatchingScreen = () => {
 
   if (isLoading) {
     return (
-      <View className="flex-1 justify-center items-center bg-black/80">
-        {/* <Spinner size="large" color="pink" /> */}
-        <Text className="text-white text-xl mt-4">
-          Đang tìm người phù hợp...
-        </Text>
-        <TouchableOpacity
-          onPress={disconnect}
-          className="mt-6 bg-gray-600 px-4 py-2 rounded-full"
-        >
-          <Text className="text-white">Hủy tìm</Text>
-        </TouchableOpacity>
-        <ScrollView className="mt-6">
-          {notifications.map((noti: any, i) => (
-            <Text key={i} className="text-pink-200 text-center">
-              {noti.message}
-            </Text>
-          ))}
-        </ScrollView>
-      </View>
+      <ImageBackground
+        source={require("../../../assets/images/matching_mb.jpg")}
+        className="flex-1"
+        resizeMode="cover"
+        imageStyle={{ opacity: 0.3 }}
+      >
+        <View className="flex-1 justify-center items-center bg-black/60 pt-5">
+          <ActivityIndicator size="large" color="#f472b6" className="mt-10" />
+          <Text className="text-white text-xl mt-4">
+            Đang tìm người phù hợp...
+          </Text>
+          <TouchableOpacity
+            onPress={disconnect}
+            className="mt-6 bg-gray-600 px-4 py-2 rounded-full"
+          >
+            <Text className="text-white">Hủy tìm</Text>
+          </TouchableOpacity>
+          <ScrollView className="mt-6">
+            {notifications.map((noti: any, i) => (
+              <Text key={i} className="font-bold text-pink-200 text-center">
+                {noti.message}
+              </Text>
+            ))}
+          </ScrollView>
+        </View>
+      </ImageBackground>
     );
   }
 
@@ -173,9 +190,10 @@ const MatchingScreen = () => {
     <ImageBackground
       source={require("../../../assets/images/matching_mb.jpg")}
       className="flex-1"
-      resizeMode="contain"
+      imageStyle={{ opacity: 0.1 }}
+      resizeMode="cover"
     >
-      <ScrollView className="flex-1 p-4 bg-pink-400">
+      <ScrollView className="flex-1 p-4 pt-8">
         <Text className="text-xl font-bold text-center mb-4">
           Ghép đôi xem phim
         </Text>
@@ -183,14 +201,17 @@ const MatchingScreen = () => {
         <View className="my-3">
           <SelectList
             setSelected={setSelectMovie}
-            data={listMovies.map((m: any) => ({ key: m.id, value: m.name }))}
+            data={listMovies.map((m: MovieType) => ({
+              key: m.id,
+              value: m.name,
+            }))}
             placeholder="Chọn phim"
           />
         </View>
         <View className="my-3">
           <SelectList
             setSelected={setSelectTheaterName}
-            data={listTheaters.map((t: any) => ({
+            data={listTheaters.map((t: TheaterType) => ({
               key: t.name,
               value: t.name,
             }))}
@@ -200,7 +221,7 @@ const MatchingScreen = () => {
         <View className="my-3">
           <SelectList
             setSelected={setSelectShowtime}
-            data={showtimesCanPick.map((s: any) => ({
+            data={showTimesCanPick.map((s: ShowtimeType) => ({
               key: s.id,
               value: `Ngày: ${s.date} - Giờ: ${s.startTime}`,
             }))}

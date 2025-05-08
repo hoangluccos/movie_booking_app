@@ -44,7 +44,11 @@ export interface ShowtimeType {
   totalSeat: number;
   emptySeat: number;
 }
-
+export interface TheaterType {
+  id: string;
+  location: string;
+  name: string;
+}
 export interface SeatType {
   id: string;
   locateRow: string;
@@ -119,4 +123,8 @@ export interface FeedbackType {
   byEmail: string;
   movieId: string;
   status: boolean;
+}
+
+export interface NotiTypeSocket {
+  message: string;
 }
