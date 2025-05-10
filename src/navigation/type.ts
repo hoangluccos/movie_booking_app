@@ -22,4 +22,9 @@ export type RootStackParamList = {
   LogInScreen: undefined;
   ChangePasswordScreen: { email: string };
   MatchingScreen: undefined;
+  MatchingSuccess: {
+    dataPartner: any;
+    dataTicket: any;
+    dataRequestMatching: any;
+  };
 };

@@ -107,24 +107,26 @@ const MatchingScreen = () => {
 
   useEffect(() => {
     const isCreateTicket = notifications.find(
-      (noti) => noti.message === "Tạo vé thành công"
+      (noti: NotiTypeSocket) => noti.message === "Tạo vé thành công"
     );
     const isMatched = notifications.find(
-      (noti: any) => noti.message === "Ghép đôi thành công"
+      (noti: NotiTypeSocket) => noti.message === "Ghép đôi thành công"
     );
 
     if (isCreateTicket && isMatched) {
-      //   const props = {
-      //     dataPartner: isMatched.result,
-      //     dataTicket: isCreateTicket.result,
-      //     dataRequestMatching: listMovies.find((m) => m.id === selectMovieId),
-      //   };
+      const props = {
+        dataPartner: isMatched.result,
+        dataTicket: isCreateTicket.result,
+        dataRequestMatching: listMovies.find(
+          (m: MovieType) => m.id === selectMovieId
+        ),
+      };
 
       showToast("success", "Đã ghép đôi thành công!");
-      //   setTimeout(() => {
-      //     disconnect();
-      //     navigation.navigate("MatchingSuccess", props);
-      //   }, 1000);
+      setTimeout(() => {
+        disconnect();
+        navigation.navigate("MatchingSuccess", props);
+      }, 1000);
     }
   }, [notifications]);
 

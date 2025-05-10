@@ -127,4 +127,10 @@ export interface FeedbackType {
 
 export interface NotiTypeSocket {
   message: string;
+  result: {};
+}
+
+export interface PartnerType {
+  name: string;
+  dateOfBirth: string;
 }

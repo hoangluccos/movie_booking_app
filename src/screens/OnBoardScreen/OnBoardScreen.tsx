@@ -5,11 +5,15 @@ import ButtonComponent from "../../components/ButtonComponent";
 import { useState } from "react";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import { GOOGLE_CLIENT_ID } from "@env";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../navigation/type";
 
-const OnBoardScreen = ({ navigation }: any) => {
+const OnBoardScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   // const [stateSendOtp, setStateSendOtp] = useRecoilState(StateSendOtpAtom);
   const handleClickSignin = () => {
-    navigation.navigate("Login");
+    navigation.navigate("LogInScreen");
   };
   const handleClickSignUp = () => {
     navigation.navigate("VerifyEmailScreen");
