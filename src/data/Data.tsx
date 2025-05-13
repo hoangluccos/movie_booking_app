@@ -11,9 +11,12 @@ export interface MovieType {
   image: string;
   genres: GenreType[];
   actors: {
+    id: string;
     name: string;
+    dateOfBirth: string;
     image: string;
     gender: true | false;
+    job: {};
   }[];
 }
 

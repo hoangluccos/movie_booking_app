@@ -19,6 +19,7 @@ import ChangePasswordScreen from "../screens/ChangePasswordScreen/ChangePassword
 import ProfileScreen from "../screens/MainScreen/tabs/ProfileScreen";
 import MatchingScreen from "../screens/MatchingScreen/MatchingScreen";
 import MatchingSuccess from "../screens/MatchingScreen/MatchingSuccess";
+import PersonMovieScreen from "../screens/PersonMovieScreen/PersonMovieScreen";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -191,6 +192,15 @@ const Routers = () => {
         <Stack.Screen
           name="MatchingSuccess"
           component={MatchingSuccess}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="PersonMovieScreen"
+          component={PersonMovieScreen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: "#000000" },

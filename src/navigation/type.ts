@@ -27,4 +27,5 @@ export type RootStackParamList = {
     dataTicket: any;
     dataRequestMatching: any;
   };
+  PersonMovieScreen: { idActor: string };
 };

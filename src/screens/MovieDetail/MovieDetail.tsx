@@ -6,7 +6,7 @@ import {
   ImageBackground,
   Modal,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import { useNavigation, RouteProp } from "@react-navigation/native";
 import { getApi, postApi } from "../../api/Api";
 import { FontAwesome } from "@expo/vector-icons";
@@ -241,6 +241,7 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
                 {movieDetail.actors.map((actor, index) => (
                   <ActorComponent
                     key={index}
+                    idActor={actor.id}
                     nameActor={actor.name}
                     gender={actor.gender}
                     image={actor.image}
