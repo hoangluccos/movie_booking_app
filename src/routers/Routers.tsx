@@ -20,6 +20,7 @@ import ProfileScreen from "../screens/MainScreen/tabs/ProfileScreen";
 import MatchingScreen from "../screens/MatchingScreen/MatchingScreen";
 import MatchingSuccess from "../screens/MatchingScreen/MatchingSuccess";
 import PersonMovieScreen from "../screens/PersonMovieScreen/PersonMovieScreen";
+import GenreMovieScreen from "../screens/GenreMovieScreen/GenreMovieScreen";
 
 const Routers = () => {
   const Stack = createNativeStackNavigator();
@@ -201,6 +202,15 @@ const Routers = () => {
         <Stack.Screen
           name="PersonMovieScreen"
           component={PersonMovieScreen}
+          options={{
+            headerShown: false,
+            headerStyle: { backgroundColor: "#000000" },
+            headerTintColor: "#FFFFFF",
+          }}
+        />
+        <Stack.Screen
+          name="GenreMovieScreen"
+          component={GenreMovieScreen}
           options={{
             headerShown: false,
             headerStyle: { backgroundColor: "#000000" },

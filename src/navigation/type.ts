@@ -28,4 +28,5 @@ export type RootStackParamList = {
     dataRequestMatching: any;
   };
   PersonMovieScreen: { idActor: string };
+  GenreMovieScreen: { idGenre: string };
 };

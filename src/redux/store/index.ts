@@ -6,6 +6,7 @@ import ticketReducer from "../slices/ticketSlice";
 import couponReducer from "../slices/couponSlice";
 import feedbackReducer from "../slices/feedbackSlice";
 import personMovieReducer from "../slices/personMovieSlice";
+import genreMovieReducer from "../slices/genreMovieSlice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     coupons: couponReducer,
     feedbacks: feedbackReducer,
     personMovie: personMovieReducer,
+    genreMovie: genreMovieReducer,
   },
 });
 

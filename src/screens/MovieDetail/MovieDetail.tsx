@@ -21,6 +21,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllCoupons } from "../../redux/slices/couponSlice";
 import { fetchAllFeedbackByMovie } from "../../redux/slices/feedbackSlice";
 import DetailFeedback from "../../components/DetailFeedback";
+import GenreComponent from "../../components/GenreComponent";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type MovieDetailRouteProp = RouteProp<RootStackParamList, "MovieDetail">;
@@ -212,9 +213,15 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
           <View className="flex flex-col justify-center my-10 gap-2">
             <View className="flex flex-row gap-5">
               <Text className="text-white">Movie genre</Text>
-              <Text className="font-bold text-white">
-                {movieDetail.genres.map((genre) => genre.name + ` `)}
-              </Text>
+              <View className="flex flex-row gap-x-2">
+                {movieDetail.genres.map((genre, id) => (
+                  <GenreComponent
+                    key={id}
+                    name={genre.name}
+                    idGenre={genre.id}
+                  />
+                ))}
+              </View>
             </View>
             <View className="flex flex-row gap-5">
               <Text className="text-white">Censorship</Text>
@@ -247,6 +254,18 @@ const MovieDetail = ({ route }: MovieDetailProp) => {
                     image={actor.image}
                   />
                 ))}
+              </ScrollView>
+            </View>
+            <Text className="text-2xl font-bold text-white">Director</Text>
+            {/* Actors, Directors Component */}
+            <View className="flex flex-row gap-2">
+              <ScrollView horizontal={true} className="flex flex-row gap-2">
+                <ActorComponent
+                  idActor={movieDetail.director.id}
+                  nameActor={movieDetail.director.name}
+                  gender={movieDetail.director.gender}
+                  image={movieDetail.director.image}
+                />
               </ScrollView>
             </View>
           </View>

@@ -10,14 +10,8 @@ export interface MovieType {
   rate: number;
   image: string;
   genres: GenreType[];
-  actors: {
-    id: string;
-    name: string;
-    dateOfBirth: string;
-    image: string;
-    gender: true | false;
-    job: {};
-  }[];
+  actors: PersonType[];
+  director: PersonType;
 }
 
 export interface GenreType {
@@ -136,4 +130,13 @@ export interface NotiTypeSocket {
 export interface PartnerType {
   name: string;
   dateOfBirth: string;
+}
+
+export interface PersonType {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  image: string;
+  gender: true | false;
+  job: {};
 }

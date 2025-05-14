@@ -1,5 +1,5 @@
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import MovieComponent from "../../components/MovieComponent";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -7,19 +7,16 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/type";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { fetchAllMovieByPersonId } from "../../redux/slices/personMovieSlice";
-import Profile from "../../../assets/images/profile.png";
+import { fetchAllMoviesByGenreId } from "../../redux/slices/genreMovieSlice";
 
-export default function PersonMovieScreen() {
+export default function GenreMovieScreen() {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, "PersonMovieScreen">>();
-  const personId = route.params.idActor;
+  const route = useRoute<RouteProp<RootStackParamList, "GenreMovieScreen">>();
+  const genreId = route.params.idGenre;
   const dispatch = useDispatch<AppDispatch>();
-  const { listMovies, loading, personInfo, error } = useSelector(
-    (state: RootState) => state.personMovie
+  const { listMovies, loading, error, genreData } = useSelector(
+    (state: RootState) => state.genreMovie
   );
-
-  const [imageError, setImageError] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -30,9 +27,8 @@ export default function PersonMovieScreen() {
   };
 
   useEffect(() => {
-    dispatch(fetchAllMovieByPersonId(personId));
-    setImageError(false);
-  }, [dispatch, personId]);
+    dispatch(fetchAllMoviesByGenreId(genreId));
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -60,7 +56,7 @@ export default function PersonMovieScreen() {
           >
             <AntDesign name="arrowleft" size={36} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-2xl">PersonMovieScreen</Text>
+          <Text className="text-white text-2xl">GenreMovieScreen</Text>
           <TouchableOpacity
             onPress={handleHome}
             className="absolute right-3 top-4"
@@ -69,26 +65,9 @@ export default function PersonMovieScreen() {
           </TouchableOpacity>
         </View>
         {/* image and info */}
-        <View className="flex justify-center items-center pt-4">
-          <View className="w-40 h-40">
-            <Image
-              className="w-full h-full rounded-[50]"
-              source={
-                personInfo?.image && !imageError
-                  ? { uri: personInfo.image }
-                  : Profile
-              }
-              defaultSource={Profile}
-              onError={() => setImageError(true)} // Phát hiện lỗi tải ảnh
-            />
-          </View>
-          <Text className="text-2xl font-bold text-white">
-            {personInfo?.name || "Unknown"}
-          </Text>
-        </View>
         <View className="flex my-3">
           <Text className="text-white text-2xl font-bold">
-            Các phim đã tham gia
+            Các phim {genreData?.name}
           </Text>
           <View className="flex flex-row flex-wrap justify-start gap-x-5 gap-y-2 mt-3 ml-3">
             {listMovies.map((f, id) => (
