@@ -24,6 +24,7 @@ import { CouponType, FoodType, SeatType } from "../../data/Data";
 import { formatVND, getTypeOfCoupon, totalPrice } from "../../utils/Utils";
 import CouponComponent from "../../components/CouponComponent";
 import { fetchAllTickets } from "../../redux/slices/ticketSlice";
+import { showToast } from "../../utils/toast";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -223,6 +224,8 @@ const PaymentScreen = () => {
         setPaymentUrl(null);
         // fix not auto fetch all_tickets in tickets screen
         dispatch(fetchAllTickets());
+        //show toast
+        showToast("success", "You have paid successfully");
         navigation.navigate("SuccessScreen", {
           amount: amount ? Number(amount) / 100 : 0,
           orderInfo: orderInfo || "",
@@ -491,7 +494,7 @@ const PaymentScreen = () => {
                       onSelect={() =>
                         setIsSelectPaymentType(!isSelectPaymentType)
                       }
-                      nameMethod="Zalo Pay"
+                      nameMethod="VN Pay"
                       image="nothing"
                     />
                   </View>

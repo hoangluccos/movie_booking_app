@@ -18,7 +18,7 @@ import { findMovieById } from "../../redux/slices/movieSlice";
 import { MovieType } from "../../data/Data";
 import StarRating from "../../components/StarRating";
 import { postFeedback } from "../../redux/slices/ticketSlice";
-import Toast from "react-native-toast-message";
+import { showToast } from "../../utils/toast";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 type TicketScreenRouteProp = RouteProp<RootStackParamList, "TicketScreen">;
@@ -51,13 +51,7 @@ const TicketScreen = () => {
     console.log("dataSend ", dataSend);
     dispatch(postFeedback(dataSend));
     setIsRated(true);
-    showToast("You have send a feedback this movie");
-  };
-  const showToast = (message: string) => {
-    Toast.show({
-      type: "success",
-      text1: message,
-    });
+    showToast("success", "You have send a feedback this movie");
   };
   if (!movieDetail) {
     return (

@@ -17,10 +17,12 @@ const PaymentComponent = ({ image, nameMethod, isSelect, onSelect }: Props) => {
       }`}
     >
       <View className="flex-1 flex flex-row items-center gap-x-5 px-2">
-        <Image
-          className="rounded-lg "
-          source={require("../../assets/images/payment_method.jpg")}
-        />
+        <View className="w-12 h-12">
+          <Image
+            className="rounded-lg w-full h-full object-cover"
+            source={require("../../assets/images/vnpay.png")}
+          />
+        </View>
         <Text className="text-white font-bold text-xl">{nameMethod}</Text>
       </View>
       <FontAwesome

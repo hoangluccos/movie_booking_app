@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/type";
 import Toast from "react-native-toast-message";
+import { showToast } from "../../utils/toast";
 
 interface UserState {
   user: User | null;
@@ -71,7 +72,7 @@ const ProfileInfoScreen = () => {
       if (updateUser.fulfilled.match(resultAction)) {
         console.log("Update successfully", resultAction.payload);
         setUserData(resultAction.payload);
-        showToast("Update profile successfully");
+        showToast("success", "Update profile successfully");
         nav.goBack();
       } else {
         console.log("update failed", resultAction.payload);
@@ -108,7 +109,7 @@ const ProfileInfoScreen = () => {
         if (changeImage.fulfilled.match(resultAction)) {
           console.log("Update Image successfully", resultAction.payload);
           setAvatar({ uri: selectedImg });
-          showToast("Update Image successfully");
+          showToast("success", "Update Image successfully");
         } else {
           console.log("update failed", resultAction.payload);
         }
@@ -119,12 +120,6 @@ const ProfileInfoScreen = () => {
   };
   const handleBack = () => {
     nav.goBack();
-  };
-  const showToast = (message: string) => {
-    Toast.show({
-      type: "success",
-      text1: message,
-    });
   };
   return (
     <View className="bg-gray-600 flex flex-1 mt-7">

@@ -22,13 +22,7 @@ import {
   ShowtimeType,
   TheaterType,
 } from "../../data/Data";
-
-const showToast = (typeToast: string, message: string) => {
-  Toast.show({
-    type: typeToast,
-    text1: message,
-  });
-};
+import { showToast } from "../../utils/toast";
 
 const MatchingScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

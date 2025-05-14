@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import ToggleComponent from "../../../components/ToggleComponent";
 import MovieComponent from "../../../components/MovieComponent";
 import { useEffect, useState } from "react";
@@ -49,14 +49,19 @@ const MovieScreen = () => {
         setIsSelectFirst={setIsSelectFirst}
       />
       {/* List movies */}
-      <View className="flex flex-row flex-wrap gap-5 justify-start ml-4">
-        {/* mặc định flex của View la column */}
-        {movies.length > 0 ? (
-          movies.map((movie) => <MovieComponent key={movie.id} item={movie} />)
-        ) : (
-          <Text className="text-white">No movies available</Text>
-        )}
-      </View>
+
+      <ScrollView>
+        <View className="flex flex-row flex-wrap gap-5 justify-start ml-4">
+          {/* mặc định flex của View la column */}
+          {movies.length > 0 ? (
+            movies.map((movie) => (
+              <MovieComponent key={movie.id} item={movie} />
+            ))
+          ) : (
+            <Text className="text-white">No movies available</Text>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 };
