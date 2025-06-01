@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { fetchAllTickets } from "../../redux/slices/ticketSlice";
 import { MovieType, PartnerType } from "../../data/Data";
+import instance from "../../api/instance";
 
 interface RouteParams {
   dataRequestMatching: MovieType;
@@ -55,6 +56,31 @@ const MatchingSuccess: React.FC = () => {
     route.params as RouteParams;
   const ticketId = dataTicket.id;
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+
+  const handleDeleteRQ = () => {
+    const checkAndDeleteRQ = async () => {
+      try {
+        const res = await instance.get("/matching/check");
+        if (res.data.result.isSendMatchingRequest) {
+          const deleteRQ = async () => {
+            try {
+              const response = await instance.delete("/matching/");
+              if (response.data.code === 200) {
+                console.log("Delete Request matching successfully");
+              }
+            } catch (error) {
+              console.log("error when delete", error);
+            }
+          };
+          deleteRQ();
+        }
+      } catch (error) {
+        console.log("error when checking: ", error);
+      }
+    };
+    checkAndDeleteRQ();
+  };
+
   const handlePayment = async () => {
     try {
       const requestPayment = {
@@ -108,6 +134,8 @@ const MatchingSuccess: React.FC = () => {
         console.log("Thanh toán thành công");
         confirmPayment(responseCode, ticketId); // Gọi GET để xác nhận
         setPaymentUrl(null);
+        //delete request matching after paid successfully
+        handleDeleteRQ();
         // fix not auto fetch all_tickets in tickets screen
         dispatch(fetchAllTickets());
         navigation.navigate("SuccessScreen", {

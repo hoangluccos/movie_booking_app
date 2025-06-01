@@ -123,8 +123,11 @@ export interface FeedbackType {
 }
 
 export interface NotiTypeSocket {
+  id: string;
+  code: number;
   message: string;
-  result: {};
+  created_at: string;
+  data: {};
 }
 
 export interface PartnerType {

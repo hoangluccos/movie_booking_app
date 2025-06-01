@@ -11,7 +11,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { useNavigation } from "@react-navigation/native";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { transferStringToDateCheckToDay } from "../../utils/Utils";
-import Toast from "react-native-toast-message";
 import instance from "../../api/instance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -28,8 +27,8 @@ const MatchingScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [userId, setUserId] = useState("");
 
-  const { connect, disconnect, isConnected, isLoading } = useWebSocket();
-  const [notifications, setNotifications] = useState<NotiTypeSocket[] | []>([]);
+  // const { connect, disconnect, isConnected, isLoading } = useWebSocket();
+  // const [notifications, setNotifications] = useState<NotiTypeSocket[] | []>([]);
 
   const [listMovies, setListMovies] = useState([]);
   const [listTheaters, setListTheaters] = useState([]);
@@ -43,6 +42,9 @@ const MatchingScreen = () => {
   const [minAge, setMinAge] = useState(18);
   const [maxAge, setMaxAge] = useState(30);
 
+  const [hasMatchingRequest, setHasMatchingRequest] = useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState(true);
+
   const genderOptions = [
     { key: 1, value: "Nam" },
     { key: 0, value: "Nữ" },
@@ -53,30 +55,54 @@ const MatchingScreen = () => {
     return { key: age, value: `${age} tuổi` };
   });
 
-  const handleNotificationSocket = (data: any) => {
-    setNotifications((prev) => [...prev, data]);
+  // const handleNotificationSocket = (data: any) => {
+  //   setNotifications((prev) => [...prev, data]);
+  // };
+
+  const checkIsHavingRqMatching = async () => {
+    try {
+      const res = await instance.get("/matching/check");
+      console.log("Kết quả kiểm tra: ", res.data.result.isSendMatchingRequest);
+      return res.data.result.isSendMatchingRequest;
+    } catch (error) {
+      console.error("Lỗi khi kiểm tra yêu cầu ghép đôi: ", error);
+      return false;
+    }
   };
 
+  //first fetch api
   useEffect(() => {
-    const fetchAPI = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        navigation.navigate("LogInScreen");
-        return;
+    const initialize = async () => {
+      setIsChecking(true);
+      try {
+        const hasRequest = await checkIsHavingRqMatching();
+        console.log("check is has request: ", hasRequest);
+        setHasMatchingRequest(hasRequest);
+        setIsChecking(false);
+        if (!hasRequest) {
+          //khong co yeu cau ghep doi
+          try {
+            const fetchAPI = async () => {
+              const [resMovies, resTheaters, resMybio] = await Promise.all([
+                instance.get("/movies/"),
+                instance.get("/theaters/"),
+                instance.get("/users/bio"),
+              ]);
+
+              setListMovies(resMovies.data.result);
+              setListTheaters(resTheaters.data.result);
+              setUserId(resMybio.data.result.id);
+            };
+            fetchAPI();
+          } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu phim/rạp: ", error);
+          }
+        }
+      } catch (error) {
+        console.log("error when fetch api initially", error);
       }
-
-      const [resMovies, resTheaters, resMybio] = await Promise.all([
-        instance.get("/movies/"),
-        instance.get("/theaters/"),
-        instance.get("/users/bio"),
-      ]);
-
-      setListMovies(resMovies.data.result);
-      setListTheaters(resTheaters.data.result);
-      setUserId(resMybio.data.result.id);
     };
-
-    fetchAPI();
+    initialize();
   }, []);
 
   useEffect(() => {
@@ -99,34 +125,34 @@ const MatchingScreen = () => {
     setShowTimesCanPick(filtered);
   }, [allShowTimesAccessible, selectTheaterName]);
 
-  useEffect(() => {
-    const isCreateTicket = notifications.find(
-      (noti: NotiTypeSocket) => noti.message === "Tạo vé thành công"
-    );
-    const isMatched = notifications.find(
-      (noti: NotiTypeSocket) => noti.message === "Ghép đôi thành công"
-    );
+  // useEffect(() => {
+  //   const isCreateTicket = notifications.find(
+  //     (noti: NotiTypeSocket) => noti.message === "Tạo vé thành công"
+  //   );
+  //   const isMatched = notifications.find(
+  //     (noti: NotiTypeSocket) => noti.message === "Ghép đôi thành công"
+  //   );
 
-    if (isCreateTicket && isMatched) {
-      const props = {
-        dataPartner: isMatched.result,
-        dataTicket: isCreateTicket.result,
-        dataRequestMatching: listMovies.find(
-          (m: MovieType) => m.id === selectMovieId
-        ),
-      };
+  //   if (isCreateTicket && isMatched) {
+  //     const props = {
+  //       dataPartner: isMatched.result,
+  //       dataTicket: isCreateTicket.result,
+  //       dataRequestMatching: listMovies.find(
+  //         (m: MovieType) => m.id === selectMovieId
+  //       ),
+  //     };
 
-      showToast("success", "Đã ghép đôi thành công!");
-      setTimeout(() => {
-        disconnect();
-        navigation.navigate("MatchingSuccess", props);
-      }, 1000);
-    }
-  }, [notifications]);
+  //     showToast("success", "Đã ghép đôi thành công!");
+  //     setTimeout(() => {
+  //       disconnect();
+  //       navigation.navigate("MatchingSuccess", props);
+  //     }, 1000);
+  //   }
+  // }, [notifications]);
 
   const handleSubmit = async () => {
     try {
-      await connect(userId, handleNotificationSocket);
+      // await connect(userId, handleNotificationSocket);
 
       const movieName = listMovies.find(
         (m: MovieType) => m.id === selectMovieId
@@ -141,7 +167,7 @@ const MatchingScreen = () => {
         minAge,
         maxAge,
       });
-
+      setHasMatchingRequest(true);
       showToast("success", "Đang tìm người phù hợp...");
     } catch (err) {
       console.error(err);
@@ -149,9 +175,35 @@ const MatchingScreen = () => {
     }
   };
 
+  const handleCancelMatching = async () => {
+    try {
+      await instance.delete("/matching/");
+      setHasMatchingRequest(false);
+      showToast("success", "Delete request matching successfully");
+    } catch (error) {
+      console.log("fail when cancel matching");
+    }
+  };
+
   const isDisabled = !selectMovieId || !selectTheaterName || !selectShowtime;
 
-  if (isLoading) {
+  if (isChecking) {
+    return (
+      <ImageBackground
+        source={require("../../../assets/images/matching_mb.jpg")}
+        className="flex-1"
+        resizeMode="cover"
+        imageStyle={{ opacity: 0.3 }}
+      >
+        <View className="flex-1 justify-center items-center bg-black/60 pt-5">
+          <ActivityIndicator size="large" color="#f472b6" className="mt-10" />
+          <Text className="text-white text-xl mt-4">Hệ thống đang loading</Text>
+        </View>
+      </ImageBackground>
+    );
+  }
+
+  if (hasMatchingRequest) {
     return (
       <ImageBackground
         source={require("../../../assets/images/matching_mb.jpg")}
@@ -162,21 +214,14 @@ const MatchingScreen = () => {
         <View className="flex-1 justify-center items-center bg-black/60 pt-5">
           <ActivityIndicator size="large" color="#f472b6" className="mt-10" />
           <Text className="text-white text-xl mt-4">
-            Đang tìm người phù hợp...
+            Bạn đã gửi yêu cầu Matching! Vui lòng đợi thông báo!
           </Text>
           <TouchableOpacity
-            onPress={disconnect}
+            onPress={handleCancelMatching}
             className="mt-6 bg-gray-600 px-4 py-2 rounded-full"
           >
             <Text className="text-white">Hủy tìm</Text>
           </TouchableOpacity>
-          <ScrollView className="mt-6">
-            {notifications.map((noti: any, i) => (
-              <Text key={i} className="font-bold text-pink-200 text-center">
-                {noti.message}
-              </Text>
-            ))}
-          </ScrollView>
         </View>
       </ImageBackground>
     );
