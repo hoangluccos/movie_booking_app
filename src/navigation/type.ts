@@ -1,4 +1,9 @@
-import { MovieType, ShowtimeType, TicketType } from "../data/Data";
+import {
+  MovieType,
+  NotiTypeSocket,
+  ShowtimeType,
+  TicketType,
+} from "../data/Data";
 
 // Định nghĩa các màn hình trong stack navigator
 export type RootStackParamList = {
@@ -29,4 +34,5 @@ export type RootStackParamList = {
   };
   PersonMovieScreen: { idActor: string };
   GenreMovieScreen: { idGenre: string };
+  NotificationScreen: { listNotification: NotiTypeSocket[] };
 };

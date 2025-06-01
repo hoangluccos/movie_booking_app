@@ -20,7 +20,9 @@ export interface GenreType {
 }
 
 export interface User {
+  id: string;
   username: string;
+  gender: boolean;
   email: string;
   avatar?: string;
   dateOfBirth?: Date | string;

@@ -12,20 +12,27 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import InputSearchComponent from "../../../components/InputSearchComponent";
-import { useEffect, useState } from "react";
-import { GenreType, MovieType } from "../../../data/Data";
+import { useCallback, useEffect, useState } from "react";
+import { GenreType, MovieType, NotiTypeSocket, User } from "../../../data/Data";
 import { formatDuration } from "../../../utils/Utils";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMovies } from "../../../redux/slices/movieSlice";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { setIsLogOut } from "../../../redux/slices/userSlice";
+import { fetchUser, setIsLogOut } from "../../../redux/slices/userSlice";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../navigation/type";
 import { useNavigation } from "@react-navigation/native";
+import { useWebSocket } from "../../../hooks/useWebSocket";
+import { showToast } from "../../../utils/toast";
+
+interface UserState {
+  user: User | null;
+}
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProps>();
+
   const { width: screenWidth } = Dimensions.get("window");
   const sliderWidth = screenWidth;
 
@@ -37,19 +44,50 @@ const HomeScreen = () => {
   const { movies, loading, error } = useSelector(
     (state: RootState) => state.movies
   );
+  const infoUser = useSelector<RootState, UserState>((state) => state.user);
+
   const listMovie = movies || [];
+
+  //handle connect socket
+  const { connect, disconnect, isConnected, isLoading } = useWebSocket();
+  const [notifications, setNotifications] = useState<NotiTypeSocket[] | []>([]);
+
+  const handleNotificationSocket = useCallback((data: NotiTypeSocket) => {
+    setNotifications((prev) => {
+      if (prev.some((notif) => notif.id === data.id)) {
+        return prev;
+      }
+      return [...prev, { ...data }];
+    });
+  }, []);
 
   useEffect(() => {
     dispatch(fetchAllMovies());
     dispatch(setIsLogOut(false));
+    //get UserId
+    dispatch(fetchUser());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (infoUser.user?.id) {
+      connect(infoUser.user?.id, handleNotificationSocket);
+    }
+  }, [infoUser.user]);
 
   const handleClickMovie = (id: string) => {
     console.log("Click on movie", id);
     navigation.navigate("MovieDetail", { id: id });
   };
+
   const handleClickMatchingFeature = () => {
     navigation.navigate("MatchingScreen");
+  };
+
+  const handleClickNotification = () => {
+    console.log("before redirect - list notifications: ", notifications);
+    navigation.navigate("NotificationScreen", {
+      listNotification: notifications,
+    });
   };
 
   const showMovieNowPlayingCus = ({ item }: { item: MovieType }) => {
@@ -146,14 +184,24 @@ const HomeScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View>
-          <View className="py-4 flex-row justify-between">
+          <View className="my-3 py-4 px-2 flex-row justify-between">
             <View>
               <Text className="text-lg text-white">Hi, Friends</Text>
               <Text className="text-2xl text-white">Wellcome Back</Text>
             </View>
-            {/* <View className="justify-center">
+            <TouchableOpacity
+              onPress={handleClickNotification}
+              className="justify-center relative" // Thêm relative để badge định vị
+            >
               <FontAwesome name="bell-o" color="white" size={35} />
-            </View> */}
+              {notifications.length > 0 && (
+                <View className="absolute top-0 right-0 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center">
+                  <Text className="text-white text-xs">
+                    {notifications.length > 9 ? "9+" : notifications.length}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
           <View>
             <InputSearchComponent

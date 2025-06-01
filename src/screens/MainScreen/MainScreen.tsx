@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./tabs/HomeScreen";
 import ProfileScreen from "./tabs/ProfileScreen";
 import MovieScreen from "./tabs/MovieScreen";
-import { Image, Text } from "react-native";
+import { Image } from "react-native";
 import MyTicketScreen from "./tabs/MyTicketScreen";
 
 const MainScreen = () => {

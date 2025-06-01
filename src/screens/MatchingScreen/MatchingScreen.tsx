@@ -12,7 +12,6 @@ import { useNavigation } from "@react-navigation/native";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { transferStringToDateCheckToDay } from "../../utils/Utils";
 import instance from "../../api/instance";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/type";
 import {
