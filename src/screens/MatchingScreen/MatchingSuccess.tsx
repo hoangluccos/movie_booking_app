@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,16 +15,13 @@ import { postApi } from "../../api/Api";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { fetchAllTickets } from "../../redux/slices/ticketSlice";
-import { MovieType, PartnerType } from "../../data/Data";
+import { MovieType, PartnerType, ShowtimeType } from "../../data/Data";
 import instance from "../../api/instance";
 
 interface RouteParams {
-  dataRequestMatching: MovieType;
-  dataTicket: { id: string };
+  dataTicket: { id: string; showtimeId: string };
   dataPartner: PartnerType;
 }
-
-const { width, height } = Dimensions.get("window");
 
 export const getPaymentApi = (
   url: string,
@@ -48,14 +45,32 @@ export const getPaymentApi = (
     .catch((error) => callback(error, null));
 };
 
-const MatchingSuccess: React.FC = () => {
+const MatchingSuccess = () => {
   const route = useRoute();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
-  const { dataRequestMatching, dataTicket, dataPartner } =
-    route.params as RouteParams;
+  const { dataTicket, dataPartner } = route.params as RouteParams;
   const ticketId = dataTicket.id;
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+
+  const [dataMovie, setDataMovie] = useState<MovieType>({});
+  const [showTime, setShowTime] = useState<ShowtimeType>({});
+
+  useEffect(() => {
+    const fetchShowtime = async () => {
+      try {
+        const res = await instance.get(
+          `/showtimes/info/${dataTicket.showtimeId}`
+        );
+        console.log("data response: ", res.data.result);
+        setDataMovie(res.data.result.movie);
+        setShowTime(res.data.result);
+      } catch (error) {
+        console.log("fail when fetch showtime api : ", error);
+      }
+    };
+    fetchShowtime();
+  }, []);
 
   const handleDeleteRQ = () => {
     const checkAndDeleteRQ = async () => {
@@ -191,15 +206,15 @@ const MatchingSuccess: React.FC = () => {
                   Thông tin phim đã chọn
                 </Text>
                 <Image
-                  source={{ uri: dataRequestMatching.image }}
+                  source={{ uri: dataMovie.image }}
                   className="w-32 h-32 mx-auto my-3"
                   resizeMode="contain"
                 />
                 <Text className="text-center text-base font-semibold text-gray-700">
-                  {dataRequestMatching.name}
+                  {dataMovie.name}
                 </Text>
                 <Text className="text-center text-sm text-gray-600">
-                  Ngày xuất chiếu - giờ
+                  Ngày xuất chiếu: {showTime.date} - giờ : {showTime.startTime}
                 </Text>
               </View>
 

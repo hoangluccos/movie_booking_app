@@ -30,7 +30,6 @@ export type RootStackParamList = {
   MatchingSuccess: {
     dataPartner: any;
     dataTicket: any;
-    dataRequestMatching: any;
   };
   PersonMovieScreen: { idActor: string };
   GenreMovieScreen: { idGenre: string };

@@ -21,7 +21,7 @@ import { AppDispatch, RootState } from "../../../redux/store";
 import { fetchUser, setIsLogOut } from "../../../redux/slices/userSlice";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../navigation/type";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useWebSocket } from "../../../hooks/useWebSocket";
 import { showToast } from "../../../utils/toast";
 
@@ -68,11 +68,20 @@ const HomeScreen = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (infoUser.user?.id) {
-      connect(infoUser.user?.id, handleNotificationSocket);
-    }
-  }, [infoUser.user]);
+  // Connect socket when screen is focused, disconnect when unfocused
+  useFocusEffect(
+    useCallback(() => {
+      if (infoUser.user?.id) {
+        console.log("Connecting socket in HomeScreen...");
+        connect(infoUser.user?.id, handleNotificationSocket);
+      }
+
+      // return () => {
+      //   console.log("Disconnecting socket in HomeScreen...");
+      //   disconnect();
+      // };
+    }, [infoUser.user])
+  );
 
   const handleClickMovie = (id: string) => {
     console.log("Click on movie", id);
