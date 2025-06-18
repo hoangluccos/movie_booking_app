@@ -8,6 +8,7 @@ import { RootStackParamList } from "../../navigation/type";
 import { getApi } from "../../api/Api";
 import { SeatType } from "../../data/Data";
 import { formattedSeat, formatVND, totalPrice } from "../../utils/Utils";
+import instance from "../../api/instance";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type SeatScreenRouteProp = RouteProp<RootStackParamList, "SeatScreen">;
@@ -21,6 +22,7 @@ const SeatScreen = () => {
   // const theaterId = route.params.theaterId;
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   console.log("seat selected: ", selectedSeats);
+
   const handleClickSeat = (seatID: string) => {
     const isExisted = selectedSeats.includes(seatID);
     isExisted
@@ -59,13 +61,23 @@ const SeatScreen = () => {
     );
   }, []);
 
-  //navigate
-  const handleBuyTicket = () => {
-    navigation.navigate("PaymentScreen", {
-      seats: selectedSeats,
-      showTime: route.params.showTime,
-      Movie: route.params.Movie,
-    });
+  //navigate and put api
+  const handleBuyTicket = async () => {
+    try {
+      const res = await instance.put(`/showtimes/${showtimeId}/updateStatus`, {
+        seatIds: selectedSeats,
+        status: 2,
+      });
+      if (res) {
+        navigation.navigate("PaymentScreen", {
+          seats: selectedSeats,
+          showTime: route.params.showTime,
+          Movie: route.params.Movie,
+        });
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
   return (
     <View className="flex-1 p-5 bg-black">
@@ -106,7 +118,14 @@ const SeatScreen = () => {
           isSample={{ id: true, textSample: "Can", colorSample: "gray" }}
         />
         <SeatComponent
-          isSample={{ id: true, textSample: "Picking", colorSample: "yellow" }}
+          isSample={{
+            id: true,
+            textSample: "Other",
+            colorSample: "blue",
+          }}
+        />
+        <SeatComponent
+          isSample={{ id: true, textSample: "Picking", colorSample: "green" }}
         />
       </View>
       <View className="flex flex-row justify-between items-center border-gray-300  absolute bottom-0 left-0 right-0">

@@ -196,7 +196,7 @@ const HomeScreen = () => {
           <View className="my-3 py-4 px-2 flex-row justify-between">
             <View>
               <Text className="text-lg text-white">Hi, Friends</Text>
-              <Text className="text-2xl text-white">Wellcome Back</Text>
+              <Text className="text-2xl text-white">Welcome Back</Text>
             </View>
             <TouchableOpacity
               onPress={handleClickNotification}

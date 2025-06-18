@@ -41,7 +41,8 @@ const InputSearchComponent = (props: InputSearchComponentProps) => {
   console.log("ket qua search", movieSearched);
   const handleSearchItem = (id: any) => {
     console.log("navigate");
-    navigation.navigate("MovieDetail", id);
+    console.log("id movie", id);
+    navigation.navigate("MovieDetail", { id: id });
   };
   return (
     <View className="w-full">

@@ -4,7 +4,7 @@ interface props {
   isSelected: boolean | undefined;
   setIsSelected: () => void | undefined;
   positionSeat: string | undefined;
-  status: boolean | undefined;
+  status: number;
   isSample:
     | {
         id: boolean;
@@ -36,20 +36,20 @@ const SeatComponent = ({
       </View>
     );
   }
-  return status ? (
+  return status === 1 || status === 2 ? (
     <View
-      className={"p-2 bg-red-500 rounded-md flex items-center min-h-[35]"}
+      className={`p-2 rounded-md flex items-center min-h-[35] ${
+        status === 1 ? "bg-red-500" : status === 2 ? "bg-blue-400" : ""
+      }`}
       style={{ width: widthW * 0.15 }}
     >
       <Text>{positionSeat}</Text>
     </View>
   ) : (
     <TouchableOpacity
-      className={
-        !isSelected
-          ? "p-2 bg-gray-400 rounded-md flex items-center min-h-[35]"
-          : "p-2 bg-yellow-400 rounded-md flex items-center min-h-[35]"
-      }
+      className={`p-2 rounded-md flex items-center min-h-[35] ${
+        isSelected ? "bg-green-500" : "bg-gray-400"
+      }`}
       style={{ width: widthW * 0.15 }}
       onPress={() => setIsSelected()}
     >

@@ -25,6 +25,8 @@ import { formatVND, getTypeOfCoupon, totalPrice } from "../../utils/Utils";
 import CouponComponent from "../../components/CouponComponent";
 import { fetchAllTickets } from "../../redux/slices/ticketSlice";
 import { showToast } from "../../utils/toast";
+import CountDownComponent from "../../components/CountdownComponent";
+import instance from "../../api/instance";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type PaymentScreenRouteProp = RouteProp<RootStackParamList, "PaymentScreen">;
@@ -149,6 +151,33 @@ const PaymentScreen = () => {
     return entries;
   };
 
+  // handle finish select , setTimeout
+  const [isTimeout, setIsTimeout] = useState(false);
+
+  useEffect(() => {
+    if (isTimeout) {
+      showToast("error", "Thanh toán đã bị hủy");
+      setTimeout(() => navigation.goBack(), 1000);
+    }
+  }, [isTimeout]);
+  // handle cancel selectSeat
+  const cancelSelectSeat = async () => {
+    try {
+      const res = await instance.put(
+        `/showtimes/${route.params.showTime.id}/updateStatus`,
+        {
+          seatIds: route.params.seats,
+          status: 0, //cancel -> 0, select -> 2
+        }
+      );
+      if (res) {
+        showToast("error", "Bạn đã hủy thanh toán");
+        setTimeout(() => navigation.goBack(), 1000);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   const handleClickPayment = () => {
     const requestBook = {
       showtimeId: route.params.showTime.id,
@@ -391,6 +420,12 @@ const PaymentScreen = () => {
                   className="flex-1"
                   contentContainerStyle={{ paddingBottom: 80 }}
                 >
+                  <View className="flex flex-row justify-center my-1">
+                    <CountDownComponent
+                      setIsTimeout={setIsTimeout}
+                      cancelSelectSeat={cancelSelectSeat}
+                    />
+                  </View>
                   <MyTicketComponent
                     nameMovie={route.params.Movie.name}
                     image={route.params.Movie.image}

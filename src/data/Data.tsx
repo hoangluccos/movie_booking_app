@@ -53,7 +53,7 @@ export interface SeatType {
   locateRow: string;
   locateColumn: number;
   price: number;
-  status: boolean;
+  status: number;
   showtimeId: string;
   isCouple: boolean;
 }
