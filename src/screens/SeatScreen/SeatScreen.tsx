@@ -9,6 +9,7 @@ import { getApi } from "../../api/Api";
 import { SeatType } from "../../data/Data";
 import { formattedSeat, formatVND, totalPrice } from "../../utils/Utils";
 import instance from "../../api/instance";
+import { showToast } from "../../utils/toast";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type SeatScreenRouteProp = RouteProp<RootStackParamList, "SeatScreen">;
@@ -76,6 +77,7 @@ const SeatScreen = () => {
         });
       }
     } catch (error) {
+      showToast("error", "Có người khác đặt trước bạn rồi!");
       console.log("error", error);
     }
   };
