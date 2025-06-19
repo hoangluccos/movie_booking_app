@@ -8,7 +8,7 @@ interface Props {
 }
 
 const CountDownComponent = ({ setIsTimeout, cancelSelectSeat }: Props) => {
-  const [countDown, setCountdown] = useState(30);
+  const [countDown, setCountdown] = useState(300);
 
   useEffect(() => {
     if (countDown <= 0) {

@@ -107,7 +107,9 @@ const MatchingScreen = () => {
   useEffect(() => {
     if (selectMovieId) {
       const fetchShowtimes = async () => {
-        const res = await instance.get(`/showtimes/${selectMovieId}/all`);
+        const res = await instance.get(
+          `/showtimes/matching/${selectMovieId}/all`
+        );
         const filtered = res.data.result.filter((d: ShowtimeType) =>
           transferStringToDateCheckToDay(d.date)
         );
